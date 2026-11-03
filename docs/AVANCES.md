@@ -45,3 +45,16 @@
 - Commit probado: 42934e73c5075d5ed4bc92da5d7edbe748600717.
 - Instalación del extra PDF verificada en entorno virtual; generación y lectura del PDF sintético sin archivos financieros privados.
 - Cerrado el incremento de lectura y vista previa. La estructura del panel está documentada en PANEL.md; la interfaz y la confirmación de importación siguen pendientes.
+
+## 2026-11-03 — Catálogo de todas las instituciones disponibles
+
+- Añadido catálogo de 13 perfiles con vistas débito/inversiones: 26 entradas de lectura.
+- Conservadas las dos implementaciones específicas conciliadas de Openbank.
+- Los 12 perfiles adicionales extraen evidencia documental por sección; no se presentan como importadores contables terminados.
+- Incluidos períodos del contenido, números Decimal, porcentajes, localizadores e IDs documentales compartidos cuando procede.
+- Añadida consola local para listar lectores y consultar PDF, sin guardado ni acceso bancario.
+- Diferenciada sección ausente de saldo cero/producto inexistente.
+- Documentados límites, reglas particulares y mapeo económico pendiente por institución.
+- Verificación local sintética: 73 pruebas aprobadas y 2 de disco omitidas en el entorno local; CI ejecutará la suite completa.
+- Verificación privada adicional: lectores ejecutados sobre los formatos disponibles, sin incorporar documentos ni datos al repositorio.
+- No se importó Excel ni se guardaron movimientos financieros reales.

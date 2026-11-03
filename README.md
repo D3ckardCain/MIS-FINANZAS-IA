@@ -4,7 +4,7 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay dos lectores de Openbank que generan vistas previas conciliadas: débito e inversiones. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas). Openbank tiene conciliación específica; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
@@ -30,6 +30,8 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Manual de persistencia](docs/PERSISTENCIA.md)
 - [Estructura aprobada del panel](docs/PANEL.md)
 - [Lectores de Openbank](docs/OPENBANK.md)
+- [Catálogo y manual de lectores](docs/LECTORES.md)
+- [Mapeo económico pendiente por perfil](docs/MAPEO-PENDIENTE.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados
