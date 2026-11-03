@@ -40,8 +40,8 @@ print(ledger.balances())
 
 ## Límites actuales
 
-Registro exclusivamente en memoria: al finalizar el proceso se pierde. No introducir datos reales como almacenamiento definitivo. No hay acceso a archivos, red, banco o plataforma, ni sincronización.
+Ledger funciona en memoria; para conservar movimientos utilizar Store, descrito en el [manual de persistencia](PERSISTENCIA.md). Ledger por sí solo no guarda datos al finalizar el proceso. No hay conexión bancaria ni sincronización.
 
-No existe todavía cálculo diario por tasa, historial contractual, reparto capital/interés, conciliación múltiple, precio de activos, derivados, rendimiento ponderado, devengo, persistencia, auditoría de correcciones ni aplicación visual. Los saldos calculados representan solo movimientos registrados, no una certificación del saldo bancario.
+No existe todavía cálculo diario por tasa, historial contractual, reparto capital/interés, conciliación múltiple, precio de activos, derivados, rendimiento ponderado, devengo ni aplicación visual. La persistencia y las correcciones versionadas pertenecen al módulo Store. Los saldos calculados representan solo movimientos registrados, no una certificación del saldo bancario.
 
 No se realizan inferencias fiscales. Las comisiones e intereses son categorías básicas para efectivo; no resuelven IVA ni tratamiento fiscal particular.

@@ -1,0 +1,26 @@
+name: Pruebas locales
+on:
+  push:
+    branches: [main]
+    paths: ['finanzas/**', 'tests/**', '.github/workflows/tests.yml']
+  pull_request:
+    paths: ['finanzas/**', 'tests/**', '.github/workflows/tests.yml']
+permissions:
+  contents: read
+concurrency:
+  group: pruebas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unittest:
+    # El runner estándar es gratuito en repositorios públicos.
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Versiones
+        run: python3 -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
+      - name: Suite completa, incluyendo archivos y reapertura
+        run: python3 -m unittest discover -v

@@ -4,7 +4,7 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Primera entrega: reglas acordadas, plan de trabajo y núcleo local de movimientos **en memoria**, con pruebas sintéticas. Todavía no hay aplicación visual, base de datos, importador de estados, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Todavía no hay aplicación visual, importador de estados, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
@@ -24,6 +24,7 @@ Las pruebas y el núcleo funcionan offline. Este incremento no requiere tarjeta,
 - [Decisiones y alternativas](docs/DECISIONES.md)
 - [Plan, pendientes y criterios de aceptación](docs/PLAN.md)
 - [Manual del núcleo y limitaciones](docs/NUCLEO.md)
+- [Manual de persistencia](docs/PERSISTENCIA.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

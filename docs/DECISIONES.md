@@ -2,10 +2,10 @@
 
 ## D001 — Base local sin dependencias externas obligatorias
 
-**Decisión:** núcleo Python con biblioteca estándar; SQLite local es la primera opción a evaluar para persistencia. No se ha creado aún la base de datos.
+**Decisión:** núcleo Python con biblioteca estándar y persistencia SQLite local implementada en el segundo incremento.
 
 **Ventajas:** ejecución offline, portabilidad, sin API ni suscripción obligatoria; pruebas reproducibles.
-**Costo y límites:** requiere equipo propio y Python; no ofrece por sí solo acceso remoto, sincronización, respaldo ni cifrado.
+**Costo y límites:** requiere equipo propio y Python; no ofrece por sí solo acceso remoto, sincronización ni cifrado; las copias de la base se gestionan mediante Store.
 **Alternativas:** servicios alojados pueden simplificar despliegue pero sus cuotas, tarjeta y continuidad deben verificarse antes de seleccionarlos.
 **Revisión:** escoger interfaz y distribución cuando el flujo documental esté definido. No se eligió un proveedor de nube.
 
@@ -41,3 +41,16 @@
 **Decisión:** cerrar un incremento funcional por vez con pruebas que comprueben reglas financieras.
 **Ventaja:** discutir problemas concretos y preservar decisiones.
 **Límite:** una prueba del núcleo no valida un importador, una tasa contractual o una obligación fiscal.
+
+## D007 — Persistencia con revisión y versiones
+
+**Decisión:** SQLite local, importes Decimal como texto y lotes transaccionales. Las correcciones crean versiones con motivo y control de versión esperada.
+**Ventajas:** conservación de evidencia e historial, recuperación local y ausencia de suscripción.
+**Límites:** un escritor a la vez; validación del ledger completo en memoria. No guardar archivos originales dentro de la base en este incremento.
+**Alternativa:** otro motor relacional si el volumen o la concurrencia lo justifican; el modelo de IDs/evidencia y los valores decimales son portables.
+
+## D008 — Pruebas de disco en GitHub, aplicación independiente
+
+**Decisión:** CI con Ubuntu estándar solo en repositorio público; sin artifacts ni cachés. Ejecución local de pruebas sigue siendo suficiente para desarrollar.
+**Costo verificado:** los runners estándar en repositorios públicos no generan cargos de cómputo según [GitHub](https://docs.github.com/en/billing/concepts/product-billing/github-actions), consultado el 2026-11-03.
+**Límites:** conexión, disponibilidad y políticas de GitHub; el workflow se omite si el repositorio pasa a privado. No se usan runners de mayor capacidad ni servicios de pago.
