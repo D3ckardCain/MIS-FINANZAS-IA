@@ -5,7 +5,7 @@ Orden inicial revisable. Cada etapa se entrega con manual y criterios verificabl
 | Orden | Incremento | Estado | Criterio de aceptación |
 | --- | --- | --- | --- |
 | 1 | Reglas y núcleo de movimientos | Implementado, pruebas sintéticas | Transferencias y reinversiones no duplican capital externo ni ingreso; pendientes visibles |
-| 2 | Persistencia local y evidencia | Implementado; verificación en disco en CI pendiente | SQLite, transacciones atómicas, identidad documental, revisión, correcciones trazables, copia y restauración verificadas |
+| 2 | Persistencia local y evidencia | Implementado; 37 pruebas aprobadas en CI | SQLite, transacciones atómicas, identidad documental, revisión, correcciones trazables, copia y restauración verificadas |
 | 3 | Primer adaptador: ahorro Openbank | Pendiente | Estado leído por sus fechas internas, operación separada de ahorro, vista previa y conciliación documental; confirmar antes de incorporar |
 | 4 | Tasas históricas y contratos | Pendiente | Vigencias, topes, condiciones, plazos y redondeo; cobro real separado de estimación |
 | 5 | Más instituciones y conciliación | Pendiente | Manual por formato, contrapartidas parciales/múltiples, faltantes, retenciones documentadas |
@@ -16,7 +16,7 @@ Orden inicial revisable. Cada etapa se entrega con manual y criterios verificabl
 
 ## Problemas abiertos
 
-1. **Persistencia:** almacenamiento SQLite implementado; completar verificación de archivos en CI y preparar flujo de revisión antes de guardar registros reales.
+1. **Persistencia:** almacenamiento SQLite y reapertura/copia en disco verificados; falta integrar el flujo visual de revisión antes de guardar registros reales.
 2. **Identidad de importación:** huella documental y referencia estable implementadas; cada adaptador debe obtener referencias fiables y dejar pendiente cualquier identidad ambigua.
 3. **Historia incompleta:** registrar períodos realmente cubiertos y documentos faltantes; no inferir faltantes solo por nombre de archivo o fecha del correo.
 4. **Vínculos complejos:** separar conciliación por tramos, tránsito, comisiones y conversión de monedas.

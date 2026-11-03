@@ -19,3 +19,12 @@
 - Verificación previa a publicación: 35 pruebas aprobadas y 2 omitidas por no disponer de escritura local. Las dos pruebas de archivo se ejecutarán mediante GitHub Actions.
 - CI limitada a Ubuntu estándar en repositorio público, sin cachés ni artifacts; ejecución local independiente.
 - No se importaron datos reales ni Excel. Siguiente módulo: vista previa del primer adaptador documental.
+
+### Verificación completa de persistencia
+
+- [GitHub Actions: 37 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41577502496).
+- Entorno: Ubuntu 24.04, Python 3.12.3, SQLite 3.45.1.
+- Confirmados cierre/reapertura de archivos, copia a otro archivo y dos conexiones con control de versión.
+- Resultado vinculado al commit 4f741507c18a5313d604d38019d863077dd6fe2a.
+- Actualizada la acción checkout a v7 tras el aviso de deprecación de Node 20 observado en la primera ejecución.
+- Finalizado el incremento de persistencia. Continúan pendientes los límites expresados en el manual; no se incorporaron registros reales.
