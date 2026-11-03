@@ -8,7 +8,7 @@ Orden inicial revisable. Cada etapa se entrega con manual y criterios verificabl
 | 2 | Persistencia local y evidencia | Implementado; 37 pruebas aprobadas en CI | SQLite, transacciones atómicas, identidad documental, revisión, correcciones trazables, copia y restauración verificadas |
 | 3 | Openbank: lectores débito e inversiones, vista previa | Vista previa implementada; 52 pruebas aprobadas en CI | Estado leído por sus fechas internas, operación separada de ahorro, vista previa y conciliación documental; confirmar antes de incorporar |
 | 4 | Tasas históricas y contratos | Pendiente | Vigencias, topes, condiciones, plazos y redondeo; cobro real separado de estimación |
-| 5 | Más instituciones y conciliación | 26 entradas de lectura disponibles; mapeo económico de 12 perfiles pendiente | Manual por formato, contrapartidas parciales/múltiples, faltantes, retenciones documentadas |
+| 5 | Más instituciones y conciliación | 26 entradas documentales disponibles; 75 pruebas aprobadas; mapeo económico de 12 perfiles pendiente | Manual por formato, contrapartidas parciales/múltiples, faltantes, retenciones documentadas |
 | 6 | Interfaz local profesional | Jerarquía de categorías/instituciones y dos vistas aprobada; interfaz pendiente | Institución/producto y resumen separados, evidencia accesible, pendientes claros, estilo GitHub y estado offline |
 | 7 | Cripto y acciones | Pendiente | Historial desde primera operación, archivos, transferencias propias, bots y derivados sin duplicación |
 | 8 | SAT y constancias | Pendiente | Reglas oficiales versionadas por ejercicio, retenciones conciliadas y alcance fiscal revisado |

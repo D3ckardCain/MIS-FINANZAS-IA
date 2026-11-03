@@ -58,3 +58,11 @@
 - Verificación local sintética: 73 pruebas aprobadas y 2 de disco omitidas en el entorno local; CI ejecutará la suite completa.
 - Verificación privada adicional: lectores ejecutados sobre los formatos disponibles, sin incorporar documentos ni datos al repositorio.
 - No se importó Excel ni se guardaron movimientos financieros reales.
+
+### Verificación completa del catálogo
+
+- [75 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41580568736).
+- Commit probado: b36a7b490c1e3e6e2bfc1143156680f66ce467ec.
+- Cobertura de prueba adicional: componentes de pago/ISR en préstamos, precisión del precio de títulos y orden inverso de movimientos.
+- Resultado: catálogo documental y consola operativos para las vistas registradas. Openbank conserva conciliación específica; los 12 perfiles adicionales siguen en revisión documental y no están autorizados por el software para importar.
+- El avance no equivale a haber terminado los importadores económicos, lectores de constancias fiscales, cripto ni interfaz.
