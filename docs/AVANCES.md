@@ -38,3 +38,10 @@
 - Añadidas 15 pruebas sintéticas del lector, incluida lectura de PDF generado en memoria; aprobadas localmente.
 - Vista previa exclusivamente: no se aprobó ni guardó ningún movimiento financiero real.
 - Pendientes interfaz, revisión de identidad y confirmación transaccional de importación.
+
+### Verificación completa de los dos lectores
+
+- [Suite completa: 52 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41579036184).
+- Commit probado: 42934e73c5075d5ed4bc92da5d7edbe748600717.
+- Instalación del extra PDF verificada en entorno virtual; generación y lectura del PDF sintético sin archivos financieros privados.
+- Cerrado el incremento de lectura y vista previa. La estructura del panel está documentada en PANEL.md; la interfaz y la confirmación de importación siguen pendientes.
