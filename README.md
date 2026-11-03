@@ -4,19 +4,22 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Todavía no hay aplicación visual, importador de estados, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay dos lectores de Openbank que generan vistas previas conciliadas: débito e inversiones. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
 ## Ejecutar las pruebas
 
-Python 3.11 o posterior; biblioteca estándar, sin instalar paquetes:
+Python 3.11 o posterior. El núcleo y SQLite usan la biblioteca estándar; la lectura PDF y su prueba necesitan el extra local:
 
 ```sh
+python -m pip install -r requirements-pdf.txt
 python -m unittest discover -v
 ```
 
-Las pruebas y el núcleo funcionan offline. Este incremento no requiere tarjeta, API, servidor, suscripción ni servicios externos. Consultar o actualizar GitHub sí requiere conexión. Los costos y límites de cualquier futura dependencia se revisarán antes de adoptarla.
+Una vez instalado el extra, las pruebas y los lectores funcionan offline. Las pruebas de núcleo y persistencia también pueden ejecutarse sin ese extra: `python -m unittest tests.test_ledger tests.test_storage`.
+
+El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor, suscripción ni servicios externos. Consultar o actualizar GitHub sí requiere conexión. Los costos y límites de cualquier futura dependencia se revisarán antes de adoptarla.
 
 ## Documentación
 
@@ -25,6 +28,8 @@ Las pruebas y el núcleo funcionan offline. Este incremento no requiere tarjeta,
 - [Plan, pendientes y criterios de aceptación](docs/PLAN.md)
 - [Manual del núcleo y limitaciones](docs/NUCLEO.md)
 - [Manual de persistencia](docs/PERSISTENCIA.md)
+- [Estructura aprobada del panel](docs/PANEL.md)
+- [Lectores de Openbank](docs/OPENBANK.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

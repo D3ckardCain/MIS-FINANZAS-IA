@@ -28,3 +28,13 @@
 - Resultado vinculado al commit 4f741507c18a5313d604d38019d863077dd6fe2a.
 - Actualizada la acción checkout a v7 tras el aviso de deprecación de Node 20 observado en la primera ejecución.
 - Finalizado el incremento de persistencia. Continúan pendientes los límites expresados en el manual; no se incorporaron registros reales.
+
+## 2026-11-03 — Dos lectores y organización del panel
+
+- Registrada la decisión del titular: categorías separadas, instituciones dentro de ellas, vistas de débito e inversiones por institución y resumen global independiente.
+- Implementados dos lectores independientes de Openbank con resumen, filas, página/línea, controles contables y propuestas de transferencias.
+- Contrastadas extracción por columnas y extracción lógica para conservar descripciones partidas.
+- Lectura PDF local mediante pypdf 6.10.0, licencia BSD-3-Clause según metadatos del paquete; biblioteca externa solo para este extra.
+- Añadidas 15 pruebas sintéticas del lector, incluida lectura de PDF generado en memoria; aprobadas localmente.
+- Vista previa exclusivamente: no se aprobó ni guardó ningún movimiento financiero real.
+- Pendientes interfaz, revisión de identidad y confirmación transaccional de importación.

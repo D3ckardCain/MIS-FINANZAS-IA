@@ -1,0 +1,2 @@
+# Extra local para lectura de PDF textual; licencia BSD-3-Clause.
+pypdf==6.10.0

@@ -4,7 +4,8 @@ Consolidación de las decisiones del proyecto al 2026-11-03. Este registro resum
 
 ## Producto
 
-- Organizar por institución y producto de inversión; resumen global separado.
+- Organizar el panel por categoría: Bancos, SOFIPOs, SOFOMes, instituciones de préstamo, acciones, criptomonedas y FIBRAs. Dentro de cada categoría: instituciones; dentro de cada institución: Cuenta de débito e Inversiones. Resumen global separado.
+- Dos lectores por institución: débito e inversiones, independientes y enlazables por transferencias. Si un producto no existe, mostrar No aplica. Detalle en [PANEL.md](PANEL.md).
 - Bancos, SOFIPOs, SOFOMs, préstamos, fondos, FIBRAs, acciones y criptomonedas.
 - Controlar capital aportado, retiros, rendimiento bruto, retenciones, comisiones, reinversiones, disponibilidad y vencimientos.
 - Excluir gastos de cuenta corriente y tarjetas. Una cuenta de paso participa únicamente cuando aporta evidencia del recorrido del dinero.

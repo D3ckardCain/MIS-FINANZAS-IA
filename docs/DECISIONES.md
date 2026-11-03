@@ -54,3 +54,16 @@
 **Decisión:** CI con Ubuntu estándar solo en repositorio público; sin artifacts ni cachés. Ejecución local de pruebas sigue siendo suficiente para desarrollar.
 **Costo verificado:** los runners estándar en repositorios públicos no generan cargos de cómputo según [GitHub](https://docs.github.com/en/billing/concepts/product-billing/github-actions), consultado el 2026-11-03.
 **Límites:** conexión, disponibilidad y políticas de GitHub; el workflow se omite si el repositorio pasa a privado. No se usan runners de mayor capacidad ni servicios de pago.
+
+## D009 — Dos lectores y dos vistas por institución
+
+**Decisión del titular:** categorías separadas, instituciones dentro de ellas y dos vistas por institución: Cuenta de débito e Inversiones. Resumen global aparte.
+**Implementación inicial:** OpenbankDebitReader y OpenbankInvestmentReader procesan secciones independientes del mismo documento.
+**Ventaja:** trazabilidad del dinero sin mezclar gasto operativo con rendimiento ni duplicar transferencias.
+**Límites:** no todas las plataformas tienen débito; mostrar No aplica. La navegación aprobada está especificada, todavía no construida.
+
+## D010 — Vista previa antes de importar
+
+**Decisión:** los lectores de Openbank devuelven datos y controles, sin guardar ni aprobar.
+**Ventaja:** la revisión de evidencia e identidad ocurre antes del registro.
+**Límite:** ausencia de referencias estables o formato desconocido debe resolverse; un saldo que cuadra no basta para autorizar una importación automática.

@@ -2,9 +2,9 @@ name: Pruebas locales
 on:
   push:
     branches: [main]
-    paths: ['finanzas/**', 'tests/**', '.github/workflows/tests.yml']
+    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['finanzas/**', 'tests/**', '.github/workflows/tests.yml']
+    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', '.github/workflows/tests.yml']
 permissions:
   contents: read
 concurrency:
@@ -20,7 +20,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+      - name: Preparar lector PDF local
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check -r requirements-pdf.txt
       - name: Versiones
-        run: python3 -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
+        run: .venv/bin/python -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
       - name: Suite completa, incluyendo archivos y reapertura
-        run: python3 -m unittest discover -v
+        run: .venv/bin/python -m unittest discover -v
