@@ -280,3 +280,11 @@
 - Incluye fechas antiguas, continuaciones entre páginas, traspasos ambiguos, neutralidad de congelamientos, devoluciones SPEI y candidatos de vencimiento sin calcular rendimientos implícitos.
 - Revisión documental completada al alcance de las fuentes; el cierre individual sin desglose publicado y las diferencias de composición siguen bloqueados por evidencia. No se atribuye conciliación completa a un documento incompleto.
 - Informe privado actualizado y sin importación financiera real.
+
+## 2026-11-05 — Nu: variante documental del emisor
+
+- Añadida variante de emisor bancario con conservación de la etiqueta por documento y reconocimiento de sus pies de página.
+- La continuidad sigue la cuenta explícita sin duplicarla por un cambio del nombre del emisor.
+- Se rechazan emisores desconocidos o contradictorios; no se infieren fechas regulatorias ni tratamiento fiscal.
+- Ampliada la revisión de fuentes privadas y cobertura, sin publicar inventarios, saldos o archivos personales.
+- Pruebas de variantes, ambigüedad, pie de página, catálogo PDF y duplicados.

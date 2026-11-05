@@ -235,4 +235,35 @@ class NuDetailTests(unittest.TestCase):
         self.assertFalse(r.ready_to_import)
 
 
+
+class NuIssuerTests(unittest.TestCase):
+    def test_banking_issuer_variant_preserves_same_account_identity(self):
+        src=[p.replace('Nu México Financiera','Nubank, S.A., Institución de Banca Múltiple') for p in statement()]
+        r=read(src)
+        self.assertEqual(r.issuer_reported,'Nubank, S.A., Institución de Banca Múltiple')
+        self.assertEqual(r.account_fingerprint,read().account_fingerprint)
+        self.assertEqual(len(r.account_events),2)
+        self.assertEqual(len(r.investment_events),2)
+        self.assertNotIn('Nubank',r.investment_events[-1].description_printed)
+        self.assertTrue(r.summary_reconciled)
+
+    def test_conflicting_or_unknown_issuer_is_not_silently_accepted(self):
+        src=statement();src[-1]+='\nNubank, S.A., Institución de Banca Múltiple'
+        with self.assertRaises(ReaderError):read(src)
+        with self.assertRaises(ReaderError):read([p.replace('Nu México Financiera','Nu de otra entidad') for p in statement()])
+
+    def test_identity_variant_does_not_change_binary_duplicate_rule(self):
+        from finanzas.nu import review_nu_documents
+        a=read();b=replace(a,issuer_reported='Nubank, S.A., Institución de Banca Múltiple')
+        self.assertEqual(len(review_nu_documents([a,b]).documents),1)
+
+
+    def test_pdf_catalog_accepts_banking_issuer(self):
+        src=[p.replace('Nu México Financiera','Nubank, S.A., Institución de Banca Múltiple') for p in statement()]
+        r=reader_for('nu','investments').read_reconciled_pdf(synthetic_pdf(src))
+        self.assertTrue(r.summary_reconciled)
+        self.assertEqual(r.account_fingerprint,read().account_fingerprint)
+        self.assertTrue(r.issuer_reported.startswith('Nubank,'))
+
+
 if __name__=='__main__':unittest.main()

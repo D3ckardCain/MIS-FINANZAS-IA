@@ -87,6 +87,7 @@ class NuPreview:
     detail_issues: tuple[str, ...]
     lane: str
     shared_account: bool = True
+    issuer_reported: str = ""
 
     @property
     def entries(self):return self.account_events if self.lane=="debit" else self.investment_events
@@ -141,7 +142,10 @@ class NuReader:
 
     def read_pages(self,pages,identifier):
         pages=tuple(pages);text="\n".join(pages)
-        if not pages or "nu mexico financiera" not in fold(text):raise ReaderError("Identidad Nu ausente")
+        issuers=[label for marker,label in (
+            ("nu mexico financiera","Nu México Financiera"),
+            ("nubank, s.a., institucion de banca multiple","Nubank, S.A., Institución de Banca Múltiple")) if marker in fold(text)]
+        if not pages or len(issuers)!=1:raise ReaderError("Identidad Nu ausente o ambigua")
         headers="\n".join(l for l in text.splitlines() if re.search(r"\bDEL\s+\d{2}\s+AL\s+\d{2}\s+[A-Z]{3}\s+\d{4}",l))
         ranges=periods(headers);accounts=set(re.findall(r"Cuenta Nu:\s*(\d+)",text))
         if len(ranges)!=1 or len(accounts)!=1:raise ReaderError("Cuenta/período Nu ausente o ambiguo")
@@ -208,7 +212,7 @@ class NuReader:
                 elif "movimientos en tu cuenta" in normalized:finish();section="account"
                 elif "movimientos de tus cajitas" in normalized:finish();section="cajitas"
                 elif "movimientos de tu cajita nu credito" in normalized:finish();section="guarantee"
-                if normalized.startswith("nu mexico financiera"):break
+                if normalized.startswith(("nu mexico financiera","nubank, s.a., institucion de banca multiple")):break
                 if "saldo promedio del periodo" in normalized or "este dinero funciona" in normalized:
                     finish();section=None;continue
                 if section is None:continue
@@ -236,7 +240,7 @@ class NuReader:
         if any(not start<=e.effective_date<=end for e in account_events+investment_events):detail.append("Fecha de evidencia Nu fuera del período")
         if any(len(e.value_candidates)!=1 for e in account_events+investment_events):detail.append("Evidencia Nu con importe ausente/ambiguo, conservada sin convertir en cero")
         preview=NuPreview(identifier,start,end,fingerprint,summary,tuple(account_events),tuple(investment_events),tuple(differences),
-            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(composition)),tuple(detail),self.lane)
+            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(composition)),tuple(detail),self.lane,issuer_reported=issuers[0])
         from dataclasses import replace
         review=review_nu_document(preview)
         return replace(preview,detail_issues=tuple(dict.fromkeys(detail+list(review.issues))))

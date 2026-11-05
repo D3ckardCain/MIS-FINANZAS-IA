@@ -21,6 +21,8 @@ Se preservan las diferencias exactas. Una sección ausente es desconocida, no ce
 
 ## Lectura y procedencia
 
+Se reconocen las variantes documentales de emisor «Nu México Financiera» y «Nubank, S.A., Institución de Banca Múltiple». `issuer_reported` conserva la variante observada en cada archivo. La cuenta se identifica por su número explícito, de modo que cambiar la etiqueta del emisor no duplica la relación financiera. Un emisor desconocido o la mezcla de ambas variantes dentro de un documento se rechaza como identidad ambigua. Esta lectura no determina por sí sola fechas de autorización, reclasificación fiscal o migración de producto.
+
 Se reconocen fechas completas, años impresos en la siguiente línea y fechas sin año cuando el período interno proporciona un único año. Las filas fuera del período quedan señaladas. Las descripciones y claves SPEI que continúan en la siguiente página se conservan junto a la evidencia inicial de página/línea. Se omiten encabezados, pies y páginas legales.
 
 La Cajita se identifica por su nombre explícito normalizado, conservando la descripción original. No se corrigen nombres, se fusionan Cajitas renombradas ni se deducen propietarios externos. La clave de rastreo se conserva, incluso si una operación y su devolución usan la misma clave: ambos signos permanecen.
