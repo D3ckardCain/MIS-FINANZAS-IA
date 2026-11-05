@@ -193,3 +193,12 @@
 - Conservadas las verificaciones de los lectores previos, OCR, cripto, monedas, núcleo y persistencia.
 - Cobertura común verificada con saldos ausentes: no se cuentan como coincidencias de cero.
 - Informe financiero y evidencia de Apartados guardados de forma privada; saldo de inversión pendiente, sin importación de datos reales.
+
+## 2026-11-05 — Hey: pagarés y propuestas de reinversión
+
+- Añadido lector optativo para ambas vistas del formato mensual reconocido, con cuenta operativa, resumen de pagarés y condiciones por contrato.
+- Separados capital retornado, interés pagado, retención, devengado incluido en saldo y proyección al vencimiento.
+- Añadidas propuestas de reinversión con referencias y cuatro filas fuente; sin confirmación ni importación automática.
+- Comprobados saldos, resumen, tasas/plazos, pagos frente a contratos y total de portafolio; diferencias de totales futuros preservadas.
+- Pruebas sintéticas de neto/bruto, devengo, contratos, referencias reutilizadas/duplicadas, PDF, consola y separación de vistas.
+- Revisión con fuente real e informe privado. Sin publicación de datos del titular ni cambios de reglas fiscales; no se importaron datos reales o Excel.

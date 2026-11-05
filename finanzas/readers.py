@@ -242,6 +242,9 @@ class StatementReader:
         if self.profile.key == "fondeadora":
             from .fondeadora import FondeadoraReader
             return FondeadoraReader(self.lane).read_pdf(content)
+        if self.profile.key == "hey":
+            from .hey import HeyReader
+            return HeyReader(self.lane).read_pdf(content)
         if self.profile.key == "fintual" and self.lane == "investments":
             from .fintual import FintualInvestmentReader
             return FintualInvestmentReader().read_pdf(content)

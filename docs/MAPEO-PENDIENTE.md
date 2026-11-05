@@ -11,7 +11,7 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | Fintual | Lector optativo de fondos MXN implementado; pendientes lotes, liquidación por ejecución, homologación de fondos, diferencias de totales y enlace de transferencias |
 | Alpaca | Perfil USD con PDF/imagen y revisión optativa implementado; pendientes identidad de ejecuciones, guiones, entradas/salidas agregadas, lotes, acciones corporativas y conversión fiscal |
 | Fondeadora | Lector operativo de estados/reportes implementado; pendientes estados/contratos de Bóveda/Apartados, identidad y enlace de traspasos, capital, tasa, rendimiento y retención de inversión |
-| Hey | Capital e interés de vencimientos, retención, renovación, interés neto y devengado |
+| Hey | Lector del formato de pagarés implementado; pendientes diferencias documentales, composición histórica del saldo anterior, formatos adicionales y confirmación de propuestas de reinversión |
 | Kapital | Contratos y proyecciones por fecha/plazo/base de días; no reconocer cobros futuros |
 | Nu | Cuenta/cajita/contrato, entradas externas, movimientos internos y descongelamiento parcial |
 | Openbank | Identidad estable, continuidad entre meses, revisión y confirmación transaccional |
