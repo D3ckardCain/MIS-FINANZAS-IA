@@ -220,3 +220,11 @@
 - Añadida revisión entre documentos con propuestas de equivalencia de identificadores y cotejo de vencimientos, sin confirmación ni fusión automática.
 - Pruebas sintéticas y revisión con documentos privados; informe de cobertura y contratos guardado de forma privada.
 - No se importaron movimientos reales ni Excel ni se asumieron reglas fiscales anuales.
+
+### Verificación completa de Kapital
+
+- [219 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42047255047).
+- Commit probado: 8a36989c68cc96767dbe30a2bee3cf830bd0f641.
+- Conservadas las pruebas de lectores anteriores, OCR, cripto, núcleo, persistencia y cobertura.
+- Cotejos entre formatos, timbrado compensado, saldos con signo final y vencimientos verificados con fuentes sintéticas.
+- Informe financiero privado; sin importación real, fusión de contratos ni confirmación automática de vínculos.
