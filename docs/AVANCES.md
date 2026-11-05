@@ -304,3 +304,10 @@
 - Indicadores, tipo/códigos de pago, UUID y procedencia preservados; sin validación de firma/SAT ni cálculo de declaración anual.
 - Un RFC genérico y la ausencia de número de cuenta impiden confirmar automáticamente el vínculo personal.
 - Fuentes e informe privados; pruebas públicas ficticias y manual del lector.
+
+### Verificación de constancias Nu
+
+- [279 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42092938543).
+- Commit probado: d11243e57fadc638ffe9a81397a3149b0287feb5.
+- Incluye diferencias portada/cadena, períodos parciales del año, meses ausentes, duplicados, identidad fiscal, comparación contextual y salida de consola sin cantidades privadas.
+- Se conserva la suite completa previa. No se generan movimientos desde constancias, correcciones monetarias ni cálculos del impuesto anual.
