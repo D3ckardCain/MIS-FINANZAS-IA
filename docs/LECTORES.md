@@ -4,14 +4,14 @@
 
 Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (28 entradas totales). Las 26 documentales son: dos vistas para cada una de las 13 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto y DiDi ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi y Doopla ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
 | BanCoppel | Documental y conciliación PDF optativa | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
 | DiDi Cuenta | Documental y conciliación PDF optativa | Documental y conciliación PDF optativa, cuenta compartida | Depósitos incluye rendimiento en el formato reconocido; escalones |
 | CETESdirecto | Detecta ausencia de sección | Documental y conciliación PDF optativa | Efectivo, títulos, mercado, fechas de liquidación |
-| Doopla | Detecta ausencia de sección | Documental | Capital, interés, IVA, ISR y cartera de préstamos |
+| Doopla | Efectivo de plataforma con PDF optativo | Documental y conciliación PDF optativa | Principal, interés, IVA, ISR y cartera; misma cuenta |
 | Fintual | Detecta ausencia de sección | Documental | Títulos, precios, valuación, venta y retiro |
 | Fondeadora | Documental | Detecta Bóveda si consta | Reporte operativo no prueba ausencia histórica de inversión |
 | Hey | Documental | Documental | Vencimiento, renovación, neto y devengado |
@@ -104,3 +104,5 @@ Para BanCoppel existe read_reconciled_pdf o --reconcile: compara el detalle, el 
 CETESdirecto admite read_reconciled_pdf/--reconcile en Inversiones, preservando por separado efectivo, posiciones, registro/liquidación e ISR del mes/acumulado. Ver [manual específico](CETESDIRECTO.md).
 
 DiDi Cuenta admite conciliación optativa en ambas vistas de una misma cuenta. Separa rendimientos de transferencias, evita duplicar depósitos/rendimientos y conserva condiciones históricas del documento. Ver [manual de DiDi](DIDI.md).
+
+Doopla admite conciliación optativa con estados separados de efectivo, pagos y cartera. El efectivo conciliado no declara correcto todo el estado. Ver [manual de Doopla](DOOPLA.md).

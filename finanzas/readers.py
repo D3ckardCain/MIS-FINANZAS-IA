@@ -234,6 +234,9 @@ class StatementReader:
         if self.profile.key == "didi":
             from .didi import DidiReader
             return DidiReader(self.lane).read_pdf(content)
+        if self.profile.key == "doopla":
+            from .doopla import DooplaReader
+            return DooplaReader(self.lane).read_pdf(content)
         if self.profile.key == "bancoppel" and self.lane == "debit":
             from .bancoppel import BanCoppelDebitReader
             return BanCoppelDebitReader().read_pdf(content)
@@ -418,6 +421,9 @@ def main(argv=None):
                   "detail_reconciled": result.detail_reconciled, "reconciled": result.reconciled,
                   "entries": len(result.entries), "issues": result.issues + result.detail_issues,
                   "ready_to_import": False}
+        if hasattr(result, "cash_reconciled"):
+            output.update(cash_reconciled=result.cash_reconciled, loan_positions=len(result.loans),
+                          differences=len(result.differences))
     else:
         output = {"institution": "openbank", "lane": result.lane,
                   "reconciled": result.reconciled, "issues": result.issues,

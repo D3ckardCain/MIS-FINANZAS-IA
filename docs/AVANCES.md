@@ -139,3 +139,13 @@
 - Conservadas las verificaciones de OCR, cripto, Openbank, BanCoppel, CETESdirecto, núcleo y persistencia.
 - El informe financiero y la cobertura documental se guardaron de forma privada.
 - No se importaron movimientos reales ni se aplicaron ajustes para forzar la conciliación.
+
+## 2026-11-05 — Doopla: efectivo y cartera por separado
+
+- Añadido lector PDF optativo para ambas perspectivas de la cuenta de plataforma.
+- Separados principal, interés, IVA ordinario/moratorio, ISR, comisión, depósitos/retiros e inversión/cancelación.
+- Conservados signos del IVA del resumen, retención no informada frente a cero y cifras acumuladas del anexo.
+- Añadidos estados independientes de conciliación del efectivo, componentes y documento completo; diferencias exactas con página/línea, sin ajustes ficticios.
+- Revisión entre documentos de continuidad y anexos económicos repetidos pese a actividad de capital.
+- Pruebas sintéticas y revisión de fuentes privadas; sin datos personales ni inventario financiero en el repositorio.
+- No se importaron movimientos reales ni Excel. Identidad económica y flujo visual siguen pendientes.
