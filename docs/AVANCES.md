@@ -337,3 +337,10 @@
 - Cobertura, duplicados binarios y candidatos de apertura/devolución, sin fusionar contratos ni suponer reinversión.
 - PDF protegido mediante contraseña explícita en memoria; sin incorporar credenciales a código, argumentos o vistas previas.
 - Documentación y pruebas ficticias; fuentes e informe privados, sin importación real ni Excel.
+
+### Verificación de SuperTasas
+
+- [317 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42117349623).
+- Commit probado: ea16c6832307174154a543520bff012480e48fc3.
+- Cubiertos PDF protegido con contraseña ficticia, campos ausentes, signos negativos, proyecciones, vencimientos, cuenta compartida y candidatos ambiguos.
+- Suite anterior conservada; informe financiero privado. Sin contraseñas reales en el repositorio, ajustes de saldos, importaciones ni cálculo fiscal anual.
