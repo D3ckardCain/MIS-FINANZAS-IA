@@ -149,3 +149,11 @@
 - Revisión entre documentos de continuidad y anexos económicos repetidos pese a actividad de capital.
 - Pruebas sintéticas y revisión de fuentes privadas; sin datos personales ni inventario financiero en el repositorio.
 - No se importaron movimientos reales ni Excel. Identidad económica y flujo visual siguen pendientes.
+
+### Verificación completa de Doopla
+
+- [160 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42033120060).
+- Commit probado: ae1415a164edfb7f66ec58348dc2465b2467fbad.
+- Conservadas las verificaciones de OCR, cripto, Openbank, BanCoppel, CETESdirecto, DiDi, núcleo y persistencia.
+- Informe financiero, cobertura y diferencias documentales guardados de forma privada.
+- Efectivo conciliado y conciliación completa son estados distintos; no se importaron datos reales ni se ocultaron diferencias mediante ajustes.
