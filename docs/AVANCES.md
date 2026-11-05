@@ -272,3 +272,11 @@
 - Detalle accesible desde API y consola; salida normal sin cantidades ni identificadores privados.
 - Rendimiento global sin reparto publicado permanece sin asignar; saldos individuales no informados no se inventan. Las diferencias reales siguen bloqueando cierre.
 - Pruebas sintéticas y revisión privada de fuentes; no se importaron datos reales ni Excel.
+
+### Verificación del detalle de Nu
+
+- [259 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42055981359).
+- Commit probado: 0849887ff491bce63358e7302ea2d195624597fb.
+- Incluye fechas antiguas, continuaciones entre páginas, traspasos ambiguos, neutralidad de congelamientos, devoluciones SPEI y candidatos de vencimiento sin calcular rendimientos implícitos.
+- Revisión documental completada al alcance de las fuentes; el cierre individual sin desglose publicado y las diferencias de composición siguen bloqueados por evidencia. No se atribuye conciliación completa a un documento incompleto.
+- Informe privado actualizado y sin importación financiera real.
