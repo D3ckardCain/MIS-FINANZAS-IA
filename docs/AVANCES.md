@@ -389,3 +389,11 @@
 - Sin APIs nuevas, CDN o servicios externos; localhost con verificación de Host/Origin y token para cambios.
 - Inspección visual con documentos ficticios y pruebas HTTP del servidor real. PDF reales usados solo para probar formatos; sin informes personales nuevos ni importación al ledger.
 - Importación financiera normalizada y resumen patrimonial siguen pendientes. Manual de aplicación y plan actualizados.
+
+### Verificación de aplicación local
+
+- [360 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42132916426).
+- Commit probado: e190c356571816aff4bcc0b93cbdde7509dca650.
+- Cubiertos HTTP real, carga y descarga exacta, duplicados, reapertura, dos vistas, retención de alertas, versiones de revisión, contraseña no persistida, identidad del emisor, OCR y precisión decimal.
+- JavaScript validado con `node --check`; inspección visual de bandeja y ambas pestañas en navegador con ejemplo ficticio.
+- La bandeja persistente está implementada. Próximo objetivo: normalización e importación financiera al ledger, sin depender de documentos faltantes.
