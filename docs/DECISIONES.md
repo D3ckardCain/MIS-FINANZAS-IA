@@ -75,3 +75,9 @@
 **Ventajas:** funcionamiento offline después de instalar dependencias, sin tarjeta, API de pago ni envío a proveedor OCR. Modelos y formatos portables.
 **Límites:** instalación del ejecutable/modelos, consumo del equipo propio, calidad de imagen y revisión necesaria. No hay carga visual ni archivo de originales implementados.
 **Cripto:** unidades explícitas, Decimal, órdenes/fills distintos, PnL por tipo y bot separado de sus operaciones. No se supone que la captura sea el historial completo.
+
+## D012 — La aplicación procesa; el chat desarrolla y verifica
+
+**Aclaración del titular:** los PDF compartidos sirven para programar/probar. La prioridad es que el usuario suba los documentos a la aplicación y esta organice y procese sus datos. La ausencia temporal de estados no bloquea el desarrollo.
+**Implementación:** interfaz web local con biblioteca estándar, JavaScript/CSS locales y SQLite documental separado del ledger. Conserva originales, salidas por vista y revisión versionada. Sin dependencias nuevas, nube o pagos obligatorios.
+**Límites:** esta entrega archiva y consulta extracciones; falta normalizar y confirmar operaciones financieras en el ledger. No confundir revisión documental con importación contable. Procesamiento secuencial, PDF escaneado multipágina y constancias visuales pendientes.

@@ -379,3 +379,13 @@
 - Commit probado: 03b11fca8d48bb30eff917b51a32d742d25beb7c.
 - Verificados ambos productos, cashback y vínculos candidatos, doble conteo ISR, continuaciones/encabezados, fechas fuera de corte, referencias desconocidas y exclusión de anexo fiscal.
 - Suite anterior conservada; informe y fuentes privados. El siguiente trabajo del orden aprobado es conciliación/cobertura por institución.
+
+## 2026-11-05 — Aplicación local y prioridad corregida
+
+- Registrada la aclaración: los PDF son muestras para desarrollar lectores; los estados faltantes no bloquean la aplicación.
+- Interfaz GitHub oscura con categorías, instituciones y pestañas de cuenta/inversiones; búsqueda y tablas paginadas.
+- Carga individual, detección por contenido, prioridad al emisor frente a contrapartes, extracción de ambas vistas y fallback documental explícito.
+- Original y resultado atómicos en SQLite, deduplicación binaria, descarga exacta, reapertura y revisión con control de versión; contraseñas solo en memoria.
+- Sin APIs nuevas, CDN o servicios externos; localhost con verificación de Host/Origin y token para cambios.
+- Inspección visual con documentos ficticios y pruebas HTTP del servidor real. PDF reales usados solo para probar formatos; sin informes personales nuevos ni importación al ledger.
+- Importación financiera normalizada y resumen patrimonial siguen pendientes. Manual de aplicación y plan actualizados.

@@ -4,9 +4,13 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 15 instituciones con formatos disponibles (30 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (32 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel, SuperTasas y Plata ofrecen conciliación PDF detallada optativa; YoTePresto añade resumen, diario operativo y observaciones de préstamos con controles separados; Nu añade resumen, cambios por Cajita/garantía, pareo de traspasos y candidatos de vencimiento; los cierres individuales sin desglose documental permanecen bloqueados. Fondeadora añade revisión operativa y evidencia de traspasos, con saldo de Bóveda pendiente; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 15 instituciones con formatos disponibles (30 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (32 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel, SuperTasas y Plata ofrecen conciliación PDF detallada optativa; YoTePresto añade resumen, diario operativo y observaciones de préstamos con controles separados; Nu añade resumen, cambios por Cajita/garantía, pareo de traspasos y candidatos de vencimiento; los cierres individuales sin desglose documental permanecen bloqueados. Fondeadora añade revisión operativa y evidencia de traspasos, con saldo de Bóveda pendiente; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Ya hay aplicación visual local con carga individual, detección, dos vistas, originales, duplicados y revisión documental. Falta conectar la importación financiera al ledger; no hay conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
+
+## Abrir la aplicación
+
+Después de instalar los extras indicados abajo, ejecutar `python -m finanzas.app` o abrir `iniciar.bat` en Windows. Funciona localmente sin Internet. [Manual y límites de la aplicación](docs/APLICACION.md).
 
 ## Ejecutar las pruebas
 
@@ -28,6 +32,7 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Plan, pendientes y criterios de aceptación](docs/PLAN.md)
 - [Manual del núcleo y limitaciones](docs/NUCLEO.md)
 - [Manual de persistencia](docs/PERSISTENCIA.md)
+- [Aplicación: carga, consulta y revisión](docs/APLICACION.md)
 - [Estructura aprobada del panel](docs/PANEL.md)
 - [Lectores de Openbank](docs/OPENBANK.md)
 - [Cuenta e inversiones a plazo de SuperTasas](docs/SUPERTASAS.md)

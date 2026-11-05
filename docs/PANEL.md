@@ -1,6 +1,6 @@
 # Organización aprobada del panel
 
-Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Especificación registrada; la interfaz todavía no está implementada.
+Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Bandeja visual local implementada: categorías, instituciones, dos vistas, carga y revisión documental. El resumen patrimonial y la importación financiera permanecen pendientes.
 
 ## Navegación
 
@@ -16,7 +16,7 @@ El resumen global es una entrada independiente. Las categorías de la barra late
 | Criptomonedas | Exchange, plataforma o wallet | Cuenta de débito / Inversiones |
 | FIBRAs | Institución o plataforma | Cuenta de débito / Inversiones |
 
-Las FIBRAs permanecen en el alcance acordado previamente. No se ha determinado aún la ubicación de productos adicionales como CETES/fondos; no asignar categorías sin resolver su presentación.
+Las FIBRAs permanecen en el alcance acordado previamente. CETESdirecto y Fintual se agrupan visualmente en Fondos y deuda; Por clasificar conserva las instituciones de categoría no confirmada. Esta agrupación configurable no determina régimen fiscal.
 
 Una institución sin cuenta de débito mostrará «No aplica» en esa vista. No inventar una cuenta bancaria para exchanges, wallets o intermediarios. El detalle de inversiones podrá tener productos a la vista, contratos a plazo y otros instrumentos según corresponda.
 
