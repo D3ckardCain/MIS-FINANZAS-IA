@@ -131,3 +131,11 @@
 - Pruebas sintéticas de diferencias de resumen/saldos, referencias ausentes/duplicadas, tipos y moneda desconocidos, fechas, retención, PDF y consola.
 - Revisión de documentos reales e informe de cobertura privados, sin publicar importes, identificadores ni inventario del titular.
 - No se importaron movimientos reales ni datos de Excel. Sin nuevas APIs ni servicios externos.
+
+### Verificación completa de DiDi Cuenta
+
+- [145 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42030988263).
+- Commit probado: 7eb9228ebf4a313a029a67ca5192a446f13905a1.
+- Conservadas las verificaciones de OCR, cripto, Openbank, BanCoppel, CETESdirecto, núcleo y persistencia.
+- El informe financiero y la cobertura documental se guardaron de forma privada.
+- No se importaron movimientos reales ni se aplicaron ajustes para forzar la conciliación.

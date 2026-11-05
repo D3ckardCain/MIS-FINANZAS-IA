@@ -4,12 +4,12 @@
 
 Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (28 entradas totales). Las 26 documentales son: dos vistas para cada una de las 13 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. Los otros perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto y DiDi ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
 | BanCoppel | Documental y conciliación PDF optativa | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
-| DiDi Cuenta | Documental | Documental, cuenta compartida | Depósitos puede incluir rendimiento; escalones |
+| DiDi Cuenta | Documental y conciliación PDF optativa | Documental y conciliación PDF optativa, cuenta compartida | Depósitos incluye rendimiento en el formato reconocido; escalones |
 | CETESdirecto | Detecta ausencia de sección | Documental y conciliación PDF optativa | Efectivo, títulos, mercado, fechas de liquidación |
 | Doopla | Detecta ausencia de sección | Documental | Capital, interés, IVA, ISR y cartera de préstamos |
 | Fintual | Detecta ausencia de sección | Documental | Títulos, precios, valuación, venta y retiro |
@@ -84,7 +84,7 @@ En DiDi, Mifel y SuperTasas las dos vistas pueden observar la misma cuenta remun
 ## Límites y próximos controles
 
 - Estos perfiles reconocen los formatos conocidos; un cambio de diseño puede requerir adaptación. La lectura de imágenes usa OCR local; la de PDF cifrado sigue pendiente.
-- No hay importación económica automática para los 12 perfiles documentales ni una conciliación financiera universal.
+- No hay importación económica automática para los perfiles institucionales ni una conciliación financiera universal.
 - Falta mapear tablas/contratos, resolver referencias, conservar todas las relaciones entre columnas, conciliar y preparar confirmación transaccional por institución.
 - Los documentos de ISR anual requieren un lector distinto; no se confunden con extractos mensuales.
 - No se ha inferido el tratamiento fiscal definitivo a partir de una etiqueta ISR.

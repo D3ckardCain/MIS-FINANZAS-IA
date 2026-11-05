@@ -5,7 +5,7 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | Perfil | Trabajo económico pendiente |
 | --- | --- |
 | BanCoppel | Conciliación PDF del formato conocido implementada; pendientes identidad económica, enlace de transferencias y revisión de discrepancias del propio documento |
-| DiDi | Mapeo de abonos/retiros, evitar duplicar depósitos/rendimientos, tasas por escalones y condiciones |
+| DiDi | Conciliación PDF de dos formatos implementada, depósitos/rendimientos separados; pendientes enlace de transferencias, vigencia contractual de escalones y formatos con retención distinta de cero |
 | CETESdirecto | Conciliación PDF de efectivo y posiciones implementada; pendientes identidad global, costo fiscal, distribución de amortizaciones y revisión de diferencias de resumen/detalle |
 | Doopla | Componentes de cada pago, IVA, comisiones, ISR, préstamo, vencidos y conciliación de cartera |
 | Fintual | Costo de títulos, ventas, retiro, valoración, comisión/ISR y cuentas/objetivos diferentes |
