@@ -18,6 +18,6 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | SuperTasas | Cuenta remunerada y contratos, vencimiento/capital, interés cobrado y estimaciones |
 | Plata | Separar agregado y detalle, cashback y vínculo interno, rendimientos/ISR posteriores al corte |
 | BingX/Pionex | Validar capturas reales, completar identidad/fills y zona horaria, convertir candidatos revisados en operaciones; costo, bots, derivados y conciliación pendientes |
-| Mifel | Referencias y fechas de devengo, cobro/retención por fila y conciliación específica |
+| Mifel | Lector de cuenta remunerada implementado; pendientes contrapartidas, formatos/productos adicionales y reglas contractuales de devengo/fiscalidad |
 
 Ninguna diferencia se resolverá creando movimientos ficticios. Las condiciones históricas y los documentos complementarios se incorporarán con su evidencia.

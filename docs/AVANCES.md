@@ -228,3 +228,12 @@
 - Conservadas las pruebas de lectores anteriores, OCR, cripto, núcleo, persistencia y cobertura.
 - Cotejos entre formatos, timbrado compensado, saldos con signo final y vencimientos verificados con fuentes sintéticas.
 - Informe financiero privado; sin importación real, fusión de contratos ni confirmación automática de vínculos.
+
+## 2026-11-05 — Mifel: cobros y rangos remunerados
+
+- Añadido lector optativo de cuenta a la vista remunerada para ambas vistas, sin duplicar saldo.
+- Separadas fecha de cobro y fechas remuneradas, incluidos rangos que cruzan fin de mes.
+- Cotejados saldos, depósitos/retiros, interés bruto, retención, posición y rangos; se preservan gráficos redondeados como ajenos al cálculo exacto.
+- Agrupación documental de interés/retención por fecha y raíz de referencia, sin calcular impuestos anuales.
+- Pruebas sintéticas de rangos, meses, duplicados, conceptos desconocidos, productos adicionales, PDF y consola.
+- Fuente real e informe financiero privados; no se importaron movimientos ni datos de Excel.

@@ -248,6 +248,9 @@ class StatementReader:
         if self.profile.key == "kapital":
             from .kapital import KapitalReader
             return KapitalReader(self.lane).read_pdf(content)
+        if self.profile.key == "mifel":
+            from .mifel import MifelReader
+            return MifelReader(self.lane).read_pdf(content)
         if self.profile.key == "fintual" and self.lane == "investments":
             from .fintual import FintualInvestmentReader
             return FintualInvestmentReader().read_pdf(content)

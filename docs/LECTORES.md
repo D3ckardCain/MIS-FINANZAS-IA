@@ -4,7 +4,7 @@
 
 Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (30 entradas totales). Las 28 documentales son: dos vistas para cada una de las 14 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | Openbank | Conciliación implementada | Conciliación implementada | Continúa el lector específico ya verificado |
 | SuperTasas | Documental | Documental, vista/plazo | Cuenta compartida, capital e interés por separado |
 | Plata | Documental | Documental | Cashback, agregado depósitos/rendimientos y registro posterior al corte |
-| Mifel | Documental | Documental, cuenta compartida | Cuenta remunerada, retenciones y períodos agrupados |
+| Mifel | Cuenta remunerada con revisión PDF optativa | Misma cuenta, cobros y rangos remunerados | Fecha de abono y cobertura de interés separadas |
 
 «Detecta ausencia» significa que devuelve section_missing cuando la sección no figura en el archivo. No declara que la institución no ofrezca ese producto ni que el titular nunca lo haya tenido.
 
@@ -115,3 +115,5 @@ Fondeadora admite revisión optativa de la cuenta operativa y reportes. La vista
 Hey admite revisión optativa de pagarés en ambas vistas y propuestas de reinversión con evidencia, sin confirmación automática: ver [manual](HEY.md).
 
 Kapital admite revisión optativa de efectivo y pagarés en dos formatos, con propuestas de equivalencia y vencimiento entre documentos: ver [manual](KAPITAL.md).
+
+Mifel admite revisión optativa de la cuenta remunerada y de los rangos de interés entre documentos: ver [manual](MIFEL.md).
