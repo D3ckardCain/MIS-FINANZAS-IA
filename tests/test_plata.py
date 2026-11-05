@@ -152,7 +152,7 @@ class PlataTests(unittest.TestCase):
 
     def test_continuation_header_is_not_a_malformed_movement(self):
         pages=source()
-        pages[1]+='\n  01 abr 2026 — 30 abr 2026 (30 días)   No. de Cuenta:\n'
+        pages[2]+='\n  01 abr 2026 — 30 abr 2026 (30 días)   No. de Cuenta:\n'
         r=read(pages)
         self.assertTrue(r.summary_reconciled)
 
