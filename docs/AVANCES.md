@@ -253,3 +253,11 @@
 - Estados explícitos de resumen/composición frente a detalle económico aún pendiente; no se marca listo para importar.
 - Pruebas sintéticas de traspasos reflejados en dos secciones, garantías ausentes/cero, tasas publicadas, importes ambiguos, PDF y catálogo.
 - Informe e inventario de fuentes reales privados. Sin importación real, Excel ni cálculo fiscal anual.
+
+### Verificación de Nu y suite completa
+
+- [245 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42054094723).
+- Commit probado: d9c7a1b8753bb299859fdf9c755e99e64aefe42b.
+- Se preservan lectores anteriores, OCR, cripto, núcleo, persistencia y revisión de cobertura.
+- Nu mantiene detalle económico pendiente aunque concilie el resumen; no se fuerza cierre de diferencias de distribución.
+- Informe financiero privado; sin importación de datos reales o Excel.
