@@ -167,3 +167,11 @@
 - Pruebas sintéticas de separación de capital/rendimiento, monedas, dividendos/retención, fechas, fuentes vacías, PDF y catálogo ampliado.
 - Informes financieros y cobertura de documentos reales guardados de forma privada, sin publicar datos ni inventario del titular.
 - No se importaron datos reales ni Excel; lotes, conversión fiscal a MXN e interfaz siguen pendientes.
+
+### Verificación completa de Fintual y Alpaca
+
+- [176 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42035477324).
+- Commit probado: 982b4eb0a6f4faf1179b06b7e1e795a81ede6caf.
+- Conservadas las pruebas de OCR, capturas cripto, catálogo ampliado, lectores previos, núcleo y persistencia.
+- Informes de ambos productos guardados de forma privada, con faltantes y diferencias documentales.
+- MXN/USD, valuación/cobro, principal/rendimiento y período/acumulado permanecen separados; sin importación real ni ajustes ficticios.
