@@ -252,6 +252,9 @@ class StatementReader:
         if self.profile.key == "kapital":
             from .kapital import KapitalReader
             return KapitalReader(self.lane).read_pdf(content)
+        if self.profile.key == "plata":
+            from .plata import PlataReader
+            return PlataReader(self.lane).read_pdf(content)
         if self.profile.key == "yotepresto":
             from .yotepresto import YoTePrestoReader
             return YoTePrestoReader(self.lane).read_pdf(content)

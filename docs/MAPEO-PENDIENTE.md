@@ -15,8 +15,8 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | Kapital | Lectores de ambos formatos implementados; pendientes confirmar equivalencias/vencimientos, completar huecos y enlazar transferencias antes de importar |
 | Nu | Resumen y evidencia por secciones implementados; pendientes resolver diferencias de distribución, reconstruir contratos/cierres por Cajita/garantía y parear traspasos |
 | Openbank | Identidad estable, continuidad entre meses, revisión y confirmación transaccional |
-| SuperTasas | Cuenta remunerada y contratos, vencimiento/capital, interés cobrado y estimaciones |
-| Plata | Separar agregado y detalle, cashback y vínculo interno, rendimientos/ISR posteriores al corte |
+| SuperTasas | Lector implementado; pendientes discrepancias, saldos iniciales ausentes, contratos/vencimientos y candidatos de capital |
+| Plata | Lector implementado; pendientes atribución temporal de cargos posteriores al corte, identidad económica, cobertura y confirmación de vínculos internos/cashback |
 | BingX/Pionex | Validar capturas reales, completar identidad/fills y zona horaria, convertir candidatos revisados en operaciones; costo, bots, derivados y conciliación pendientes |
 | Mifel | Lector de cuenta remunerada implementado; pendientes contrapartidas, formatos/productos adicionales y reglas contractuales de devengo/fiscalidad |
 

@@ -362,3 +362,13 @@
 - Cubiertos formatos con/sin usuario, acumulados, retenciones ausentes, IVA/ISR separados, bases de ganancia, continuaciones, diario, cartera, atrasos e identidad compartida.
 - Catálogo y OCR verificados para 15 instituciones y 32 entradas. Suite previa conservada.
 - Informe y fuentes reales privados; discrepancias preservadas sin ajustes, importación o cálculo fiscal anual.
+
+## 2026-11-05 — Plata: cuenta y ahorro flexible
+
+- Dos productos separados con relación compartida; saldo agregado cotejado sin descontar ISR dos veces.
+- Conservados depósitos/rendimientos combinados, signos en continuaciones, referencias desconocidas y operaciones iguales legítimas.
+- Cashback como aportación identificada y pares internos candidatos, sin duplicar capital externo.
+- Fechas de operación/cargo y período separados; cargos posteriores al corte conservan alerta aunque cuadre el resumen.
+- Tasas, promedio y GAT publicados; anexo CFDI excluido de movimientos.
+- 348 pruebas locales aprobadas, incluidas 14 específicas; verificación remota pendiente.
+- Documentación y datos sintéticos públicos; fuentes e informe privados. Sin importación real o cálculo fiscal anual.
