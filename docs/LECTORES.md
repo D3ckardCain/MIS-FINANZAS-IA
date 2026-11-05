@@ -2,17 +2,18 @@
 
 ## Alcance implementado
 
-Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (28 entradas totales). Las 26 documentales son: dos vistas para cada una de las 13 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
+Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (30 entradas totales). Las 28 documentales son: dos vistas para cada una de las 14 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi y Doopla ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual y Alpaca ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
+| Alpaca | Efectivo USD de la misma cuenta, PDF optativo | Acciones/ETF USD, PDF optativo | Período/acumulado, Memopost e importe no informado separados |
 | BanCoppel | Documental y conciliación PDF optativa | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
 | DiDi Cuenta | Documental y conciliación PDF optativa | Documental y conciliación PDF optativa, cuenta compartida | Depósitos incluye rendimiento en el formato reconocido; escalones |
 | CETESdirecto | Detecta ausencia de sección | Documental y conciliación PDF optativa | Efectivo, títulos, mercado, fechas de liquidación |
 | Doopla | Efectivo de plataforma con PDF optativo | Documental y conciliación PDF optativa | Principal, interés, IVA, ISR y cartera; misma cuenta |
-| Fintual | Detecta ausencia de sección | Documental | Títulos, precios, valuación, venta y retiro |
+| Fintual | Detecta ausencia de sección | Documental y conciliación PDF optativa | Títulos, precios, valuación, venta y retiro |
 | Fondeadora | Documental | Detecta Bóveda si consta | Reporte operativo no prueba ausencia histórica de inversión |
 | Hey | Documental | Documental | Vencimiento, renovación, neto y devengado |
 | Kapital | Documental | Documental | Proyecciones a vencimiento distintas de cobros |
@@ -93,7 +94,7 @@ En DiDi, Mifel y SuperTasas las dos vistas pueden observar la misma cuenta remun
 
 ## Pruebas
 
-La suite sintética cubre las 26 entradas, extracción PDF para los perfiles documentales, ambos lectores específicos de Openbank, separación de vistas, evidencia compartida, formatos de fechas, ausencia de sección, referencia a otra institución, proyecciones, congelamientos, ISR acumulado y PDF corrupto.
+La suite sintética cubre las 28 entradas, extracción PDF para los perfiles documentales, ambos lectores específicos de Openbank, separación de vistas, evidencia compartida, formatos de fechas, ausencia de sección, referencia a otra institución, proyecciones, congelamientos, ISR acumulado y PDF corrupto.
 
 Los datos de prueba son ficticios. La comprobación local adicional con fuentes privadas no incorpora archivos, texto, importes ni identificadores del titular al repositorio.
 
@@ -106,3 +107,5 @@ CETESdirecto admite read_reconciled_pdf/--reconcile en Inversiones, preservando 
 DiDi Cuenta admite conciliación optativa en ambas vistas de una misma cuenta. Separa rendimientos de transferencias, evita duplicar depósitos/rendimientos y conserva condiciones históricas del documento. Ver [manual de DiDi](DIDI.md).
 
 Doopla admite conciliación optativa con estados separados de efectivo, pagos y cartera. El efectivo conciliado no declara correcto todo el estado. Ver [manual de Doopla](DOOPLA.md).
+
+Fintual ofrece conciliación optativa de fondos MXN: ver [manual](FINTUAL.md). Alpaca incorpora dos vistas PDF/imagen y revisión detallada en USD: ver [manual](ALPACA.md).

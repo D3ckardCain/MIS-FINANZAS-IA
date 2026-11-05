@@ -83,6 +83,11 @@ class Profile:
 
 
 PROFILES = (
+    Profile("alpaca", "Alpaca", r"alpaca",
+            ("cash summary", "income", "fees", "transaction"),
+            ("account summary", "holdings", "income", "transaction"),
+            True, ("Acciones/ETF y efectivo USD pertenecen a una misma cuenta de corretaje.",
+                   "Separar período y acumulado; Memopost no es una operación económica de efectivo.")),
     Profile("bancoppel", "BanCoppel", r"bancoppel",
             ("detalle de movimientos", "resumen de la cuenta", "calculo de intereses"),
             ("inversiones vigentes", "inversion a plazo"),
@@ -231,6 +236,12 @@ class StatementReader:
 
     def read_reconciled_pdf(self, content):
         """Conciliación estricta optativa; conserva el lector documental general."""
+        if self.profile.key == "alpaca":
+            from .alpaca import AlpacaReader
+            return AlpacaReader(self.lane).read_pdf(content)
+        if self.profile.key == "fintual" and self.lane == "investments":
+            from .fintual import FintualInvestmentReader
+            return FintualInvestmentReader().read_pdf(content)
         if self.profile.key == "didi":
             from .didi import DidiReader
             return DidiReader(self.lane).read_pdf(content)

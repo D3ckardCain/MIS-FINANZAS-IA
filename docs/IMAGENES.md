@@ -2,7 +2,7 @@
 
 ## Estado implementado
 
-Las 26 vistas documentales existentes aceptan imágenes mediante read_image. BingX y Pionex tienen, además, lectores de capturas de operaciones; el catálogo suma 28 entradas. Se mantienen los lectores PDF existentes.
+Las 28 vistas documentales existentes aceptan imágenes mediante read_image. BingX y Pionex tienen, además, lectores de capturas de operaciones; el catálogo suma 30 entradas. Se mantienen los lectores PDF existentes.
 
 El motor es Tesseract local, con Pillow para abrir la imagen. No se contratan APIs, no se requiere tarjeta ni cuenta de un proveedor OCR. Una vez instalados el motor y los modelos de idioma, la lectura funciona offline. Instalar paquetes/modelos y actualizar GitHub sí necesita conexión.
 

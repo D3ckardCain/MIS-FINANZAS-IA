@@ -157,3 +157,13 @@
 - Conservadas las verificaciones de OCR, cripto, Openbank, BanCoppel, CETESdirecto, DiDi, núcleo y persistencia.
 - Informe financiero, cobertura y diferencias documentales guardados de forma privada.
 - Efectivo conciliado y conciliación completa son estados distintos; no se importaron datos reales ni se ocultaron diferencias mediante ajustes.
+
+## 2026-11-05 — Fondos Fintual y acciones/ETF Alpaca
+
+- Añadido lector optativo de fondos MXN: posiciones anterior/actual, efectivo, operaciones, resumen y retención informativa separados.
+- Añadido perfil Alpaca USD, dos perspectivas de una misma cuenta, PDF/imagen y revisión optativa de acciones, ingresos, retención extranjera y Memopost.
+- Catálogo actualizado a 14 perfiles institucionales con dos vistas (28 entradas), más BingX/Pionex (30 entradas totales).
+- Preservados guiones como no informados, importes mensuales frente a acumulados y diferencias exactas sin ajustes ficticios.
+- Pruebas sintéticas de separación de capital/rendimiento, monedas, dividendos/retención, fechas, fuentes vacías, PDF y catálogo ampliado.
+- Informes financieros y cobertura de documentos reales guardados de forma privada, sin publicar datos ni inventario del titular.
+- No se importaron datos reales ni Excel; lotes, conversión fiscal a MXN e interfaz siguen pendientes.

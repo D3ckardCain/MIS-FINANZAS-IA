@@ -4,7 +4,7 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (28 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi y Doopla ofrecen conciliación PDF detallada optativa; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 14 instituciones con formatos disponibles (28 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (30 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi, Doopla, Fintual y Alpaca ofrecen conciliación PDF detallada optativa; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
@@ -38,6 +38,8 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Conciliación de CETESdirecto](docs/CETESDIRECTO.md)
 - [Conciliación de DiDi Cuenta](docs/DIDI.md)
 - [Revisión de efectivo y cartera Doopla](docs/DOOPLA.md)
+- [Fondos Fintual en MXN](docs/FINTUAL.md)
+- [Acciones/ETF y efectivo Alpaca USD](docs/ALPACA.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

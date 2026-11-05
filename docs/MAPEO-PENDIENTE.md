@@ -8,7 +8,8 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | DiDi | Conciliación PDF de dos formatos implementada, depósitos/rendimientos separados; pendientes enlace de transferencias, vigencia contractual de escalones y formatos con retención distinta de cero |
 | CETESdirecto | Conciliación PDF de efectivo y posiciones implementada; pendientes identidad global, costo fiscal, distribución de amortizaciones y revisión de diferencias de resumen/detalle |
 | Doopla | Lector PDF con conciliación por secciones implementado; pendientes resolver discrepancias documentales, vigencia de anexos, identidad económica de pagos y tratamiento fiscal |
-| Fintual | Costo de títulos, ventas, retiro, valoración, comisión/ISR y cuentas/objetivos diferentes |
+| Fintual | Lector optativo de fondos MXN implementado; pendientes lotes, liquidación por ejecución, homologación de fondos, diferencias de totales y enlace de transferencias |
+| Alpaca | Perfil USD con PDF/imagen y revisión optativa implementado; pendientes identidad de ejecuciones, guiones, entradas/salidas agregadas, lotes, acciones corporativas y conversión fiscal |
 | Fondeadora | Reporte operativo y Bóveda como formatos distintos; etiquetas fiscales versus signo económico |
 | Hey | Capital e interés de vencimientos, retención, renovación, interés neto y devengado |
 | Kapital | Contratos y proyecciones por fecha/plazo/base de días; no reconocer cobros futuros |
