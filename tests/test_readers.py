@@ -19,6 +19,7 @@ IDENTITY = {
     "didi": "J.P. Sofiexpress",
     "cetesdirecto": "cetesdirecto.com",
     "doopla": "doopla.mx",
+    "yotepresto": "yotepresto.com",
     "fintual": "Fintual",
     "fondeadora": "apoyomultiple.com",
     "hey": "Hey, Banco",
@@ -42,9 +43,9 @@ def sample(profile, lane, *, period="Periodo 01/01/2026 al 31/01/2026"):
 
 
 class ReaderCatalogTests(unittest.TestCase):
-    def test_all_14_institutions_have_two_independent_reader_instances(self):
-        self.assertEqual(len(PROFILES), 14)
-        self.assertEqual(len(available_readers()), 30)
+    def test_all_15_institutions_have_two_independent_reader_instances(self):
+        self.assertEqual(len(PROFILES), 15)
+        self.assertEqual(len(available_readers()), 32)
         for profile in PROFILES:
             with self.subTest(institution=profile.key):
                 debit = reader_for(profile.key, "debit")
@@ -202,12 +203,12 @@ Capital al vencimiento      110.00
         self.assertEqual(result.periods, ())
         self.assertFalse(result.ready_to_import)
 
-    def test_cli_list_is_local_and_has_30_entries(self):
+    def test_cli_list_is_local_and_has_32_entries(self):
         import json
         output = StringIO()
         with contextlib.redirect_stdout(output):
             self.assertEqual(main(["--list"]), 0)
-        self.assertEqual(len(json.loads(output.getvalue())), 30)
+        self.assertEqual(len(json.loads(output.getvalue())), 32)
 
     def test_doopla_components_and_withholding_remain_separate_observations(self):
         text = """doopla.mx

@@ -344,3 +344,13 @@
 - Commit probado: ea16c6832307174154a543520bff012480e48fc3.
 - Cubiertos PDF protegido con contraseña ficticia, campos ausentes, signos negativos, proyecciones, vencimientos, cuenta compartida y candidatos ambiguos.
 - Suite anterior conservada; informe financiero privado. Sin contraseñas reales en el repositorio, ajustes de saldos, importaciones ni cálculo fiscal anual.
+
+## 2026-11-05 — YoTePresto: plataforma operativa y préstamos
+
+- Añadido perfil institucional con dos vistas PDF/imagen: el catálogo suma 15 instituciones y 32 entradas, incluidas capturas cripto.
+- Lectura específica de resumen global, efectivo, interés/IVA, comisiones y retenciones IVA/ISR, sin mezclar pagos compuestos con ganancias.
+- «Ganaste» conserva su base observada por documento; retenciones ausentes quedan desconocidas, distintas de cero.
+- Cartera admite formato con/sin usuario, tasas históricas y acumulados; atrasos se conservan aparte.
+- Controles separados de resumen, saldos operativos y cartera, sin ordenar filas por saldo ni introducir ajustes.
+- Historia con duplicados, continuidad de efectivo entre meses y controles de acumulados, sin reinversión automática o importación real.
+- Documentos e informe privados; manuales y pruebas públicas ficticias.

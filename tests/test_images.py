@@ -78,7 +78,7 @@ class ImageTests(unittest.TestCase):
         with self.assertRaises(ImageReadError):
             LocalOcr().read(b"not an image")
 
-    def test_all_28_statement_views_expose_image_preview_without_import(self):
+    def test_all_30_statement_views_expose_image_preview_without_import(self):
         for profile in PROFILES:
             for lane in ("debit", "investments"):
                 with self.subTest(institution=profile.key, lane=lane):

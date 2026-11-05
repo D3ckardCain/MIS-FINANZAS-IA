@@ -4,7 +4,7 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 14 instituciones con formatos disponibles (28 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (30 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y SuperTasas ofrecen conciliación PDF detallada optativa; Nu añade resumen, cambios por Cajita/garantía, pareo de traspasos y candidatos de vencimiento; los cierres individuales sin desglose documental permanecen bloqueados. Fondeadora añade revisión operativa y evidencia de traspasos, con saldo de Bóveda pendiente; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 15 instituciones con formatos disponibles (30 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (32 entradas en total). Openbank tiene conciliación específica y BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y SuperTasas ofrecen conciliación PDF detallada optativa; YoTePresto añade resumen, diario operativo y observaciones de préstamos con controles separados; Nu añade resumen, cambios por Cajita/garantía, pareo de traspasos y candidatos de vencimiento; los cierres individuales sin desglose documental permanecen bloqueados. Fondeadora añade revisión operativa y evidencia de traspasos, con saldo de Bóveda pendiente; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
@@ -31,6 +31,7 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Estructura aprobada del panel](docs/PANEL.md)
 - [Lectores de Openbank](docs/OPENBANK.md)
 - [Cuenta e inversiones a plazo de SuperTasas](docs/SUPERTASAS.md)
+- [Cuenta operativa y cartera de YoTePresto](docs/YOTEPRESTO.md)
 - [Constancias PDF/XML de Openbank](docs/OPENBANK_CONSTANCIAS.md)
 - [Catálogo y manual de lectores](docs/LECTORES.md)
 - [Mapeo económico pendiente por perfil](docs/MAPEO-PENDIENTE.md)

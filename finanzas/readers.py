@@ -101,6 +101,10 @@ PROFILES = (
             (), ("resumen del portafolio", "posicion final", "posicion inicial", "movimientos del periodo"),
             notes=("Posición de mercado y efectivo son conceptos distintos.",
                    "Mantener operación y liquidación separadas; no cuadrar diferencias por ajuste ficticio.")),
+    Profile("yotepresto", "YoTePresto", r"yotepresto\.com",
+            ("mis movimientos",), ("resumen del mes", "inversiones realizadas"),
+            True, ("Cuenta operativa de plataforma, no cuenta bancaria de débito.",
+                   "Separar capital, interés, IVA, comisiones e ISR; los acumulados no son cobros del mes.")),
     Profile("doopla", "Doopla", r"doopla\.mx",
             (), ("resumen", "efectivo disponible", "movimientos del periodo", "detalle de", "prestamos", "portafolio"),
             notes=("Separar capital, interés, IVA, comisiones e ISR; no sumar acumulados a los del mes.",
@@ -248,6 +252,9 @@ class StatementReader:
         if self.profile.key == "kapital":
             from .kapital import KapitalReader
             return KapitalReader(self.lane).read_pdf(content)
+        if self.profile.key == "yotepresto":
+            from .yotepresto import YoTePrestoReader
+            return YoTePrestoReader(self.lane).read_pdf(content)
         if self.profile.key == "supertasas":
             from .supertasas import SuperTasasReader
             return SuperTasasReader(self.lane).read_pdf(content)

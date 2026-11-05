@@ -2,9 +2,9 @@
 
 ## Alcance implementado
 
-Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (30 entradas totales). Las 28 documentales son: dos vistas para cada una de las 14 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
+Hay 30 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (32 entradas totales). Las 30 documentales son: dos vistas para cada una de las 15 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 30 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
@@ -19,6 +19,7 @@ Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | Kapital | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Dos formatos; proyecciones, vencimientos y equivalencias propuestas |
 | Nu | Resumen y evidencia operativa | Evidencia de Cajitas/garantía, cierre detallado pendiente | Congelar/descongelar no es ingreso; resumen conciliado no habilita importación |
 | Openbank | Conciliación implementada | Conciliación implementada | Continúa el lector específico ya verificado |
+| YoTePresto | Operativa de plataforma | Cartera y acumulados | Resumen, efectivo, retenciones y préstamos con controles independientes |
 | SuperTasas | Conciliación específica | Efectivo y posiciones a plazo | Cuenta compartida; campos ausentes y posiciones vencidas bloquean cierre |
 | Plata | Documental | Documental | Cashback, agregado depósitos/rendimientos y registro posterior al corte |
 | Mifel | Cuenta remunerada con revisión PDF optativa | Misma cuenta, cobros y rangos remunerados | Fecha de abono y cobertura de interés separadas |
@@ -94,7 +95,7 @@ En DiDi, Mifel y SuperTasas las dos vistas pueden observar la misma cuenta remun
 
 ## Pruebas
 
-La suite sintética cubre las 28 entradas, extracción PDF para los perfiles documentales, ambos lectores específicos de Openbank, separación de vistas, evidencia compartida, formatos de fechas, ausencia de sección, referencia a otra institución, proyecciones, congelamientos, ISR acumulado y PDF corrupto.
+La suite sintética cubre las 30 entradas, extracción PDF para los perfiles documentales, ambos lectores específicos de Openbank, separación de vistas, evidencia compartida, formatos de fechas, ausencia de sección, referencia a otra institución, proyecciones, congelamientos, ISR acumulado y PDF corrupto.
 
 Los datos de prueba son ficticios. La comprobación local adicional con fuentes privadas no incorpora archivos, texto, importes ni identificadores del titular al repositorio.
 
