@@ -95,3 +95,11 @@
 - Validación adicional con documentos privados: el informe y su inventario no se publican en GitHub.
 - 122 pruebas locales aprobadas, sin omisiones. Se conservan pruebas de OCR, cripto, núcleo y almacenamiento.
 - No se importaron movimientos reales ni Excel. Las transferencias no se califican automáticamente como capital externo.
+
+### Verificación completa de BanCoppel y cobertura
+
+- [122 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41967058012).
+- Commit probado: 1558210d7da3c541ccf6e9f0076be3b569b5685d.
+- Preservadas las verificaciones existentes de OCR, capturas cripto, núcleo y persistencia.
+- El informe financiero del lote y sus referencias de integridad se guardaron de forma privada; no forman parte de este repositorio.
+- El resultado sigue siendo revisión documental, sin importación automática ni ajustes ficticios.
