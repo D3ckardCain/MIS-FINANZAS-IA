@@ -321,3 +321,10 @@
 - Cotejo de totales mensuales observados y addenda, sin acreditar cobertura anual cuando faltan meses.
 - Sin duplicar rendimientos, retenciones o documentos, sin escribir datos reales ni verificar firmas o consultar SAT.
 - Fuentes, inventario e informe financiero privados; manuales y pruebas ficticias públicos.
+
+### Verificación de Openbank y constancias XML
+
+- [301 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42095107298).
+- Commit probado: f3faa3a1b0a53be59adbec1ddc198f33fdd55040.
+- Verificados PDF, XML directo/multipart, IDs exactos, identidad, discrepancias, doble representación fiscal, cobertura incompleta y resumen vacío sin tabla.
+- Suite previa conservada. Informe y fuentes privados; ninguna importación financiera, validación criptográfica o consulta a SAT.
