@@ -85,3 +85,13 @@
 - OCR real sobre imágenes ficticias en PNG, JPEG, WebP, TIFF y BMP; comprobados los recorridos de BingX/Pionex y detección de formato por contenido.
 - Las propuestas permanecen pendientes de revisión: no se importaron movimientos ni se archivaron originales financieros reales.
 - Pendientes: calibración con capturas reales, pantalla de carga/revisión y confirmación contable.
+
+## 2026-11-04 — Conciliación de débito BanCoppel y cobertura documental
+
+- Implementada lectura PDF detallada optativa de BanCoppel con fechas MM/DD dentro del período, orden inverso, interés bruto/neto, retención y tasa informativa.
+- Contrastados importes/saldos por movimiento, depósitos, retiros, comisiones, IVA y ecuación de resumen; las discrepancias no crean ajustes.
+- Añadida comprobación de documentos duplicados, huecos, solapamientos y continuidad de saldos para una misma cuenta identificada.
+- La consola ofrece --reconcile en perfiles compatibles. La entrada de imagen sigue su revisión OCR, sin heredar la conciliación PDF.
+- Validación adicional con documentos privados: el informe y su inventario no se publican en GitHub.
+- 122 pruebas locales aprobadas, sin omisiones. Se conservan pruebas de OCR, cripto, núcleo y almacenamiento.
+- No se importaron movimientos reales ni Excel. Las transferencias no se califican automáticamente como capital externo.

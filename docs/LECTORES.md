@@ -8,7 +8,7 @@ Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
-| BanCoppel | Documental | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
+| BanCoppel | Documental y conciliación PDF optativa | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
 | DiDi Cuenta | Documental | Documental, cuenta compartida | Depósitos puede incluir rendimiento; escalones |
 | CETESdirecto | Detecta ausencia de sección | Documental | Efectivo, títulos, mercado, fechas de liquidación |
 | Doopla | Detecta ausencia de sección | Documental | Capital, interés, IVA, ISR y cartera de préstamos |
@@ -98,3 +98,5 @@ La suite sintética cubre las 26 entradas, extracción PDF para los perfiles doc
 Los datos de prueba son ficticios. La comprobación local adicional con fuentes privadas no incorpora archivos, texto, importes ni identificadores del titular al repositorio.
 
 La entrada de imagen devuelve evidencia y revisión pendiente: ver [manual OCR](IMAGENES.md). La consola detecta PDF o imagen por contenido; --ocr-language configura los idiomas locales.
+
+Para BanCoppel existe read_reconciled_pdf o --reconcile: compara el detalle, el resumen y su interés/retención, manteniendo discrepancias sin ajustes ficticios. Ver [manual de BanCoppel](BANCOPPEL.md).

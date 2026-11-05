@@ -229,6 +229,15 @@ class StatementReader:
         from .imaging import read_statement_image
         return read_statement_image(content, self.profile.key, self.lane, engine=engine)
 
+    def read_reconciled_pdf(self, content):
+        """Conciliación estricta optativa; conserva el lector documental general."""
+        if self.profile.key == "bancoppel" and self.lane == "debit":
+            from .bancoppel import BanCoppelDebitReader
+            return BanCoppelDebitReader().read_pdf(content)
+        if self.profile.key == "openbank":
+            return self.read_pdf(content)
+        raise ReaderError("Conciliación detallada no disponible para este perfil/vista")
+
     def read_document(self, content, *, engine=None):
         if not isinstance(content, bytes):
             raise ReaderError("Se requieren los bytes del documento")
@@ -362,6 +371,7 @@ def main(argv=None):
     parser.add_argument("--list", action="store_true", dest="list_readers")
     parser.add_argument("--details", action="store_true")
     parser.add_argument("--ocr-language", help="Idiomas locales, por ejemplo spa+eng")
+    parser.add_argument("--reconcile", action="store_true", help="Conciliación PDF detallada si está disponible")
     args = parser.parse_args(argv)
     if args.list_readers:
         print(json.dumps(available_readers(), ensure_ascii=False))
@@ -370,8 +380,14 @@ def main(argv=None):
         parser.error("Indicar archivo PDF/imagen, --institution y --lane")
     try:
         from .imaging import LocalOcr
-        result = reader_for(args.institution, args.lane).read_document(
-            Path(args.pdf).read_bytes(), engine=LocalOcr(languages=args.ocr_language))
+        reader = reader_for(args.institution, args.lane)
+        content = Path(args.pdf).read_bytes()
+        if args.reconcile:
+            if not hasattr(reader, "read_reconciled_pdf") or not content[:1024].lstrip().startswith(b"%PDF-"):
+                raise ReaderError("La conciliación detallada requiere un PDF y un perfil compatible")
+            result = reader.read_reconciled_pdf(content)
+        else:
+            result = reader.read_document(content, engine=LocalOcr(languages=args.ocr_language))
     except (OSError, ValueError) as error:
         print(json.dumps({"status": "error", "error": str(error)}, ensure_ascii=False))
         return 2
@@ -391,6 +407,11 @@ def main(argv=None):
             "observations": len(result.observations), "issues": result.issues,
             "ready_to_import": False,
         }
+    elif hasattr(result, "entries"):
+        output = {"institution": args.institution, "lane": result.lane,
+                  "detail_reconciled": result.detail_reconciled, "reconciled": result.reconciled,
+                  "entries": len(result.entries), "issues": result.issues + result.detail_issues,
+                  "ready_to_import": False}
     else:
         output = {"institution": "openbank", "lane": result.lane,
                   "reconciled": result.reconciled, "issues": result.issues,
