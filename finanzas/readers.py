@@ -234,6 +234,9 @@ class StatementReader:
         if self.profile.key == "bancoppel" and self.lane == "debit":
             from .bancoppel import BanCoppelDebitReader
             return BanCoppelDebitReader().read_pdf(content)
+        if self.profile.key == "cetesdirecto" and self.lane == "investments":
+            from .cetesdirecto import CetesDirectoInvestmentReader
+            return CetesDirectoInvestmentReader().read_pdf(content)
         if self.profile.key == "openbank":
             return self.read_pdf(content)
         raise ReaderError("Conciliación detallada no disponible para este perfil/vista")

@@ -103,3 +103,14 @@
 - Preservadas las verificaciones existentes de OCR, capturas cripto, núcleo y persistencia.
 - El informe financiero del lote y sus referencias de integridad se guardaron de forma privada; no forman parte de este repositorio.
 - El resultado sigue siendo revisión documental, sin importación automática ni ajustes ficticios.
+
+## 2026-11-04 — CETESdirecto: efectivo y posiciones
+
+- Implementado lector PDF de conciliación optativa para CETESdirecto, manteniendo el lector documental y OCR existentes.
+- Separados efectivo, títulos, valuación, entradas/salidas, compras/ventas, amortización e ISR.
+- Preservadas fechas de registro y liquidación, incluida operación registrada fuera del mes pero liquidada dentro del período documental.
+- Conservadas etiquetas de resultados BONDDIA/GUBER/ENERFIN sin convertir valoración en cobro ni duplicar ISR acumulado.
+- Añadida huella de texto normalizado, distinta de la huella binaria, para comparar evidencia equivalente sin fusionar movimientos.
+- Validación con documentos privados e informe de cobertura privado; no se publican nombres particulares de archivos, fechas del inventario ni importes del titular.
+- Añadidas pruebas sintéticas de formatos antiguos/nuevos, efectivo temporal negativo, diferencias de resumen, acumulados, posiciones vacías, PDF y consola.
+- No se importaron movimientos reales ni Excel.

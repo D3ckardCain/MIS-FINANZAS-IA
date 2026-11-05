@@ -4,7 +4,7 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (28 entradas en total). Openbank tiene conciliación específica y BanCoppel ofrece conciliación PDF detallada optativa; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (28 entradas en total). Openbank tiene conciliación específica y BanCoppel y CETESdirecto ofrecen conciliación PDF detallada optativa; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
@@ -35,6 +35,7 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Lectura de fotos y capturas](docs/IMAGENES.md)
 - [BingX/Pionex por imagen](docs/CRIPTO-IMAGENES.md)
 - [Conciliación detallada de BanCoppel](docs/BANCOPPEL.md)
+- [Conciliación de CETESdirecto](docs/CETESDIRECTO.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

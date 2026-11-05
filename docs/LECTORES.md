@@ -10,7 +10,7 @@ Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | --- | --- | --- | --- |
 | BanCoppel | Documental y conciliación PDF optativa | Detecta sección si consta | Cuenta de paso; no asumir aportación externa |
 | DiDi Cuenta | Documental | Documental, cuenta compartida | Depósitos puede incluir rendimiento; escalones |
-| CETESdirecto | Detecta ausencia de sección | Documental | Efectivo, títulos, mercado, fechas de liquidación |
+| CETESdirecto | Detecta ausencia de sección | Documental y conciliación PDF optativa | Efectivo, títulos, mercado, fechas de liquidación |
 | Doopla | Detecta ausencia de sección | Documental | Capital, interés, IVA, ISR y cartera de préstamos |
 | Fintual | Detecta ausencia de sección | Documental | Títulos, precios, valuación, venta y retiro |
 | Fondeadora | Documental | Detecta Bóveda si consta | Reporte operativo no prueba ausencia histórica de inversión |
@@ -100,3 +100,5 @@ Los datos de prueba son ficticios. La comprobación local adicional con fuentes 
 La entrada de imagen devuelve evidencia y revisión pendiente: ver [manual OCR](IMAGENES.md). La consola detecta PDF o imagen por contenido; --ocr-language configura los idiomas locales.
 
 Para BanCoppel existe read_reconciled_pdf o --reconcile: compara el detalle, el resumen y su interés/retención, manteniendo discrepancias sin ajustes ficticios. Ver [manual de BanCoppel](BANCOPPEL.md).
+
+CETESdirecto admite read_reconciled_pdf/--reconcile en Inversiones, preservando por separado efectivo, posiciones, registro/liquidación e ISR del mes/acumulado. Ver [manual específico](CETESDIRECTO.md).

@@ -6,7 +6,7 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | --- | --- |
 | BanCoppel | Conciliación PDF del formato conocido implementada; pendientes identidad económica, enlace de transferencias y revisión de discrepancias del propio documento |
 | DiDi | Mapeo de abonos/retiros, evitar duplicar depósitos/rendimientos, tasas por escalones y condiciones |
-| CETESdirecto | Títulos/precio/valuación, efectivo, liquidación, reinversión y diferencias de resumen/detalle |
+| CETESdirecto | Conciliación PDF de efectivo y posiciones implementada; pendientes identidad global, costo fiscal, distribución de amortizaciones y revisión de diferencias de resumen/detalle |
 | Doopla | Componentes de cada pago, IVA, comisiones, ISR, préstamo, vencidos y conciliación de cartera |
 | Fintual | Costo de títulos, ventas, retiro, valoración, comisión/ISR y cuentas/objetivos diferentes |
 | Fondeadora | Reporte operativo y Bóveda como formatos distintos; etiquetas fiscales versus signo económico |
