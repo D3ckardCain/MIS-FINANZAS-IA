@@ -237,3 +237,10 @@
 - Agrupación documental de interés/retención por fecha y raíz de referencia, sin calcular impuestos anuales.
 - Pruebas sintéticas de rangos, meses, duplicados, conceptos desconocidos, productos adicionales, PDF y consola.
 - Fuente real e informe financiero privados; no se importaron movimientos ni datos de Excel.
+
+### Verificación completa de Mifel
+
+- [233 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42051723372).
+- Commit probado: 5c3d270919a951a6d6e677a9f10dee82ac1f86ef.
+- Se conservan las verificaciones de lectores previos, OCR, cripto, núcleo y persistencia.
+- Informe y cobertura privados; sin importación real ni doble cómputo de rangos entre meses.
