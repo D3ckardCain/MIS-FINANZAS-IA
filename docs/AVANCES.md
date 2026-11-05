@@ -311,3 +311,13 @@
 - Commit probado: d11243e57fadc638ffe9a81397a3149b0287feb5.
 - Incluye diferencias portada/cadena, períodos parciales del año, meses ausentes, duplicados, identidad fiscal, comparación contextual y salida de consola sin cantidades privadas.
 - Se conserva la suite completa previa. No se generan movimientos desde constancias, correcciones monetarias ni cálculos del impuesto anual.
+
+## 2026-11-05 — Openbank: cobertura y constancias PDF/XML
+
+- Incorporada identidad documental por vista, con RFC en columnas y referencia de cuenta padre para Apartado, sin equipararla al folio fiscal.
+- Admitido resumen completo explícito en cero sin tabla; ausencia de sección y tabla malformada siguen siendo casos distintos.
+- Añadido lector de constancias por producto y XML directo/multipart con huella original e IDs exactos de addenda.
+- Cotejo PDF/XML por UUID, producto, receptor, emisor y período, separado de igualdad de importes.
+- Cotejo de totales mensuales observados y addenda, sin acreditar cobertura anual cuando faltan meses.
+- Sin duplicar rendimientos, retenciones o documentos, sin escribir datos reales ni verificar firmas o consultar SAT.
+- Fuentes, inventario e informe financiero privados; manuales y pruebas ficticias públicos.

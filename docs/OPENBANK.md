@@ -54,3 +54,13 @@ No hay pantalla de revisión ni confirmación del importador todavía. El PDF no
 `read_pages` acepta texto con columnas para pruebas o integración. Las descripciones multilineales necesitan también `raw_pages` con extracción lógica; en su ausencia se rechazan para evitar asignarlas al movimiento incorrecto.
 
 Las páginas/filas son localizadores de extracción, no coordenadas visuales. La verificación del original se hace con la huella documental; no se guarda el archivo dentro del lector.
+
+## Identidad y períodos sin movimientos
+
+Las vistas ahora conservan `account_fingerprint`, `recipient_fingerprint` e `identity_source`. Débito usa el número explícito de cuenta. Apartado usa la cuenta débito padre del mismo PDF junto con el producto, porque su sección no siempre imprime número propio. Esta identidad permite revisar continuidad de cada vista sin mezclar ambas; no equivale a un número de Apartado confirmado por la constancia. Cuando no hay datos de identidad, quedan desconocidos y la cobertura no los acepta como cuenta identificada.
+
+El RFC del cliente puede estar en la segunda columna; el RFC del emisor no lo sustituye. Dos cuentas o RFC contradictorios dentro del archivo se rechazan.
+
+Una sección de resumen explícitamente íntegro en cero puede omitir por completo la tabla de transacciones. Se acepta solo si no hay importes monetarios no nulos, filas fechadas o una tabla declarada sin encabezado reconocible. Una sección ausente sigue siendo ausente, distinta de un período documentado en cero. Un resumen o tabla no nulos no se corrigen ni se omiten.
+
+`ready_to_import=False`: la conciliación produce una vista previa y no guarda datos financieros.

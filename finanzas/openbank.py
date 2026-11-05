@@ -4,6 +4,7 @@ from datetime import date
 from decimal import Decimal
 from io import BytesIO
 import re
+from hashlib import sha256
 import unicodedata
 
 from .ledger import _sum
@@ -70,6 +71,12 @@ class Preview:
     summary: Summary
     rows: tuple[Row, ...]
     issues: tuple[str, ...]
+    account_fingerprint: str | None = None
+    recipient_fingerprint: str | None = None
+    identity_source: str | None = None
+
+    @property
+    def ready_to_import(self):return False
 
     @property
     def reconciled(self):
@@ -147,6 +154,13 @@ class _Reader:
         pages = tuple(pages)
         if raw_pages is not None and len(raw_pages) != len(pages):
             raise FormatError("Extracciones incompatibles")
+        all_text="\n".join(pages)
+        parent_accounts=set(re.findall(r"Número de cuenta\s+(\d+)",all_text))
+        recipients=set(re.findall(r"\bRFC\s+([A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3})\b",all_text,re.M))
+        if len(parent_accounts)>1 or len(recipients)>1:raise FormatError("Identidad Openbank contradictoria")
+        account=next(iter(parent_accounts),None);recipient=next(iter(recipients),None)
+        account_fp=sha256(("openbank:"+self.lane+":"+account).encode()).hexdigest() if account else None
+        recipient_fp=sha256(("openbank-rfc:"+recipient).encode()).hexdigest() if recipient else None
         selected = [(number, text) for number, text in enumerate(pages, 1)
                     if any(_fold(line.strip()) == self.title for line in text.splitlines())
                     and ("detalle de tus transacciones" in _fold(text) or "resumen informativo" in _fold(text))]
@@ -219,8 +233,16 @@ class _Reader:
             if current:
                 rows.append(current)
             if not had_header:
-                raise FormatError("Encabezado de movimientos no reconocido")
-            if raw_pages is not None:
+                # A printed all-zero summary can omit the transaction table.
+                # Never interpret an absent/nonzero/malformed table as zero.
+                zero_summary=(summary is not None and all(getattr(summary,k)==0 for k in
+                    ("initial","deposits","cash_withdrawals","other_charges","final","interest","withholding","fees")))
+                if not (zero_summary and re.search(r"^\s*resumen informativo\s+mxn\s*$",_fold(text),re.M)
+                        and all(_money(v)==0 for v in _CASH.findall(text))
+                        and "detalle de tus transacciones" not in _fold(text)
+                        and not re.search(r"\b\d{2}/\d{2}/\d{2}\b",re.sub(r"Periodo[^\n]*","",text,flags=re.I))):
+                    raise FormatError("Encabezado de movimientos no reconocido")
+            if raw_pages is not None and had_header:
                 descriptions = _raw_rows(raw_pages[page_number - 1])
                 if len(descriptions) != len(rows) - first_row:
                     raise FormatError("Las extracciones discrepan en el número de movimientos")
@@ -257,7 +279,8 @@ class _Reader:
             issues.append("Intereses del resumen no conciliados")
         if summary.withholding != 0 or summary.fees != 0:
             issues.append("Retenciones o comisiones no nulas requieren formato y detalle específicos")
-        return Preview(identifier, self.lane, *period, summary, rows, tuple(issues))
+        return Preview(identifier, self.lane, *period, summary, rows, tuple(issues),account_fp,recipient_fp,
+                       ("explicit_debit_account" if self.lane=="debit" else "parent_debit_account_and_product") if account else None)
 
     def read_image(self, content, *, engine=None):
         from .imaging import read_statement_image

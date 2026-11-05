@@ -30,6 +30,7 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Manual de persistencia](docs/PERSISTENCIA.md)
 - [Estructura aprobada del panel](docs/PANEL.md)
 - [Lectores de Openbank](docs/OPENBANK.md)
+- [Constancias PDF/XML de Openbank](docs/OPENBANK_CONSTANCIAS.md)
 - [Catálogo y manual de lectores](docs/LECTORES.md)
 - [Mapeo económico pendiente por perfil](docs/MAPEO-PENDIENTE.md)
 - [Lectura de fotos y capturas](docs/IMAGENES.md)
