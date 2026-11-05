@@ -4,7 +4,7 @@
 
 Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (30 entradas totales). Las 28 documentales son: dos vistas para cada una de las 14 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
-**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
+**No son 28 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital y Fondeadora ofrecen conciliación optativa en los formatos y vistas documentados. Los demás perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
 | Institución | Lector de débito | Lector de inversiones | Particularidad |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | Fintual | Detecta ausencia de sección | Documental y conciliación PDF optativa | Títulos, precios, valuación, venta y retiro |
 | Fondeadora | Operativa y revisión PDF optativa | Evidencia de traspasos, saldo invertido desconocido | Resumen operativo no equivale a saldo de Bóveda |
 | Hey | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Capital, cobro, devengo, proyección y reinversión propuesta separados |
-| Kapital | Documental | Documental | Proyecciones a vencimiento distintas de cobros |
+| Kapital | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Dos formatos; proyecciones, vencimientos y equivalencias propuestas |
 | Nu | Documental | Documental de cajitas | Congelar/descongelar no es capital externo |
 | Openbank | Conciliación implementada | Conciliación implementada | Continúa el lector específico ya verificado |
 | SuperTasas | Documental | Documental, vista/plazo | Cuenta compartida, capital e interés por separado |
@@ -113,3 +113,5 @@ Fintual ofrece conciliación optativa de fondos MXN: ver [manual](FINTUAL.md). A
 Fondeadora admite revisión optativa de la cuenta operativa y reportes. La vista inversiones conserva evidencia de traspasos con saldo invertido desconocido: ver [manual](FONDEADORA.md).
 
 Hey admite revisión optativa de pagarés en ambas vistas y propuestas de reinversión con evidencia, sin confirmación automática: ver [manual](HEY.md).
+
+Kapital admite revisión optativa de efectivo y pagarés en dos formatos, con propuestas de equivalencia y vencimiento entre documentos: ver [manual](KAPITAL.md).

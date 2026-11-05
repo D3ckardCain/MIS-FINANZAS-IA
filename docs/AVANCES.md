@@ -210,3 +210,13 @@
 - Conservadas las pruebas de los lectores anteriores, OCR, cripto, núcleo, persistencia y cobertura de saldos desconocidos.
 - Informe financiero privado con contratos y propuestas de reinversión; diferencias abiertas sin ajustes ficticios.
 - No se importaron movimientos reales ni Excel, ni se confirmó automáticamente una renovación.
+
+## 2026-11-05 — Kapital: formatos y vencimientos
+
+- Añadido lector optativo en ambas vistas para el formato anterior y el nuevo, con efectivo y capital invertido separados.
+- Preservados los movimientos de inversión fuera del resumen operativo anterior y los componentes ya incluidos en depósitos/retiros nuevos.
+- Conservados timbrado/descuento, folios compartidos y saldos con signo final, sin compensar ni borrar evidencia.
+- Contratos con condiciones históricas; campos de proyección no informados permanecen desconocidos.
+- Añadida revisión entre documentos con propuestas de equivalencia de identificadores y cotejo de vencimientos, sin confirmación ni fusión automática.
+- Pruebas sintéticas y revisión con documentos privados; informe de cobertura y contratos guardado de forma privada.
+- No se importaron movimientos reales ni Excel ni se asumieron reglas fiscales anuales.
