@@ -19,7 +19,7 @@ Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | Kapital | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Dos formatos; proyecciones, vencimientos y equivalencias propuestas |
 | Nu | Resumen y evidencia operativa | Evidencia de Cajitas/garantía, cierre detallado pendiente | Congelar/descongelar no es ingreso; resumen conciliado no habilita importación |
 | Openbank | Conciliación implementada | Conciliación implementada | Continúa el lector específico ya verificado |
-| SuperTasas | Documental | Documental, vista/plazo | Cuenta compartida, capital e interés por separado |
+| SuperTasas | Conciliación específica | Efectivo y posiciones a plazo | Cuenta compartida; campos ausentes y posiciones vencidas bloquean cierre |
 | Plata | Documental | Documental | Cashback, agregado depósitos/rendimientos y registro posterior al corte |
 | Mifel | Cuenta remunerada con revisión PDF optativa | Misma cuenta, cobros y rangos remunerados | Fecha de abono y cobertura de interés separadas |
 

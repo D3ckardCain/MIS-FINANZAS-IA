@@ -328,3 +328,12 @@
 - Commit probado: f3faa3a1b0a53be59adbec1ddc198f33fdd55040.
 - Verificados PDF, XML directo/multipart, IDs exactos, identidad, discrepancias, doble representación fiscal, cobertura incompleta y resumen vacío sin tabla.
 - Suite previa conservada. Informe y fuentes privados; ninguna importación financiera, validación criptográfica o consulta a SAT.
+
+## 2026-11-05 — SuperTasas: efectivo y plazos
+
+- Añadido lector específico para ambas vistas, con cuenta compartida, capital devuelto, interés pagado y proyecciones diferenciados.
+- Preservados saldos iniciales no publicados, negativos entre paréntesis, importes con decimales variables y saldos inconsistentes sin ajustes.
+- Posiciones mensuales con condiciones históricas; capital al vencimiento en sus formas publicadas y alerta por posición vencida aún listada como vigente.
+- Cobertura, duplicados binarios y candidatos de apertura/devolución, sin fusionar contratos ni suponer reinversión.
+- PDF protegido mediante contraseña explícita en memoria; sin incorporar credenciales a código, argumentos o vistas previas.
+- Documentación y pruebas ficticias; fuentes e informe privados, sin importación real ni Excel.

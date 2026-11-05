@@ -248,6 +248,9 @@ class StatementReader:
         if self.profile.key == "kapital":
             from .kapital import KapitalReader
             return KapitalReader(self.lane).read_pdf(content)
+        if self.profile.key == "supertasas":
+            from .supertasas import SuperTasasReader
+            return SuperTasasReader(self.lane).read_pdf(content)
         if self.profile.key == "mifel":
             from .mifel import MifelReader
             return MifelReader(self.lane).read_pdf(content)
@@ -454,6 +457,8 @@ def main(argv=None):
                           differences=len(result.differences))
         if hasattr(result, "scope"):
             output.update(scope=result.scope, investment_balance_known=result.investment_balance is not None)
+        if hasattr(result, "contracts"):
+            output["contracts"] = len(result.contracts)
         if hasattr(result, "summary_reconciled"):
             output.update(summary_reconciled=result.summary_reconciled,
                           composition_reconciled=not result.composition_issues)
