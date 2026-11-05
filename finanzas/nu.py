@@ -57,6 +57,12 @@ class NuEvent:
     maturity_candidate: date | None
     page: int
     line: int
+    cajita: str | None = None
+    tracking_key: str | None = None
+
+    @property
+    def amount(self):
+        return self.value_candidates[0] if len(self.value_candidates)==1 else None
 
 
 @dataclass(frozen=True)
@@ -96,6 +102,9 @@ class NuPreview:
 
     @property
     def reconciled(self):return not self.issues and not self.detail_issues
+
+    @property
+    def detail_review(self):return review_nu_document(self)
 
     @property
     def ready_to_import(self):return False
@@ -180,29 +189,194 @@ class NuReader:
             if current is None:return
             when,area,parts,page,line=current;description=" ".join(parts)
             values=tuple(money(x) for x in _MONEY.findall(description))
+            clean=_MONEY.sub("",description)
+            clean=re.sub(r"\s+"," ",clean).strip()
+            name=re.search(r"(?:en tu Cajita:|de tu Cajita:|Depósito en Cajita:|Retiro de Cajita:)\s*(.+)",clean,re.I)
+            cajita=fold(name[1]).strip() if name else ("credito con garantia" if area=="guarantee" else None)
+            tracking=re.search(r"Clave de rastreo\s+([A-Z0-9]+)",description,re.I)
             maturity=re.search(r"congelaste saldo hasta el\s+(\d{2}\s+[A-Z]{3}\s+\d{4})",description,re.I)
             proposed=parse_date(maturity[1]) if maturity else None
-            event=NuEvent(sha256(f'{identifier}:{page}:{line}'.encode()).hexdigest(),when,area,kind(description),description,values,proposed,page,line)
+            event=NuEvent(sha256(f'{identifier}:{page}:{line}'.encode()).hexdigest(),when,area,kind(description),description,values,proposed,page,line,cajita,tracking[1] if tracking else None)
             (account_events if area=="account" else investment_events).append(event);current=None
         for pno,page in enumerate(pages[1:],2):
-            for lno,line in enumerate(page.splitlines(),1):
+            page_lines=page.splitlines()
+            header_end=next((i for i,l in enumerate(page_lines) if "Cuenta Nu:" in l),-1)
+            for lno,line in enumerate(page_lines,1):
+                if lno<=header_end+1:continue
                 normalized=fold(line)
                 if normalized.startswith("dinero generado en tu cuenta nu"):finish();section=None
                 elif "movimientos en tu cuenta" in normalized:finish();section="account"
                 elif "movimientos de tus cajitas" in normalized:finish();section="cajitas"
                 elif "movimientos de tu cajita nu credito" in normalized:finish();section="guarantee"
-                if normalized.startswith("nu mexico financiera") or "saldo promedio del periodo" in normalized:
-                    finish();continue
+                if normalized.startswith("nu mexico financiera"):break
+                if "saldo promedio del periodo" in normalized or "este dinero funciona" in normalized:
+                    finish();section=None;continue
                 if section is None:continue
+                # In older statements the printed year is in the following row.
+                wrapped=re.match(r"^\s*(\d{2})\s+([A-Z]{3})\s+(?!\d{4}\b)(.*)$",line)
+                if wrapped and not _ROW.match(line):
+                    following=page_lines[lno] if lno<len(page_lines) else ""
+                    year=re.match(r"^\s*(\d{4})\b",following)
+                    if year:row_year=year[1]
+                    elif start.year==end.year:row_year=str(start.year)
+                    else:raise ReaderError("Año de fila Nu ambiguo")
+                    line=f"{wrapped[1]} {wrapped[2]} {row_year} {wrapped[3]}"
+                elif re.match(r"^\s*\d{4}\b",line):
+                    line=re.sub(r"^\s*\d{4}\s*","",line)
                 match=_ROW.match(line)
                 if match:
                     finish();when=parse_date(f'{match[1]} {match[2]} {match[3]}')
                     current=(when,section,[match[4]],pno,lno)
                 elif current is not None and line.strip():
-                    if not re.search(r"Cuenta Nu:|\d+ de \d+|MONTO EN PESOS|^\s*FECHA",line):current[2].append(line.strip())
-            finish()
-        detail=["Revisión económica por Cajita/garantía y pareo de movimientos internos pendientes; no importar ni sumar secciones"]
+                    if not re.search(r"Cuenta Nu:|\d+ de \d+|MONTO EN PESOS|^\s*FECHA|^\s*MEXICANOS$",line):current[2].append(line.strip())
+            # A footer does not finish the last transaction: its SPEI details
+            # or wrapped Cajita name can continue on the next page.
+        finish()
+        detail=[]
         if any(not start<=e.effective_date<=end for e in account_events+investment_events):detail.append("Fecha de evidencia Nu fuera del período")
         if any(len(e.value_candidates)!=1 for e in account_events+investment_events):detail.append("Evidencia Nu con importe ausente/ambiguo, conservada sin convertir en cero")
-        return NuPreview(identifier,start,end,fingerprint,summary,tuple(account_events),tuple(investment_events),tuple(differences),
+        preview=NuPreview(identifier,start,end,fingerprint,summary,tuple(account_events),tuple(investment_events),tuple(differences),
             tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(composition)),tuple(detail),self.lane)
+        from dataclasses import replace
+        review=review_nu_document(preview)
+        return replace(preview,detail_issues=tuple(dict.fromkeys(detail+list(review.issues))))
+
+
+@dataclass(frozen=True)
+class NuPosting:
+    evidence_id: str
+    bucket: str
+    amount: Decimal
+    kind: str
+
+
+@dataclass(frozen=True)
+class NuTransferPair:
+    account_evidence: str
+    investment_evidence: str
+    cajita: str
+    amount: Decimal
+    status: str = "documentary_pair"  # Not confirmation of external ownership.
+
+
+@dataclass(frozen=True)
+class NuDetailReview:
+    postings: tuple[NuPosting, ...]
+    pairs: tuple[NuTransferPair, ...]
+    unmatched_internal: tuple[str, ...]
+    unallocated_net_income: Decimal
+    external_net: Decimal
+    issues: tuple[str, ...]
+
+
+def internal_direction(event):
+    text=fold(event.description_printed)
+    if "deposito en cajita:" in text or "agregado a tu cajita" in text:return 1
+    if "retiro de cajita:" in text or "retirado de tu cajita" in text:return -1
+    return None
+
+
+def review_nu_document(preview):
+    """Build auditable subaccount changes; never manufacture opening balances.
+
+    Pair only explicit internal-transfer descriptions, the SAME named Cajita,
+    date, exact opposite amounts, and unique one-to-one counterparts. This is
+    documentary pairing inside one statement, not cross-bank ownership proof.
+    """
+    postings=[];pairs=[];unmatched=[];issues=[]
+    account=preview.account_events;investments=preview.investment_events
+    internals=[e for e in account if internal_direction(e) is not None]
+    destinations=[e for e in investments if internal_direction(e) is not None]
+    def compatible(a,b):
+        return (a.amount is not None and b.amount is not None and a.cajita is not None
+            and a.cajita==b.cajita and a.effective_date==b.effective_date
+            and internal_direction(a)==internal_direction(b)
+            and a.amount==-b.amount and a.amount!=0)
+    for a in internals:
+        found=[b for b in destinations if compatible(a,b)]
+        if len(found)==1 and sum(compatible(other,found[0]) for other in internals)==1:
+            b=found[0];pairs.append(NuTransferPair(a.evidence_id,b.evidence_id,a.cajita,b.amount))
+        else:unmatched.append(a.evidence_id)
+    paired={p.investment_evidence for p in pairs}
+    unmatched.extend(e.evidence_id for e in destinations if e.evidence_id not in paired)
+    for e in account+investments:
+        amount=e.amount
+        if amount is None:issues.append("Importe de fila Nu ausente o ambiguo");continue
+        if not preview.period_start<=e.effective_date<=preview.period_end:issues.append("Fecha de fila Nu fuera del período")
+        if e.section=="account":postings.append(NuPosting(e.evidence_id,"account",amount,"account_cash"));continue
+        if e.cajita is None:issues.append("Cajita no identificada en fila Nu");continue
+        bucket=("guarantee:" if e.section=="guarantee" else "cajita:")+e.cajita
+        text=fold(e.description_printed)
+        if "congelaste saldo" in text:
+            if amount>=0 or e.maturity_candidate is None or e.maturity_candidate<=e.effective_date:
+                issues.append("Congelamiento Nu con signo o vencimiento no válido");continue
+            postings.extend((NuPosting(e.evidence_id,bucket+":available",amount,"freeze"),
+                             NuPosting(e.evidence_id,bucket+":frozen",-amount,"freeze")))
+        elif "descongelamos saldo" in text:
+            if amount<=0:issues.append("Descongelamiento Nu con signo no válido");continue
+            postings.extend((NuPosting(e.evidence_id,bucket+":frozen",-amount,"unfreeze"),
+                             NuPosting(e.evidence_id,bucket+":available",amount,"unfreeze")))
+        elif internal_direction(e) is not None:
+            if amount*internal_direction(e)<=0:issues.append("Signo de traspaso Nu incompatible con concepto")
+            postings.append(NuPosting(e.evidence_id,bucket+":available",amount,"internal_transfer"))
+        else:issues.append("Concepto de inversión Nu no reconocido")
+    if unmatched:issues.append("Traspasos internos Nu sin contraparte documental única")
+    external=_sum(e.amount for e in account if internal_direction(e) is None and e.amount is not None)
+    expected=_sum((preview.summary.deposits,preview.summary.expenses_printed))
+    if external!=expected:issues.append("Neto externo del detalle Nu difiere del resumen")
+    if preview.summary.net_income:
+        issues.append("Rendimiento neto global Nu sin distribución publicada por Cajita/cuenta/garantía")
+    if investments or preview.summary.cajitas_reported or preview.summary.guarantee_reported:
+        issues.append("Saldos iniciales/finales individuales Nu no publicados; cambios por Cajita disponibles sin inventar saldos")
+    return NuDetailReview(tuple(postings),tuple(pairs),tuple(unmatched),preview.summary.net_income,external,tuple(dict.fromkeys(issues)))
+
+
+@dataclass(frozen=True)
+class NuMaturityCandidate:
+    frozen_evidence: str
+    released_evidence: str
+    cajita: str
+    principal_reported: Decimal
+    released_reported: Decimal
+    status: str = "candidate_requires_contract"
+
+
+@dataclass(frozen=True)
+class NuHistoryReview:
+    documents: tuple[NuPreview, ...]
+    duplicate_documents: tuple[str, ...]
+    detail_reviews: tuple[NuDetailReview, ...]
+    maturity_candidates: tuple[NuMaturityCandidate, ...]
+    unmatched_freezes: tuple[str, ...]
+    unmatched_releases: tuple[str, ...]
+
+
+def review_nu_documents(previews):
+    """One account, binary deduplication and explicit maturity/name candidates.
+
+    Never infer a contract rate or interest from released minus frozen amounts.
+    Multiple freezes/release rows on one maturity date remain unmatched.
+    """
+    unique={};duplicates=[]
+    for p in previews:
+        if p.document_id in unique:duplicates.append(p.document_id)
+        else:unique[p.document_id]=p
+    docs=tuple(sorted(unique.values(),key=lambda p:p.period_start))
+    if len({p.account_fingerprint for p in docs})>1:raise ReaderError("Historial Nu mezcla cuentas")
+    for a,b in zip(docs,docs[1:]):
+        if b.period_start<=a.period_end:raise ReaderError("Historial Nu tiene períodos solapados")
+    freezes=[e for p in docs for e in p.investment_events if e.category=="freeze_evidence"]
+    releases=[e for p in docs for e in p.investment_events if e.category=="unfreeze_evidence"]
+    def compatible(a,b):
+        return (a.cajita is not None and a.cajita==b.cajita and a.maturity_candidate==b.effective_date
+            and a.effective_date<b.effective_date and a.amount is not None and a.amount<0
+            and b.amount is not None and b.amount>0)
+    matches=[]
+    for a in freezes:
+        found=[b for b in releases if compatible(a,b)]
+        if len(found)==1 and sum(compatible(other,found[0]) for other in freezes)==1:
+            b=found[0];matches.append(NuMaturityCandidate(a.evidence_id,b.evidence_id,a.cajita,-a.amount,b.amount))
+    used_a={m.frozen_evidence for m in matches};used_b={m.released_evidence for m in matches}
+    return NuHistoryReview(docs,tuple(duplicates),tuple(review_nu_document(p) for p in docs),tuple(matches),
+        tuple(e.evidence_id for e in freezes if e.evidence_id not in used_a),
+        tuple(e.evidence_id for e in releases if e.evidence_id not in used_b))

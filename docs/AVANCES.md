@@ -261,3 +261,14 @@
 - Se preservan lectores anteriores, OCR, cripto, núcleo, persistencia y revisión de cobertura.
 - Nu mantiene detalle económico pendiente aunque concilie el resumen; no se fuerza cierre de diferencias de distribución.
 - Informe financiero privado; sin importación de datos reales o Excel.
+
+## 2026-11-05 — Nu: detalle y traspasos
+
+- Corregidas fechas con año en otra línea o contextual y descripciones que continúan entre páginas.
+- Añadidas claves SPEI, nombres explícitos de Cajita y conservación de devoluciones con la misma clave.
+- Añadidos asientos de cambio para cuenta, disponible, congelado y garantía; los congelamientos son movimientos internos neutrales.
+- Pareo documental único de depósitos/retiros entre secciones, con ambigüedades sin confirmar.
+- Revisión histórica con duplicados, cuenta única, rechazo de solapamientos y candidatos de vencimiento por nombre/fecha explícitos.
+- Detalle accesible desde API y consola; salida normal sin cantidades ni identificadores privados.
+- Rendimiento global sin reparto publicado permanece sin asignar; saldos individuales no informados no se inventan. Las diferencias reales siguen bloqueando cierre.
+- Pruebas sintéticas y revisión privada de fuentes; no se importaron datos reales ni Excel.

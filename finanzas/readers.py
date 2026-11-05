@@ -428,6 +428,8 @@ def main(argv=None):
         return 2
     if args.details:
         output = asdict(result)
+        if hasattr(result, "detail_review"):
+            output["detail_review"] = asdict(result.detail_review)
     elif hasattr(result, "evidence"):
         output = {"institution": args.institution, "lane": args.lane,
                   "source": "image", "lines": len(result.evidence.lines),
@@ -455,6 +457,11 @@ def main(argv=None):
         if hasattr(result, "summary_reconciled"):
             output.update(summary_reconciled=result.summary_reconciled,
                           composition_reconciled=not result.composition_issues)
+        if hasattr(result, "detail_review"):
+            review = result.detail_review
+            output.update(internal_pairs=len(review.pairs),
+                          unmatched_internal=len(review.unmatched_internal),
+                          postings=len(review.postings))
     else:
         output = {"institution": "openbank", "lane": result.lane,
                   "reconciled": result.reconciled, "issues": result.issues,

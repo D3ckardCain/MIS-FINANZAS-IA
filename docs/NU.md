@@ -1,38 +1,56 @@
-# Nu: resumen consolidado y evidencia de Cajitas
+# Nu: cuenta, Cajitas y garantía
 
-El lector optativo revisa el resumen global y conserva por separado evidencia de cuenta operativa, Cajitas y crédito con garantía. Esta etapa no reconstruye todavía el libro por cada Cajita ni confirma movimientos económicos.
+El lector local separa ambas vistas y construye cambios por Cajita, movimientos de congelamiento y contrapartes documentales. Los saldos y rendimientos que el documento no desglosa quedan pendientes de evidencia, sin ajustes inventados.
 
 ```bash
 python -m finanzas.readers estado.pdf --institution nu --lane debit --reconcile
 python -m finanzas.readers estado.pdf --institution nu --lane investments --reconcile
 ```
 
-## Estados de verificación independientes
+La salida habitual contiene estados, conteos e incidencias. `--details` incluye información financiera sensible, las filas y `detail_review` con los asientos de cambio y sus parejas.
 
-`summary_reconciled` comprueba la ecuación global, bruto menos retención y neto de portada frente al anexo. La distribución de saldos se verifica aparte en `composition_issues`. La consola muestra ambos estados.
+## Verificaciones independientes
 
-`detail_reconciled` permanece falso mientras falten cierre por Cajita/garantía y pareo económico de traspasos. Por ello `reconciled=False` y `ready_to_import=False` en esta etapa, aunque el resumen cuadre. No se presenta una extracción documental como contabilidad lista para guardar.
+- `summary_reconciled`: ecuación global, bruto menos retención y neto de portada/anexo.
+- `composition_issues`: Cuenta + Cajitas + garantía frente al total, y disponible + congelado frente a Cajitas.
+- `detail_reconciled`: fechas, importes, conceptos/signos, contrapartes internas, neto externo y disponibilidad del desglose para cerrar subcuentas.
+- `reconciled`: exige que pasen todos los controles anteriores. Un estado explícitamente vacío y con ceros puede conciliar; eso no habilita importación.
+- `ready_to_import`: siempre falso; este módulo entrega una revisión, no guarda movimientos financieros.
 
-## Qué conserva
+Se preservan las diferencias exactas. Una sección ausente es desconocida, no cero. Congelado es parte de Cajitas y no se suma otra vez al patrimonio. El saldo en garantía es dinero del titular; no se confunde con el límite de crédito.
 
-- Saldo global inicial/final, depósitos, gastos con signo original, comisión y rendimiento neto.
-- Interés bruto, retención publicada y texto/porcentaje de las etiquetas de interés e ISR. No se recalcula impuesto usando esas etiquetas ni se presupone que una tasa describa todos los contratos congelados.
-- Saldo en cuenta, Cajitas y garantía cuando se publican. Una sección ausente queda no informada, distinta de cero.
-- Disponible y congelado como componentes de Cajitas, sin sumarlos otra vez al patrimonio.
-- Filas por sección con fecha, descripción, candidatos de importe, fecha futura explícita y página/línea. Un congelamiento no es un ingreso y un importe ausente/ambiguo no se convierte en cero.
+## Lectura y procedencia
 
-Las diferencias de distribución se conservan sin ajuste ni explicación fiscal inventada. Un saldo de garantía no es un límite de crédito adicional disponible para invertir.
+Se reconocen fechas completas, años impresos en la siguiente línea y fechas sin año cuando el período interno proporciona un único año. Las filas fuera del período quedan señaladas. Las descripciones y claves SPEI que continúan en la siguiente página se conservan junto a la evidencia inicial de página/línea. Se omiten encabezados, pies y páginas legales.
 
-## Identidad y movimientos internos
+La Cajita se identifica por su nombre explícito normalizado, conservando la descripción original. No se corrigen nombres, se fusionan Cajitas renombradas ni se deducen propietarios externos. La clave de rastreo se conserva, incluso si una operación y su devolución usan la misma clave: ambos signos permanecen.
 
-Las dos vistas comparten documento y cuenta. La vista débito expone filas operativas y la vista inversiones evidencia de Cajitas/garantía. El mismo traspaso puede tener dos representaciones: no se suman como dos aportaciones externas.
+## Asientos y traspasos
 
-Los IDs de evidencia son huellas de archivo/página/línea, no IDs económicos de operación. No permiten deduplicar automáticamente capturas o documentos distintos. La conciliación de cada Cajita y la reconstrucción de referencias/fragmentos entre páginas permanecen pendientes.
+`preview.detail_review` o `review_nu_document(preview)` entrega:
 
-El interés se reconoce una sola vez cuando se incorpore el libro. Que permanezca invertido no crea otro rendimiento ni aportación externa. Las fechas de descongelamiento no prueban cuánto es principal/interés sin datos suficientes. Los datos de tarjeta/garantía se conservan como contexto del dinero invertido, sin crear un módulo de presupuesto o deuda de tarjeta.
+- `postings`: cambios de cuenta, disponible por Cajita, congelado por Cajita y garantía, con ID de evidencia.
+- `pairs`: contraparte documental única entre cuenta y Cajita/garantía. Exige concepto explícito de depósito/retiro, mismo nombre, misma fecha y cantidades opuestas. Repeticiones ambiguas quedan sin parear.
+- `unmatched_internal`: filas internas sin contraparte inequívoca.
+- `external_net`: neto operativo excluyendo los traspasos explícitos; se coteja con depósitos/gastos publicados. «Externo» aquí significa fuera de las subcuentas Nu, no capital nuevo confirmado del titular.
+- `unallocated_net_income`: rendimiento mensual publicado sin reparto individual acreditado.
 
-## Límites
+Un depósito en Cajita reduce cuenta y aumenta Cajita; su pareja no es una segunda aportación externa. Congelar disminuye disponible y aumenta congelado por el mismo principal. Descongelar hace el movimiento inverso por el importe publicado; no se reconoce toda la liberación como ganancia. Un signo imposible se conserva en evidencia, se señala y no genera asientos de congelamiento.
 
-La cobertura usa períodos internos y duplicados binarios; no rellena huecos con tasas, proyecciones o Excel. Los GAT se conservan como publicados y los campos ausentes como desconocidos. No calcula declaración anual, exenciones o acreditamientos.
+Estos asientos son cambios documentales: no son saldos iniciales/finales reconstruidos. El rendimiento global se reconoce una vez y no se distribuye por tasas, saldos medios o diferencias entre importes de congelamiento. La reinversión no crea otra aportación externa.
 
-PDF y OCR funcionan localmente con las dependencias existentes. Las imágenes no heredan verificaciones del PDF. No se importan datos reales ni Excel, ni se añaden APIs de pago. Los documentos y los informes del titular siguen siendo privados.
+## Historia y vencimientos
+
+`review_nu_documents(previews)` deduplica documentos binarios, exige una sola cuenta y rechaza períodos solapados de archivos distintos. Acepta cualquiera de las dos vistas, que comparten evidencia y cuenta.
+
+Los vencimientos se proponen únicamente si nombre y fecha futura explícita del congelamiento coinciden con una liberación posterior, con correspondencia única en ambos sentidos. `maturity_candidates` conserva capital congelado e importe liberado como datos distintos, estado `candidate_requires_contract` y sus evidencias. No deduce rendimiento, retención o tasa contractual de su diferencia. Coincidencias ambiguas y contratos sin contraparte permanecen en listas separadas.
+
+Para meses faltantes, continuidad y cierre global se usa además `review_coverage`. Las fechas proceden del interior, no del nombre del archivo.
+
+## Condiciones históricas y límites documentales
+
+Se conservan tasas/etiquetas publicadas de interés e ISR, GAT y cada retención real. Una tasa de portada no sustituye las condiciones de un contrato congelado; una retención explícita cero no prueba exención ni impuesto anual definitivo. No se calcula declaración del SAT.
+
+Cuando el estado solamente publica rendimiento global y saldos agregados de Cajitas, no se puede certificar el cierre de cada Cajita. Se entregan sus cambios y el rendimiento sin asignar, y `detail_reconciled` permanece falso con la causa concreta. Una diferencia en la composición global también bloquea conciliación completa. Resolver esos casos exige evidencia adicional; no más fórmulas ni un ajuste artificial.
+
+Los datos de pagos de tarjeta/garantía sirven para rastrear efectivo, sin crear un módulo de presupuesto o deuda de tarjeta. Los IDs documentales no son IDs económicos y no deduplican capturas diferentes. Las imágenes conservan OCR local revisable, sin heredar las verificaciones de un PDF. No se usa Excel como movimientos, conexión bancaria, servicios de pago o importación automática. Fuentes e informes financieros permanecen privados.

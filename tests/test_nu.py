@@ -131,4 +131,108 @@ class NuTests(unittest.TestCase):
         self.assertTrue(r.shared_account)
 
 
+
+class NuDetailTests(unittest.TestCase):
+    def test_old_dates_without_year_use_internal_period(self):
+        src=statement();src[1]=src[1].replace('05 ENE 2026','05 ENE')
+        self.assertEqual(read(src).account_events[0].effective_date,date(2026,1,5))
+
+    def test_year_and_cajita_name_on_next_line(self):
+        src=statement();src[2]=src[2].replace('05 ENE 2026 Depósito en Cajita: FICTICIA +$50.00',
+            '05 ENE Depósito en Cajita: FICTICIA +$50.00\n2026')
+        self.assertEqual(read(src).investment_events[0].cajita,'ficticia')
+        self.assertEqual(len(read(src).investment_events),2)
+
+    def test_spei_continues_across_page_footer(self):
+        src=statement();src[1]=src[1].replace('Nu México Financiera','Nu México Financiera\nfooter')
+        src.insert(2,'Titular ficticio\nCuenta Nu: 00011111111\nFECHA DEL 01 AL 31 ENE 2026\nDepósito SPEI Clave de rastreo FICTICIO123\nNu México Financiera')
+        r=read(src)
+        self.assertEqual(r.account_events[-1].tracking_key,'FICTICIO123')
+        self.assertNotIn('Titular ficticio',r.account_events[-1].description_printed)
+
+    def test_wrapped_name_survives_amount_between_name_parts(self):
+        src=statement();src[2]=src[2].replace('Cajita: FICTICIA +$100.00','Cajita: NUMERO -$100.00\n5')
+        self.assertEqual(read(src).investment_events[-1].cajita,'numero 5')
+
+    def test_pairs_require_explicit_name_and_opposite_sign(self):
+        from finanzas.nu import review_nu_document
+        r=review_nu_document(read())
+        self.assertEqual(len(r.pairs),1)
+        self.assertEqual(r.unmatched_internal,())
+        src=statement();src[2]=src[2].replace('Depósito en Cajita: FICTICIA','Depósito en Cajita: OTRA')
+        r=review_nu_document(read(src))
+        self.assertEqual(r.pairs,())
+        self.assertEqual(len(r.unmatched_internal),2)
+
+    def test_ambiguous_same_name_date_amount_not_paired_arbitrarily(self):
+        from finanzas.nu import review_nu_document
+        src=statement();src[2]=src[2].replace('Nu México Financiera','05 ENE 2026 Depósito en Cajita: FICTICIA +$50.00\nNu México Financiera')
+        self.assertEqual(review_nu_document(read(src)).pairs,())
+
+    def test_freeze_and_release_are_neutral_inside_investments(self):
+        from finanzas.nu import review_nu_document
+        src=statement();src[2]=src[2].replace('+$100.00','-$100.00')
+        review=review_nu_document(read(src))
+        legs=[p for p in review.postings if p.kind=='freeze']
+        self.assertEqual(len(legs),2)
+        self.assertEqual(sum(p.amount for p in legs),D('0'))
+        self.assertEqual(review.unallocated_net_income,D('2.00'))
+        self.assertEqual(review.external_net,D('50.00'))
+
+    def test_invalid_positive_freeze_is_preserved_but_not_posted(self):
+        from finanzas.nu import review_nu_document
+        review=review_nu_document(read())
+        self.assertTrue(any('Congelamiento' in x for x in review.issues))
+        self.assertFalse(any(p.kind=='freeze' for p in review.postings))
+
+    def test_external_net_failure_does_not_hide_behind_summary(self):
+        from finanzas.nu import review_nu_document
+        src=statement();src[1]=src[1].replace('Depósito SPEI +$50.00','Depósito SPEI +$49.00')
+        r=read(src)
+        self.assertTrue(r.summary_reconciled)
+        self.assertTrue(any('Neto externo' in x for x in review_nu_document(r).issues))
+
+    def test_history_duplicates_and_accounts(self):
+        from finanzas.nu import review_nu_documents
+        r=read();h=review_nu_documents([r,r])
+        self.assertEqual(len(h.documents),1)
+        self.assertEqual(h.duplicate_documents,('synthetic',))
+        with self.assertRaises(ReaderError):review_nu_documents([r,replace(r,document_id='other',account_fingerprint='other')])
+
+    def test_history_rejects_distinct_overlapping_documents(self):
+        from finanzas.nu import review_nu_documents
+        r=read()
+        with self.assertRaises(ReaderError):review_nu_documents([r,replace(r,document_id='other')])
+
+    def test_maturity_match_is_candidate_without_computing_income(self):
+        from finanzas.nu import review_nu_documents
+        src=statement();src[2]=src[2].replace('05 ABR 2026','05 FEB 2026').replace('+$100.00','-$100.00')
+        a=read(src)
+        release=replace(a.investment_events[-1],evidence_id='release',effective_date=date(2026,2,5),
+            category='unfreeze_evidence',value_candidates=(D('101.00'),),maturity_candidate=None)
+        b=replace(a,document_id='feb',period_start=date(2026,2,1),period_end=date(2026,2,28),investment_events=(release,))
+        h=review_nu_documents([a,b])
+        self.assertEqual(len(h.maturity_candidates),1)
+        self.assertEqual(h.maturity_candidates[0].status,'candidate_requires_contract')
+        self.assertFalse(hasattr(h.maturity_candidates[0],'interest'))
+        ambiguous=replace(b,investment_events=(release,replace(release,evidence_id='second')))
+        self.assertEqual(review_nu_documents([a,ambiguous]).maturity_candidates,())
+
+    def test_reversal_with_same_tracking_key_keeps_both_signed_rows(self):
+        src=statement();src[1]=src[1].replace('Nu México Financiera',
+            '06 ENE 2026 Transferencia SPEI -$7.00\nClave de rastreo FICTICIOREV1\n06 ENE 2026 Transferencia SPEI +$7.00\nClave de rastreo FICTICIOREV1\nNu México Financiera')
+        r=read(src);rev=[e for e in r.account_events if e.tracking_key=='FICTICIOREV1']
+        self.assertEqual(len(rev),2)
+        self.assertEqual([e.amount for e in rev],[D('-7.00'),D('7.00')])
+        self.assertEqual(r.detail_review.external_net,D('50.00'))
+
+    def test_empty_zero_statement_can_reconcile_detail_without_enabling_import(self):
+        src=statement(False);src[1]=src[1].split('05 ENE',1)[0];src[2]=''
+        import re
+        src=[re.sub(r'\$\d+\.\d{2}','$0.00',p) for p in src]
+        r=read(src)
+        self.assertTrue(r.reconciled)
+        self.assertFalse(r.ready_to_import)
+
+
 if __name__=='__main__':unittest.main()
