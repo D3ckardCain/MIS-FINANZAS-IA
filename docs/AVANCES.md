@@ -354,3 +354,11 @@
 - Controles separados de resumen, saldos operativos y cartera, sin ordenar filas por saldo ni introducir ajustes.
 - Historia con duplicados, continuidad de efectivo entre meses y controles de acumulados, sin reinversión automática o importación real.
 - Documentos e informe privados; manuales y pruebas públicas ficticias.
+
+### Verificación de YoTePresto y catálogo ampliado
+
+- [334 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42124832410).
+- Commit probado: 84817c729a1c1104d5aa5a65530f4c58a632515a.
+- Cubiertos formatos con/sin usuario, acumulados, retenciones ausentes, IVA/ISR separados, bases de ganancia, continuaciones, diario, cartera, atrasos e identidad compartida.
+- Catálogo y OCR verificados para 15 instituciones y 32 entradas. Suite previa conservada.
+- Informe y fuentes reales privados; discrepancias preservadas sin ajustes, importación o cálculo fiscal anual.
