@@ -288,3 +288,10 @@
 - Se rechazan emisores desconocidos o contradictorios; no se infieren fechas regulatorias ni tratamiento fiscal.
 - Ampliada la revisión de fuentes privadas y cobertura, sin publicar inventarios, saldos o archivos personales.
 - Pruebas de variantes, ambigüedad, pie de página, catálogo PDF y duplicados.
+
+### Verificación de la variante Nu
+
+- [263 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42091872791).
+- Commit probado: c4c12d0ca5b237c69bb914120a283c4e6b2c224b.
+- Suite completa de lectores, OCR, cripto, núcleo, persistencia y cobertura conservada.
+- Informe privado actualizado. Sin importación financiera, ajuste de diferencias ni reclasificación fiscal automática.
