@@ -185,3 +185,11 @@
 - Corregida la cobertura común para no contar dos saldos desconocidos como continuidad verificada.
 - Pruebas sintéticas de formatos, desconocido/cero, tasa vacía, traspasos, diferencias, fechas, cobertura, PDF y consola.
 - Informe de los documentos reales guardado de forma privada. No se importaron movimientos reales ni Excel.
+
+### Verificación completa de Fondeadora
+
+- [189 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42039373304).
+- Commit probado: ac281d0a953750003cf3e74c06dcadc9702aa48f.
+- Conservadas las verificaciones de los lectores previos, OCR, cripto, monedas, núcleo y persistencia.
+- Cobertura común verificada con saldos ausentes: no se cuentan como coincidencias de cero.
+- Informe financiero y evidencia de Apartados guardados de forma privada; saldo de inversión pendiente, sin importación de datos reales.
