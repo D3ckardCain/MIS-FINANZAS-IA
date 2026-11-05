@@ -370,5 +370,12 @@
 - Cashback como aportación identificada y pares internos candidatos, sin duplicar capital externo.
 - Fechas de operación/cargo y período separados; cargos posteriores al corte conservan alerta aunque cuadre el resumen.
 - Tasas, promedio y GAT publicados; anexo CFDI excluido de movimientos.
-- 348 pruebas locales aprobadas, incluidas 14 específicas; verificación remota pendiente.
+- 348 pruebas locales aprobadas, incluidas 14 específicas; verificación remota aprobada.
 - Documentación y datos sintéticos públicos; fuentes e informe privados. Sin importación real o cálculo fiscal anual.
+
+### Verificación de Plata
+
+- [348 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42126737348).
+- Commit probado: 03b11fca8d48bb30eff917b51a32d742d25beb7c.
+- Verificados ambos productos, cashback y vínculos candidatos, doble conteo ISR, continuaciones/encabezados, fechas fuera de corte, referencias desconocidas y exclusión de anexo fiscal.
+- Suite anterior conservada; informe y fuentes privados. El siguiente trabajo del orden aprobado es conciliación/cobertura por institución.
