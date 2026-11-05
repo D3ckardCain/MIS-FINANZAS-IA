@@ -202,3 +202,11 @@
 - Comprobados saldos, resumen, tasas/plazos, pagos frente a contratos y total de portafolio; diferencias de totales futuros preservadas.
 - Pruebas sintéticas de neto/bruto, devengo, contratos, referencias reutilizadas/duplicadas, PDF, consola y separación de vistas.
 - Revisión con fuente real e informe privado. Sin publicación de datos del titular ni cambios de reglas fiscales; no se importaron datos reales o Excel.
+
+### Verificación completa de Hey
+
+- [203 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42043748201).
+- Commit probado: 1a3dde032d1ddab5e2af98e500f9643b7c6f0867.
+- Conservadas las pruebas de los lectores anteriores, OCR, cripto, núcleo, persistencia y cobertura de saldos desconocidos.
+- Informe financiero privado con contratos y propuestas de reinversión; diferencias abiertas sin ajustes ficticios.
+- No se importaron movimientos reales ni Excel, ni se confirmó automáticamente una renovación.
