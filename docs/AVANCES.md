@@ -76,3 +76,12 @@
 - Comprobados importes ambiguos, campos ausentes/repetidos y propuestas de coincidencia entre fotos de una ejecución sin fusionar órdenes distintas.
 - 108 pruebas locales aprobadas, sin omisiones, incluyendo OCR real sobre imágenes ficticias en cinco formatos y reapertura de archivos SQLite.
 - No se validaron todavía capturas reales de las plataformas ni se importaron datos reales. Los originales permanecen fuera del repositorio.
+
+### Verificación completa de OCR y cripto por imagen
+
+- [GitHub Actions: 108 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41965052220).
+- Commit probado: 5cf304854318c9981b9eba0c0c0db37338c9e7ac.
+- Extras Pillow 13.0.0 y pypdf 6.10.0 instalados correctamente en CI; Tesseract y modelos inglés/español disponibles.
+- OCR real sobre imágenes ficticias en PNG, JPEG, WebP, TIFF y BMP; comprobados los recorridos de BingX/Pionex y detección de formato por contenido.
+- Las propuestas permanecen pendientes de revisión: no se importaron movimientos ni se archivaron originales financieros reales.
+- Pendientes: calibración con capturas reales, pantalla de carga/revisión y confirmación contable.
