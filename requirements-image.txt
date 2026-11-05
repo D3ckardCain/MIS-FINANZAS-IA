@@ -1,0 +1,2 @@
+# OCR local: biblioteca de imágenes. El motor Tesseract se instala en el sistema.
+Pillow==13.0.0

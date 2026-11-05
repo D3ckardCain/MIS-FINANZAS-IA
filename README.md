@@ -4,16 +4,16 @@ Control de inversiones por institución y producto, con evidencia documental y r
 
 ## Estado actual
 
-Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas). Openbank tiene conciliación específica; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
+Núcleo local de movimientos y persistencia SQLite con evidencia documental, revisión explícita, correcciones versionadas y copias recuperables. Pruebas exclusivamente sintéticas. Hay un catálogo de dos vistas para las 13 instituciones con formatos disponibles (26 entradas), todas con entrada PDF/imagen, más dos lectores de capturas de operaciones de BingX/Pionex (28 entradas en total). Openbank tiene conciliación específica; los otros perfiles extraen evidencia documental y requieren mapeo económico antes de importar. Todavía no hay aplicación visual, confirmación de importación, conexión bancaria ni cálculo de declaración anual. No se han importado datos reales.
 
 El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, comisiones y saldos iniciales. Enlaza transferencias propias y reinversiones entre cuentas sin duplicar aportaciones externas ni intereses.
 
 ## Ejecutar las pruebas
 
-Python 3.11 o posterior. El núcleo y SQLite usan la biblioteca estándar; la lectura PDF y su prueba necesitan el extra local:
+Python 3.11 o posterior. El núcleo y SQLite usan la biblioteca estándar; los lectores de PDF e imagen necesitan sus extras. El OCR requiere además Tesseract local (ver manual de imágenes):
 
 ```sh
-python -m pip install -r requirements-pdf.txt
+python -m pip install -r requirements-pdf.txt -r requirements-image.txt
 python -m unittest discover -v
 ```
 
@@ -32,6 +32,8 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Lectores de Openbank](docs/OPENBANK.md)
 - [Catálogo y manual de lectores](docs/LECTORES.md)
 - [Mapeo económico pendiente por perfil](docs/MAPEO-PENDIENTE.md)
+- [Lectura de fotos y capturas](docs/IMAGENES.md)
+- [BingX/Pionex por imagen](docs/CRIPTO-IMAGENES.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

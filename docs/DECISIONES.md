@@ -67,3 +67,11 @@
 **Decisión:** los lectores de Openbank devuelven datos y controles, sin guardar ni aprobar.
 **Ventaja:** la revisión de evidencia e identidad ocurre antes del registro.
 **Límite:** ausencia de referencias estables o formato desconocido debe resolverse; un saldo que cuadra no basta para autorizar una importación automática.
+
+## D011 — Imágenes como evidencia con OCR local
+
+**Decisión del titular:** todos los lectores admitirán foto/captura cuando no haya PDF; BingX/Pionex usarán capturas de operaciones.
+**Implementación:** Tesseract local y Pillow. El OCR conserva texto, coordenadas, confianza y huella original; no crea movimientos.
+**Ventajas:** funcionamiento offline después de instalar dependencias, sin tarjeta, API de pago ni envío a proveedor OCR. Modelos y formatos portables.
+**Límites:** instalación del ejecutable/modelos, consumo del equipo propio, calidad de imagen y revisión necesaria. No hay carga visual ni archivo de originales implementados.
+**Cripto:** unidades explícitas, Decimal, órdenes/fills distintos, PnL por tipo y bot separado de sus operaciones. No se supone que la captura sea el historial completo.

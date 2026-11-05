@@ -259,6 +259,10 @@ class _Reader:
             issues.append("Retenciones o comisiones no nulas requieren formato y detalle específicos")
         return Preview(identifier, self.lane, *period, summary, rows, tuple(issues))
 
+    def read_image(self, content, *, engine=None):
+        from .imaging import read_statement_image
+        return read_statement_image(content, "openbank", self.lane, engine=engine)
+
     def read_pdf(self, content: bytes):
         """PDF textual local; requiere el extra pypdf, sin servicios remotos."""
         from pypdf import PdfReader

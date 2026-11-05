@@ -66,3 +66,13 @@
 - Cobertura de prueba adicional: componentes de pago/ISR en préstamos, precisión del precio de títulos y orden inverso de movimientos.
 - Resultado: catálogo documental y consola operativos para las vistas registradas. Openbank conserva conciliación específica; los 12 perfiles adicionales siguen en revisión documental y no están autorizados por el software para importar.
 - El avance no equivale a haber terminado los importadores económicos, lectores de constancias fiscales, cripto ni interfaz.
+
+## 2026-11-04 — OCR y capturas de cripto
+
+- Incorporada entrada de imagen en las 26 vistas documentales y dos lectores iniciales BingX/Pionex: catálogo de 28 entradas.
+- OCR Tesseract local con Pillow, texto/coordenadas/confianza y huella original. Las imágenes no se envían a una API.
+- La consola detecta PDF/imagen por contenido y permite seleccionar idioma OCR; la interfaz visual sigue pendiente.
+- Candidatos cripto con unidades, precisión Decimal, ID de orden/fill, PnL por tipo, bot, funding y pendientes de zona horaria/estado.
+- Comprobados importes ambiguos, campos ausentes/repetidos y propuestas de coincidencia entre fotos de una ejecución sin fusionar órdenes distintas.
+- 108 pruebas locales aprobadas, sin omisiones, incluyendo OCR real sobre imágenes ficticias en cinco formatos y reapertura de archivos SQLite.
+- No se validaron todavía capturas reales de las plataformas ni se importaron datos reales. Los originales permanecen fuera del repositorio.

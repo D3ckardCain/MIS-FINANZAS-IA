@@ -26,3 +26,10 @@ project_sources/
 *.pfx
 *.p12
 *.key
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.tif
+*.tiff
+*.bmp

@@ -2,9 +2,9 @@ name: Pruebas locales
 on:
   push:
     branches: [main]
-    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', '.github/workflows/tests.yml']
+    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', 'requirements-image.txt', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', '.github/workflows/tests.yml']
+    paths: ['finanzas/**', 'tests/**', 'requirements-pdf.txt', 'requirements-image.txt', '.github/workflows/tests.yml']
 permissions:
   contents: read
 concurrency:
@@ -15,15 +15,19 @@ jobs:
     # El runner estándar es gratuito en repositorios públicos.
     if: github.event.repository.private == false
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - name: Preparar lector PDF local
+      - name: Preparar OCR local
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa
+      - name: Preparar lectores PDF e imagen
         run: |
           python3 -m venv .venv
-          .venv/bin/python -m pip install --disable-pip-version-check -r requirements-pdf.txt
+          .venv/bin/python -m pip install --disable-pip-version-check -r requirements-pdf.txt -r requirements-image.txt
       - name: Versiones
         run: .venv/bin/python -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
       - name: Suite completa, incluyendo archivos y reapertura

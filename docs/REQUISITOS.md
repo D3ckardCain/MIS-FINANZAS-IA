@@ -1,6 +1,6 @@
 # Alcance y reglas acordadas
 
-Consolidación de las decisiones del proyecto al 2026-11-03. Este registro resume requisitos; no reproduce conversaciones ni documentos privados.
+Consolidación de las decisiones del proyecto al 2026-11-04. Este registro resume requisitos; no reproduce conversaciones ni documentos privados.
 
 ## Producto
 
@@ -15,6 +15,7 @@ Consolidación de las decisiones del proyecto al 2026-11-03. Este registro resum
 
 ## Evidencia y calidad
 
+- Todos los lectores deben aceptar imagen/foto como alternativa al PDF. BingX y Pionex usarán capturas individuales de operaciones como fuente principal, conservando su alcance parcial.
 - Los estados de cuenta son fuente primaria. No convertir el Excel en movimientos; usarlo posteriormente para localizar inversiones y períodos faltantes.
 - Documento, página/fila, cuenta, período y extracción deben ser rastreables. Mantener original, correcciones y revisión humana.
 - Fechas efectivas según el contenido; separar operación, liquidación, registro y período devengado. No usar el nombre del archivo como fecha contable.

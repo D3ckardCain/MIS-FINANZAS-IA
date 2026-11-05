@@ -2,7 +2,7 @@
 
 ## Alcance implementado
 
-Hay 26 entradas de lectura: dos vistas para cada una de las 13 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
+Hay 26 entradas documentales con soporte PDF e imagen, más dos lectores de capturas BingX/Pionex (28 entradas totales). Las 26 documentales son: dos vistas para cada una de las 13 instituciones con formatos disponibles. Comparten utilidades de PDF/fechas/evidencia; cada perfil define identidad y selección de secciones.
 
 **No son 26 importadores contables terminados.** Openbank conserva sus dos lectores con conciliación detallada. Los otros perfiles realizan extracción documental por secciones, valores observados y localizadores; requieren mapeo económico y conciliación antes de convertirlos en movimientos. No escriben en la base de datos.
 
@@ -83,12 +83,12 @@ En DiDi, Mifel y SuperTasas las dos vistas pueden observar la misma cuenta remun
 
 ## Límites y próximos controles
 
-- Estos perfiles reconocen los formatos conocidos; un cambio de diseño puede requerir adaptación. No tienen OCR ni lectura de PDF cifrado.
+- Estos perfiles reconocen los formatos conocidos; un cambio de diseño puede requerir adaptación. La lectura de imágenes usa OCR local; la de PDF cifrado sigue pendiente.
 - No hay importación económica automática para los 12 perfiles documentales ni una conciliación financiera universal.
 - Falta mapear tablas/contratos, resolver referencias, conservar todas las relaciones entre columnas, conciliar y preparar confirmación transaccional por institución.
 - Los documentos de ISR anual requieren un lector distinto; no se confunden con extractos mensuales.
 - No se ha inferido el tratamiento fiscal definitivo a partir de una etiqueta ISR.
-- BingX, Pionex, wallets, brokers adicionales y FIBRAs requieren sus formatos/exportaciones o fuentes identificadas. No se inventaron esquemas, APIs ni historial que no estuvieran disponibles.
+- BingX y Pionex tienen lectores iniciales de capturas por etiquetas: ver CRIPTO-IMAGENES.md. Su validación con capturas reales queda pendiente. Wallets, brokers adicionales y FIBRAs requieren fuentes identificadas.
 - El Excel no se lee ni se importa con estos lectores.
 
 ## Pruebas
@@ -96,3 +96,5 @@ En DiDi, Mifel y SuperTasas las dos vistas pueden observar la misma cuenta remun
 La suite sintética cubre las 26 entradas, extracción PDF para los perfiles documentales, ambos lectores específicos de Openbank, separación de vistas, evidencia compartida, formatos de fechas, ausencia de sección, referencia a otra institución, proyecciones, congelamientos, ISR acumulado y PDF corrupto.
 
 Los datos de prueba son ficticios. La comprobación local adicional con fuentes privadas no incorpora archivos, texto, importes ni identificadores del titular al repositorio.
+
+La entrada de imagen devuelve evidencia y revisión pendiente: ver [manual OCR](IMAGENES.md). La consola detecta PDF o imagen por contenido; --ocr-language configura los idiomas locales.

@@ -225,6 +225,17 @@ class StatementReader:
         self.profile = _BY_KEY[institution]
         self.lane = lane
 
+    def read_image(self, content, *, engine=None):
+        from .imaging import read_statement_image
+        return read_statement_image(content, self.profile.key, self.lane, engine=engine)
+
+    def read_document(self, content, *, engine=None):
+        if not isinstance(content, bytes):
+            raise ReaderError("Se requieren los bytes del documento")
+        if content[:1024].lstrip().startswith(b"%PDF-"):
+            return self.read_pdf(content)
+        return self.read_image(content, engine=engine)
+
     def read_pdf(self, content):
         try:
             from pypdf import PdfReader
@@ -324,11 +335,17 @@ class StatementReader:
 
 
 def reader_for(institution, lane):
+    if institution in ("bingx", "pionex"):
+        if lane != "investments":
+            raise ReaderError("Esta plataforma usa capturas de operaciones; débito bancario no aplica")
+        from .crypto_images import BingXImageReader, PionexImageReader
+        return (BingXImageReader if institution == "bingx" else PionexImageReader)()
     return StatementReader(institution, lane)
 
 
 def available_readers():
-    return tuple((p.key, lane) for p in PROFILES for lane in ("debit", "investments"))
+    return tuple((p.key, lane) for p in PROFILES for lane in ("debit", "investments")) + (
+        ("bingx", "investments"), ("pionex", "investments"))
 
 
 def main(argv=None):
@@ -339,24 +356,34 @@ def main(argv=None):
     from pathlib import Path
 
     parser = argparse.ArgumentParser(description="Lectores locales por institución y vista")
-    parser.add_argument("pdf", nargs="?")
-    parser.add_argument("--institution", choices=tuple(_BY_KEY))
+    parser.add_argument("pdf", nargs="?", metavar="ARCHIVO")
+    parser.add_argument("--institution", choices=tuple(_BY_KEY) + ("bingx", "pionex"))
     parser.add_argument("--lane", choices=("debit", "investments"))
     parser.add_argument("--list", action="store_true", dest="list_readers")
     parser.add_argument("--details", action="store_true")
+    parser.add_argument("--ocr-language", help="Idiomas locales, por ejemplo spa+eng")
     args = parser.parse_args(argv)
     if args.list_readers:
         print(json.dumps(available_readers(), ensure_ascii=False))
         return 0
     if not args.pdf or not args.institution or not args.lane:
-        parser.error("Indicar PDF, --institution y --lane")
+        parser.error("Indicar archivo PDF/imagen, --institution y --lane")
     try:
-        result = reader_for(args.institution, args.lane).read_pdf(Path(args.pdf).read_bytes())
+        from .imaging import LocalOcr
+        result = reader_for(args.institution, args.lane).read_document(
+            Path(args.pdf).read_bytes(), engine=LocalOcr(languages=args.ocr_language))
     except (OSError, ValueError) as error:
         print(json.dumps({"status": "error", "error": str(error)}, ensure_ascii=False))
         return 2
     if args.details:
         output = asdict(result)
+    elif hasattr(result, "evidence"):
+        output = {"institution": args.institution, "lane": args.lane,
+                  "source": "image", "lines": len(result.evidence.lines),
+                  "issues": result.issues, "ready_to_import": False}
+        if hasattr(result, "operation_kind"):
+            output["operation_kind"] = result.operation_kind
+            output["fields_detected"] = [field.name for field in result.fields]
     elif isinstance(result, DocumentPreview):
         output = {
             "institution": result.institution, "lane": result.lane,
