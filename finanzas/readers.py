@@ -251,6 +251,9 @@ class StatementReader:
         if self.profile.key == "mifel":
             from .mifel import MifelReader
             return MifelReader(self.lane).read_pdf(content)
+        if self.profile.key == "nu":
+            from .nu import NuReader
+            return NuReader(self.lane).read_pdf(content)
         if self.profile.key == "fintual" and self.lane == "investments":
             from .fintual import FintualInvestmentReader
             return FintualInvestmentReader().read_pdf(content)
@@ -449,6 +452,9 @@ def main(argv=None):
                           differences=len(result.differences))
         if hasattr(result, "scope"):
             output.update(scope=result.scope, investment_balance_known=result.investment_balance is not None)
+        if hasattr(result, "summary_reconciled"):
+            output.update(summary_reconciled=result.summary_reconciled,
+                          composition_reconciled=not result.composition_issues)
     else:
         output = {"institution": "openbank", "lane": result.lane,
                   "reconciled": result.reconciled, "issues": result.issues,

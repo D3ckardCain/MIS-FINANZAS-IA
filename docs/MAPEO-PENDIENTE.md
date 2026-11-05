@@ -13,7 +13,7 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | Fondeadora | Lector operativo de estados/reportes implementado; pendientes estados/contratos de Bóveda/Apartados, identidad y enlace de traspasos, capital, tasa, rendimiento y retención de inversión |
 | Hey | Lector del formato de pagarés implementado; pendientes diferencias documentales, composición histórica del saldo anterior, formatos adicionales y confirmación de propuestas de reinversión |
 | Kapital | Lectores de ambos formatos implementados; pendientes confirmar equivalencias/vencimientos, completar huecos y enlazar transferencias antes de importar |
-| Nu | Cuenta/cajita/contrato, entradas externas, movimientos internos y descongelamiento parcial |
+| Nu | Resumen y evidencia por secciones implementados; pendientes resolver diferencias de distribución, reconstruir contratos/cierres por Cajita/garantía y parear traspasos |
 | Openbank | Identidad estable, continuidad entre meses, revisión y confirmación transaccional |
 | SuperTasas | Cuenta remunerada y contratos, vencimiento/capital, interés cobrado y estimaciones |
 | Plata | Separar agregado y detalle, cashback y vínculo interno, rendimientos/ISR posteriores al corte |

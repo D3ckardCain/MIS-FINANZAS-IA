@@ -17,7 +17,7 @@ Hay 28 entradas documentales con soporte PDF e imagen, más dos lectores de capt
 | Fondeadora | Operativa y revisión PDF optativa | Evidencia de traspasos, saldo invertido desconocido | Resumen operativo no equivale a saldo de Bóveda |
 | Hey | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Capital, cobro, devengo, proyección y reinversión propuesta separados |
 | Kapital | Documental y conciliación PDF optativa | Pagarés y revisión PDF optativa | Dos formatos; proyecciones, vencimientos y equivalencias propuestas |
-| Nu | Documental | Documental de cajitas | Congelar/descongelar no es capital externo |
+| Nu | Resumen y evidencia operativa | Evidencia de Cajitas/garantía, cierre detallado pendiente | Congelar/descongelar no es ingreso; resumen conciliado no habilita importación |
 | Openbank | Conciliación implementada | Conciliación implementada | Continúa el lector específico ya verificado |
 | SuperTasas | Documental | Documental, vista/plazo | Cuenta compartida, capital e interés por separado |
 | Plata | Documental | Documental | Cashback, agregado depósitos/rendimientos y registro posterior al corte |
@@ -117,3 +117,5 @@ Hey admite revisión optativa de pagarés en ambas vistas y propuestas de reinve
 Kapital admite revisión optativa de efectivo y pagarés en dos formatos, con propuestas de equivalencia y vencimiento entre documentos: ver [manual](KAPITAL.md).
 
 Mifel admite revisión optativa de la cuenta remunerada y de los rangos de interés entre documentos: ver [manual](MIFEL.md).
+
+Nu ofrece revisión optativa de resúmenes y evidencia por secciones, con estados de conciliación diferenciados y sin cierre económico por Cajita: ver [manual](NU.md).

@@ -244,3 +244,12 @@
 - Commit probado: 5c3d270919a951a6d6e677a9f10dee82ac1f86ef.
 - Se conservan las verificaciones de lectores previos, OCR, cripto, núcleo y persistencia.
 - Informe y cobertura privados; sin importación real ni doble cómputo de rangos entre meses.
+
+## 2026-11-05 — Nu: resumen y evidencia por secciones
+
+- Añadido lector optativo de resumen consolidado, rendimiento bruto/neto y retención publicada.
+- Separadas las evidencias de cuenta, Cajitas y garantía; congelamientos y fechas futuras no se convierten en ganancias.
+- Conservadas distribución publicada, disponible/congelado y diferencias exactas sin ajustes.
+- Estados explícitos de resumen/composición frente a detalle económico aún pendiente; no se marca listo para importar.
+- Pruebas sintéticas de traspasos reflejados en dos secciones, garantías ausentes/cero, tasas publicadas, importes ambiguos, PDF y catálogo.
+- Informe e inventario de fuentes reales privados. Sin importación real, Excel ni cálculo fiscal anual.
