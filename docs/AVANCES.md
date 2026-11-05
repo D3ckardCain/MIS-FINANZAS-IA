@@ -122,3 +122,12 @@
 - Conservadas las verificaciones de OCR, capturas cripto, BanCoppel, núcleo y persistencia.
 - El informe del lote, sus faltantes y las referencias documentales se guardaron de forma privada, fuera del repositorio.
 - No se importaron operaciones reales ni se resolvieron discrepancias mediante ajustes ficticios.
+
+## 2026-11-05 — DiDi Cuenta: formatos de resumen y cuenta compartida
+
+- Añadido lector optativo de conciliación para ambos formatos reconocidos, con disposición visual del resumen y detalle de movimientos.
+- Conservados rendimientos, retención, transferencias pendientes, referencias partidas entre páginas y condiciones históricas publicadas.
+- Las vistas de débito e inversión comparten identidad/evidencia; no representan saldos adicionales.
+- Pruebas sintéticas de diferencias de resumen/saldos, referencias ausentes/duplicadas, tipos y moneda desconocidos, fechas, retención, PDF y consola.
+- Revisión de documentos reales e informe de cobertura privados, sin publicar importes, identificadores ni inventario del titular.
+- No se importaron movimientos reales ni datos de Excel. Sin nuevas APIs ni servicios externos.

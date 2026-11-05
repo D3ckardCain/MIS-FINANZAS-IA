@@ -102,3 +102,5 @@ La entrada de imagen devuelve evidencia y revisión pendiente: ver [manual OCR](
 Para BanCoppel existe read_reconciled_pdf o --reconcile: compara el detalle, el resumen y su interés/retención, manteniendo discrepancias sin ajustes ficticios. Ver [manual de BanCoppel](BANCOPPEL.md).
 
 CETESdirecto admite read_reconciled_pdf/--reconcile en Inversiones, preservando por separado efectivo, posiciones, registro/liquidación e ISR del mes/acumulado. Ver [manual específico](CETESDIRECTO.md).
+
+DiDi Cuenta admite conciliación optativa en ambas vistas de una misma cuenta. Separa rendimientos de transferencias, evita duplicar depósitos/rendimientos y conserva condiciones históricas del documento. Ver [manual de DiDi](DIDI.md).

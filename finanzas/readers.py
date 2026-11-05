@@ -231,6 +231,9 @@ class StatementReader:
 
     def read_reconciled_pdf(self, content):
         """Conciliación estricta optativa; conserva el lector documental general."""
+        if self.profile.key == "didi":
+            from .didi import DidiReader
+            return DidiReader(self.lane).read_pdf(content)
         if self.profile.key == "bancoppel" and self.lane == "debit":
             from .bancoppel import BanCoppelDebitReader
             return BanCoppelDebitReader().read_pdf(content)
