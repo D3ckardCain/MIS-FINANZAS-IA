@@ -45,6 +45,7 @@ El núcleo funciona offline. Este incremento no requiere tarjeta, API, servidor,
 - [Efectivo y pagarés Kapital](docs/KAPITAL.md)
 - [Cuenta remunerada y rangos Mifel](docs/MIFEL.md)
 - [Lectores y conciliación documental de Nu](docs/NU.md)
+- [Constancias de intereses y retenciones de Nu](docs/NU_CONSTANCIAS.md)
 - [Registro de avances](docs/AVANCES.md)
 
 ## Datos privados

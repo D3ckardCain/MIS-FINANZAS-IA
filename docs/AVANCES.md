@@ -295,3 +295,12 @@
 - Commit probado: c4c12d0ca5b237c69bb914120a283c4e6b2c224b.
 - Suite completa de lectores, OCR, cripto, núcleo, persistencia y cobertura conservada.
 - Informe privado actualizado. Sin importación financiera, ajuste de diferencias ni reclasificación fiscal automática.
+
+## 2026-11-05 — Nu: constancias fiscales documentales
+
+- Añadido lector local separado de constancias, sin generar movimientos ni duplicar el rendimiento o las retenciones de los estados mensuales.
+- Portada y cadena se conservan por separado, con diferencias explícitas de campos y aritmética, sin aplicar correcciones.
+- Cotejo contextual con meses completos del período publicado, duplicados binarios, cuenta única y detección de períodos ausentes.
+- Indicadores, tipo/códigos de pago, UUID y procedencia preservados; sin validación de firma/SAT ni cálculo de declaración anual.
+- Un RFC genérico y la ausencia de número de cuenta impiden confirmar automáticamente el vínculo personal.
+- Fuentes e informe privados; pruebas públicas ficticias y manual del lector.
