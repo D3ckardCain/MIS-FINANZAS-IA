@@ -114,3 +114,11 @@
 - Validación con documentos privados e informe de cobertura privado; no se publican nombres particulares de archivos, fechas del inventario ni importes del titular.
 - Añadidas pruebas sintéticas de formatos antiguos/nuevos, efectivo temporal negativo, diferencias de resumen, acumulados, posiciones vacías, PDF y consola.
 - No se importaron movimientos reales ni Excel.
+
+### Verificación completa de CETESdirecto
+
+- [133 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/41969285172).
+- Commit probado: bf75c51bc304e0712a089cc7af6b249938dc67a5.
+- Conservadas las verificaciones de OCR, capturas cripto, BanCoppel, núcleo y persistencia.
+- El informe del lote, sus faltantes y las referencias documentales se guardaron de forma privada, fuera del repositorio.
+- No se importaron operaciones reales ni se resolvieron discrepancias mediante ajustes ficticios.
