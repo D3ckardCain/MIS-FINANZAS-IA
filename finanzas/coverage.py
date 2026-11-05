@@ -37,9 +37,12 @@ def review_coverage(previews):
         elif b.period_start > next_day:
             gaps.append((next_day, b.period_start - timedelta(days=1)))
         elif a.period_end == frontier:
-            checked += 1
-            if a.summary.final != b.summary.initial:
-                issues.append("Saldo de cierre y apertura consecutivos no coincide")
+            if a.summary.final is None or b.summary.initial is None:
+                issues.append("Continuidad de saldos no verificable: saldo no informado")
+            else:
+                checked += 1
+                if a.summary.final != b.summary.initial:
+                    issues.append("Saldo de cierre y apertura consecutivos no coincide")
         frontier = max(frontier, b.period_end)
     return CoverageReview(tuple(p.document_id for p in ordered), tuple(duplicates),
                           tuple(gaps), checked, tuple(issues))

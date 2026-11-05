@@ -175,3 +175,13 @@
 - Conservadas las pruebas de OCR, capturas cripto, catálogo ampliado, lectores previos, núcleo y persistencia.
 - Informes de ambos productos guardados de forma privada, con faltantes y diferencias documentales.
 - MXN/USD, valuación/cobro, principal/rendimiento y período/acumulado permanecen separados; sin importación real ni ajustes ficticios.
+
+## 2026-11-05 — Fondeadora: formatos operativos y traspasos de inversión
+
+- Añadido lector optativo para estados operativos y reportes de movimientos, manteniendo el emisor impreso y los campos no informados.
+- Vista inversiones limitada explícitamente a evidencia de traspasos/Apartados; no se usa saldo operativo como saldo invertido.
+- Normalización localizada de espacios de fuente en campos, contraste de fechas y conservación de página/línea.
+- Distinción entre tabla vacía y detalle no incluido; diferencias entre resumen y detalle preservadas sin ajustes.
+- Corregida la cobertura común para no contar dos saldos desconocidos como continuidad verificada.
+- Pruebas sintéticas de formatos, desconocido/cero, tasa vacía, traspasos, diferencias, fechas, cobertura, PDF y consola.
+- Informe de los documentos reales guardado de forma privada. No se importaron movimientos reales ni Excel.

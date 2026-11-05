@@ -110,8 +110,8 @@ PROFILES = (
                  "movimientos del periodo", "rendimiento neto del portafolio", "impuestos retenidos"),
             notes=("Títulos, precio y valuación no equivalen a interés cobrado.",
                    "No duplicar venta de títulos y retiro del efectivo; distinguir cuentas/PPR.")),
-    Profile("fondeadora", "Fondeadora", r"apoyomultiple\.com",
-            ("detalles de la cuenta", "detalle del mes", "reporte de movimientos"),
+    Profile("fondeadora", "Fondeadora", r"apoyomultiple\.com|fondea\s+technologies|fondeadora\.com",
+            ("detalles de la cuenta", "detalle del mes", "detalles del mes", "reporte de movimientos", "movimientos", "saldo inicial"),
             ("boveda", "rendimientos", "ahorro"),
             notes=("Un reporte operativo vacío no demuestra ausencia histórica de inversiones.",
                    "No inferir una Bóveda a partir de una mención publicitaria.")),
@@ -239,6 +239,9 @@ class StatementReader:
         if self.profile.key == "alpaca":
             from .alpaca import AlpacaReader
             return AlpacaReader(self.lane).read_pdf(content)
+        if self.profile.key == "fondeadora":
+            from .fondeadora import FondeadoraReader
+            return FondeadoraReader(self.lane).read_pdf(content)
         if self.profile.key == "fintual" and self.lane == "investments":
             from .fintual import FintualInvestmentReader
             return FintualInvestmentReader().read_pdf(content)
@@ -435,6 +438,8 @@ def main(argv=None):
         if hasattr(result, "cash_reconciled"):
             output.update(cash_reconciled=result.cash_reconciled, loan_positions=len(result.loans),
                           differences=len(result.differences))
+        if hasattr(result, "scope"):
+            output.update(scope=result.scope, investment_balance_known=result.investment_balance is not None)
     else:
         output = {"institution": "openbank", "lane": result.lane,
                   "reconciled": result.reconciled, "issues": result.issues,

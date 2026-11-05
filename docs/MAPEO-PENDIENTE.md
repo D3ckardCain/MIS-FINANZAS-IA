@@ -10,7 +10,7 @@ El catálogo documental está disponible para todos los formatos bancarios/insti
 | Doopla | Lector PDF con conciliación por secciones implementado; pendientes resolver discrepancias documentales, vigencia de anexos, identidad económica de pagos y tratamiento fiscal |
 | Fintual | Lector optativo de fondos MXN implementado; pendientes lotes, liquidación por ejecución, homologación de fondos, diferencias de totales y enlace de transferencias |
 | Alpaca | Perfil USD con PDF/imagen y revisión optativa implementado; pendientes identidad de ejecuciones, guiones, entradas/salidas agregadas, lotes, acciones corporativas y conversión fiscal |
-| Fondeadora | Reporte operativo y Bóveda como formatos distintos; etiquetas fiscales versus signo económico |
+| Fondeadora | Lector operativo de estados/reportes implementado; pendientes estados/contratos de Bóveda/Apartados, identidad y enlace de traspasos, capital, tasa, rendimiento y retención de inversión |
 | Hey | Capital e interés de vencimientos, retención, renovación, interés neto y devengado |
 | Kapital | Contratos y proyecciones por fecha/plazo/base de días; no reconocer cobros futuros |
 | Nu | Cuenta/cajita/contrato, entradas externas, movimientos internos y descongelamiento parcial |
