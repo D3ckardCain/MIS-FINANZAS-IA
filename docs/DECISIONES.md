@@ -115,3 +115,11 @@
 **Decisión:** confirmar únicamente estados operativos completos y conciliados. Reportes sin apertura/cierre permanecen evidencia parcial; saldo operativo cero no acredita saldo cero de Bóveda. Traspasos/Apartados registran flujo operativo con origen/destino pendientes, sin cuenta o propiedad inventada.
 **Moneda:** la extracción conserva moneda desconocida si no aparece. La aplicación permite revisión explícita MXN para ese documento, vinculada al plan/revisión y conservada al confirmar. No puede sobrescribir moneda extranjera/contradictoria ni habilitar otros conceptos faltantes.
 **Control:** apertura/cierre y totales normalizados, fechas sin reordenar, conceptos no mapeados bloqueados, tasas vacías distintas de cero y transacción/idempotencia existentes. Sin nuevas dependencias, servicios, tablas de preferencias globales o cambios al original.
+
+
+## D018 — Plata: dos productos y un lote indivisible
+
+**Decisión:** confirmar débito y ahorro como cuentas distintas, con agregado solo de control. Cashback es aportación con origen propio de cashback; su transferencia explícita y única reduce origen y aporta a destino sin capital externo adicional. SPEI conserva origen pendiente.
+**Interés e ISR:** registrar filas una sola vez; no duplicar depósitos/rendimientos combinados, retención informativa global o anexo fiscal. El cero publicado se conserva por producto; no equivale a impuesto anual definitivo.
+**Fechas y límites:** fecha efectiva de cargo, con fecha de operación separada. Cualquier fila fuera del corte bloquea ambos productos, sin cambiar fechas o importar parcialmente. No se infiere reinversión. Comisiones/IVA no nulos, otros productos e imágenes requieren adaptación.
+**Control:** identidad, moneda, pares únicos, totales normalizados, continuidad, versiones, atomicidad e idempotencia. Referencias ausentes no se inventan; operaciones iguales mantienen evidencia distinta. Sin servicios o dependencias nuevos.

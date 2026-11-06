@@ -243,7 +243,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};

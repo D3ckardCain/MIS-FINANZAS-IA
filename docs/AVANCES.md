@@ -487,3 +487,14 @@
 - Dieciséis pruebas nuevas cubren estados completos/vacíos, reportes sin saldo, destino desconocido, moneda publicada/revisada, restricciones y versiones HTTP, fechas, conceptos no mapeados, duplicados, continuidad, tasas desconocidas/cero, rollback y coexistencia de cinco instituciones.
 - Suite previa conservada y JavaScript validado. Control de selección de moneda comprobado en navegador con una muestra ficticia; envío y confirmación comprobados por HTTP real.
 - Reporte real correctamente bloqueado por ausencia de saldos de apertura/cierre; sin confirmar movimientos personales. Bóvedas, productos adicionales y reportes parciales permanecen fuera de la confirmación financiera.
+
+
+## 2026-11-06 — Plata: confirmación financiera de débito y ahorro
+
+- Plan automático y confirmación indivisible de dos productos, sin tercera cuenta por el agregado.
+- Cashback como aportación, traspaso propio único enlazado, SPEI con origen pendiente y sin reinversión inferida.
+- Interés/retención de filas sin duplicar el resumen combinado, ISR global o anexo fiscal; cero publicado por producto preservado.
+- Fechas de operación/cargo conservadas; cargos fuera de corte bloquean ambos productos sin cambiar fechas.
+- Controles de normalización, continuidad, solapamiento, versiones, transacción y reintentos; seis instituciones coexisten sin colisiones.
+- Catorce pruebas nuevas; suite local de 443 pruebas aprobada y JavaScript validado. Muestra real comprobada solo mediante vista previa: bloqueo temporal correcto y cero movimientos confirmados.
+- Manual y decisiones actualizados, sin nuevas dependencias o pagos obligatorios. Otros productos, imágenes y enlaces entre instituciones pendientes de confirmación financiera.

@@ -5,12 +5,12 @@
 Los estados compartidos son muestras para construir y probar el software. No se condiciona el desarrollo a completar estados faltantes ni a elaborar contabilidad personal en el chat. El orden anterior queda como histórico y se antepone el flujo de la aplicación.
 
 1. **Carga y consulta local:** implementada la bandeja PDF/imagen, identificación, dos vistas, originales, duplicados y revisión documental.
-2. **Importación financiera:** Openbank, Mifel, BanCoppel y DiDi PDF conectados al ledger con plan y confirmación atómica, traspasos internos, control de solapamientos y cierres. Extender esta integración a cada institución; transferencias externas/reinversiones/correcciones pendientes.
+2. **Importación financiera:** Openbank, Mifel, BanCoppel, DiDi y Plata PDF conectados al ledger con plan y confirmación atómica, traspasos internos, control de solapamientos y cierres. Extender esta integración a cada institución; transferencias externas/reinversiones/correcciones pendientes.
 3. **Panel financiero:** resúmenes y evolución por institución/producto sobre movimientos confirmados, con cobertura y diferencias visibles.
 4. **Cripto, constancias y datos complementarios:** completar sus flujos visuales y contabilidad específica; incorporar nuevos archivos cuando estén disponibles.
 5. **Fiscalidad anual y comparación de inversiones:** implementar después sobre información validada y fuentes oficiales históricas.
 
-La aplicación guarda resultados documentales; Openbank, Mifel, BanCoppel y DiDi PDF permiten confirmar sus movimientos financieros. Fondeadora permite confirmar estados operativos completos, con revisión explícita de moneda cuando falta; reportes sin saldo y posiciones de inversión permanecen pendientes. Las demás salidas todavía no se transforman en movimientos financieros confirmados. Los PDF reales solo se utilizan para validar formatos.
+La aplicación guarda resultados documentales; Openbank, Mifel, BanCoppel, DiDi y Plata PDF permiten confirmar sus movimientos financieros. Fondeadora permite confirmar estados operativos completos, con revisión explícita de moneda cuando falta; reportes sin saldo y posiciones de inversión permanecen pendientes. Las demás salidas todavía no se transforman en movimientos financieros confirmados. Los PDF reales solo se utilizan para validar formatos.
 
 ## Orden anterior — conservado como historial
 
@@ -37,14 +37,14 @@ Cada etapa se entrega con manual y criterios verificables. Las cifras de pruebas
 | 3 | Openbank: lectores débito e inversiones, vista previa | Vista previa implementada; 52 pruebas aprobadas en CI | Estado leído por sus fechas internas, operación separada de ahorro, vista previa y conciliación documental; confirmar antes de incorporar |
 | 4 | Tasas históricas y contratos | Pendiente | Vigencias, topes, condiciones, plazos y redondeo; cobro real separado de estimación |
 | 5 | Más instituciones y conciliación | 30 entradas documentales PDF/imagen, más dos lectores cripto (15 instituciones, 32 entradas); conciliación PDF optativa de BanCoppel, CETESdirecto, DiDi, Doopla, Fintual, Alpaca, Hey, Kapital, Mifel y SuperTasas implementada; Fondeadora con revisión operativa y traspasos; Nu con resumen/cambios por Cajita y cierres individuales pendientes; YoTePresto con controles de resumen, efectivo y cartera; Plata con dos productos, resumen agregado y control temporal | Manual por formato, contrapartidas parciales/múltiples, faltantes, retenciones documentadas |
-| 6 | Interfaz local profesional | Bandeja y libro financiero Openbank/Mifel/BanCoppel/DiDi y Fondeadora operativa implementados; integración de otras instituciones y resumen patrimonial pendientes | Institución/producto y resumen separados, evidencia accesible, pendientes claros, estilo GitHub y estado offline |
+| 6 | Interfaz local profesional | Bandeja y libro financiero Openbank/Mifel/BanCoppel/DiDi/Plata y Fondeadora operativa implementados; integración de otras instituciones y resumen patrimonial pendientes | Institución/producto y resumen separados, evidencia accesible, pendientes claros, estilo GitHub y estado offline |
 | 7 | Cripto y acciones | Capturas BingX/Pionex y PDF/imagen Alpaca disponibles; contabilidad e interfaz pendientes | Historial desde primera operación, archivos, transferencias propias, bots y derivados sin duplicación |
 | 8 | SAT y constancias | Constancias documentales Nu/Openbank disponibles; motor de declaración pendiente | Reglas oficiales versionadas por ejercicio, retenciones conciliadas y alcance fiscal revisado |
 | 9 | Comparador de inversiones | Pendiente | Ofertas verificadas, fuentes y fechas, riesgo/liquidez/fiscalidad, disponibilidad gratuita comprobada |
 
 ## Problemas abiertos
 
-1. **Persistencia:** almacenamiento SQLite y reapertura/copia en disco verificados; bandeja y revisión documental visual implementadas; confirmación financiera Openbank/Mifel/BanCoppel/DiDi y Fondeadora operativa conectada; faltan las demás instituciones.
+1. **Persistencia:** almacenamiento SQLite y reapertura/copia en disco verificados; bandeja y revisión documental visual implementadas; confirmación financiera Openbank/Mifel/BanCoppel/DiDi/Plata y Fondeadora operativa conectada; faltan las demás instituciones.
 2. **Identidad de importación:** huella documental y referencia estable implementadas; cada adaptador debe obtener referencias fiables y dejar pendiente cualquier identidad ambigua.
 3. **Historia incompleta:** registrar períodos realmente cubiertos y documentos faltantes; no inferir faltantes solo por nombre de archivo o fecha del correo.
 4. **Vínculos complejos:** separar conciliación por tramos, tránsito, comisiones y conversión de monedas.

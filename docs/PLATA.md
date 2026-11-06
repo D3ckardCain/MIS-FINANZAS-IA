@@ -27,6 +27,6 @@ El catálogo mantiene entrada PDF/imagen. La imagen usa OCR local y revisión de
 
 `summary_reconciled` comprueba aritmética del producto y agregado. `detail_reconciled` exige además coherencia temporal. Una suma correcta puede coexistir con cargos posteriores al corte.
 
-`ready_to_import` permanece falso. Faltan revisar identidad económica, enlaces entre instituciones, cobertura histórica y atribución temporal antes de confirmar datos reales. No se infiere reinversión solo por permanecer el interés en el producto.
+`ready_to_import` del lector permanece falso: la extracción sola no confirma movimientos. La aplicación dispone de un [plan financiero separado](IMPORTACION-PLATA.md), con revisión y confirmación atómica de ambos productos cuando todos los controles pasan. Enlaces entre instituciones y cobertura histórica siguen pendientes. No se infiere reinversión solo por permanecer el interés en el producto.
 
 Pruebas sintéticas: dos identidades, descripción continuada, cashback, cargos/ISR agregados, interés incluido, fechas posteriores al corte, anexo fiscal, operaciones iguales legítimas, pares ambiguos, moneda/concepto desconocidos, identidad discordante, ISR cero y recorrido PDF del catálogo.

@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None):
+        if doc['result']['institution']=='plata' and doc['result']['format']=='pdf':
+            from .book_plata import prepare
+            return prepare(self,doc,content)
         if doc['result']['institution']=='fondeadora' and doc['result']['format']=='pdf':
             from .book_fondeadora import prepare
             return prepare(self,doc,content,currency_confirmation=currency_confirmation)
