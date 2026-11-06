@@ -397,3 +397,14 @@
 - Cubiertos HTTP real, carga y descarga exacta, duplicados, reapertura, dos vistas, retención de alertas, versiones de revisión, contraseña no persistida, identidad del emisor, OCR y precisión decimal.
 - JavaScript validado con `node --check`; inspección visual de bandeja y ambas pestañas en navegador con ejemplo ficticio.
 - La bandeja persistente está implementada. Próximo objetivo: normalización e importación financiera al ledger, sin depender de documentos faltantes.
+
+## 2026-11-05 — Openbank: del documento al libro financiero
+
+- Implementados plan automático, revisión visible y confirmación financiera desde la aplicación; extracción documental y aprobación financiera siguen separadas.
+- Normalización de aportaciones/retiros, interés y retención explícita cero; orígenes no acreditados permanecen pendientes.
+- Reducción/aportación de traspasos internos con pareja única, sin inflar capital externo; pares ambiguos bloqueados.
+- Anclas de apertura/cierre por período, meses fuera de orden, solapamientos bloqueados y huecos de cobertura visibles.
+- Guardado atómico de documento, aprobación, movimientos, evidencias, cobertura y plan; savepoints para transacciones anidadas.
+- Control de versión y huella del plan/libro; reintentos idempotentes, sin cambios silenciosos en importaciones existentes.
+- Primera consulta del libro con cierres por producto/fecha e intereses/retenciones de períodos importados.
+- Pruebas y vista visual con documentos ficticios; ninguna contabilidad real confirmada. Otras instituciones, correcciones y resumen patrimonial completo siguen pendientes.

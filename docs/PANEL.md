@@ -1,6 +1,6 @@
 # Organización aprobada del panel
 
-Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Bandeja visual local implementada: categorías, instituciones, dos vistas, carga y revisión documental. El resumen patrimonial y la importación financiera permanecen pendientes.
+Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Bandeja visual local implementada: categorías, instituciones, dos vistas, carga y revisión documental. Openbank PDF tiene plan e importación al libro financiero; resumen patrimonial completo y demás instituciones pendientes.
 
 ## Navegación
 

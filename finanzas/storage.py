@@ -107,6 +107,20 @@ class Store:
 
     @contextmanager
     def _transaction(self):
+        if self._db.in_transaction:
+            # Permite una confirmación mayor (documento, revisión y lote) atómica.
+            number = getattr(self, '_savepoint_number', 0) + 1
+            self._savepoint_number = number
+            name = 'finanzas_' + str(number)
+            self._db.execute('SAVEPOINT ' + name)
+            try:
+                yield
+                self._db.execute('RELEASE ' + name)
+            except BaseException:
+                self._db.execute('ROLLBACK TO ' + name)
+                self._db.execute('RELEASE ' + name)
+                raise
+            return
         self._db.execute("BEGIN IMMEDIATE")
         try:
             yield

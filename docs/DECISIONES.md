@@ -81,3 +81,10 @@
 **Aclaración del titular:** los PDF compartidos sirven para programar/probar. La prioridad es que el usuario suba los documentos a la aplicación y esta organice y procese sus datos. La ausencia temporal de estados no bloquea el desarrollo.
 **Implementación:** interfaz web local con biblioteca estándar, JavaScript/CSS locales y SQLite documental separado del ledger. Conserva originales, salidas por vista y revisión versionada. Sin dependencias nuevas, nube o pagos obligatorios.
 **Límites:** esta entrega archiva y consulta extracciones; falta normalizar y confirmar operaciones financieras en el ledger. No confundir revisión documental con importación contable. Procesamiento secuencial, PDF escaneado multipágina y constancias visuales pendientes.
+
+## D013 — Plan financiero y anclas documentales por período
+
+**Decisión:** primera normalización confirmable para Openbank PDF. Plan recalculado desde el original, revisión y estado del ledger; confirmación en una única transacción con aprobación/evidencia/cobertura.
+**Ventaja:** reintentos no duplican, fallos no dejan importaciones parciales, y traspasos internos mantienen reducción/aportación enlazadas.
+**Historia:** apertura y cierre se conservan como anclas por período; no se generan aportaciones ni aperturas mensuales acumulables. Esto admite meses fuera de orden. El libro muestra el último cierre documental por cuenta y fecha; el neto de movimientos del ledger sin apertura no se presenta como saldo total.
+**Límites:** sin deduplicación económica inferida entre documentos: solapamientos bloqueados, huecos visibles y diferencias de continuidad pendientes. Orígenes de débito desconocidos no se cuentan como capital externo acreditado. Las demás instituciones conservan sus lectores, sin confirmar automáticamente sus salidas.

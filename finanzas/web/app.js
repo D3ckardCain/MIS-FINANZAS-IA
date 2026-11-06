@@ -1,6 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
-let state, current, selected = null, lane = 'debit', busy = false;
+let state, current, financialPlan, selected = null, lane = 'debit', busy = false;
 const labels = {
   summary:'Resumen publicado', rows:'Movimientos', entries:'Registros', observations:'Evidencia extraída',
   initial:'Saldo inicial', final:'Saldo final', deposits:'Depósitos', withdrawals:'Retiros',
@@ -11,6 +11,14 @@ const labels = {
   annual_rate_reported:'Tasa anual publicada', average_balance_reported:'Saldo promedio publicado',
   gat_nominal_reported:'GAT nominal publicado', gat_real_reported:'GAT real publicado',
   interest:'Interés', withholding:'Retención', fees:'Comisiones', vat:'IVA', isr:'ISR',
+  cash_withdrawals:'Retiros en efectivo',other_charges:'Otros cargos',
+  identity_source:'Origen de la identidad',explicit_debit_account:'Cuenta de débito publicada',
+  parent_debit_account_and_product:'Cuenta padre y producto publicados',
+  debit_movement:'Movimiento operativo',to_investments:'Reducción hacia Apartado',
+  from_investments:'Entrada desde Apartado',from_debit:'Aportación desde débito',to_debit:'Reducción hacia débito',
+  movements:'Movimientos propuestos',
+  account_name:'Cuenta / producto',
+  product:'Producto',locator:'Referencia de evidencia',
   operation_date:'Fecha de operación', posting_date:'Fecha de cargo', effective_date:'Fecha efectiva',
   date:'Fecha', description:'Descripción', amount:'Importe', deposit:'Abono', withdrawal:'Cargo',
   balance:'Saldo', category:'Tipo de movimiento', currency:'Moneda', exchange_rate:'Tipo de cambio',
@@ -30,6 +38,11 @@ const labels = {
   maturity:'Vencimiento', rate:'Tasa', start:'Inicio', end:'Fin', quantity:'Cantidad',
   debit:'Cuenta operativa', investments:'Inversiones', reconciled:'Conciliación',
   candidate_requires_review:'Candidato pendiente de revisión', interest_received:'Interés cobrado',
+  first_period:'Primer período importado', through:'Cierre al', closing:'Saldo de cierre documental',
+  pending_origins:'Orígenes pendientes', gaps:'Huecos entre períodos importados',
+  aportacion:'Aportación',retiro:'Retiro',interes_cobrado:'Interés cobrado',isr_retenido:'ISR retenido',
+  transferencia_propia:'Transferencia propia',pendiente:'Origen pendiente',
+  capital_externo:'Capital externo confirmado',kind:'Tipo',origin:'Origen',
   cashback_contribution:'Aportación de cashback', own_transfer_in:'Aportación desde cuenta propia',
   own_transfer_out:'Reducción por transferencia propia', isr_withholding:'Retención ISR',
   spei_in:'Entrada SPEI', spei_out:'Salida SPEI', unmapped:'Concepto por clasificar',
@@ -37,8 +50,8 @@ const labels = {
   arithmetic_included_in_other_charges:'ISR incluido en otros cargos',
   indistinguishable_zero_retention:'Retención cero: base no distinguible',
 };
-const label = key => labels[key] || key.replaceAll('_',' ').replace(/^./, c=>c.toUpperCase());
-const value = data => data === null ? 'No publicado / desconocido' : typeof data === 'boolean' ? (data ? 'Sí' : 'No') : labels[data] || String(data);
+const label = key => Object.hasOwn(labels,key) ? labels[key] : key.replaceAll('_',' ').replace(/^./, c=>c.toUpperCase());
+const value = data => data === null ? 'No publicado / desconocido' : typeof data === 'boolean' ? (data ? 'Sí' : 'No') : Object.hasOwn(labels,data) ? labels[data] : String(data);
 function el(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -65,11 +78,12 @@ async function api(path, body, raw = false) {
 async function run(action) {
   if (busy) return;
   busy = true;
-  for (const id of ['choose','first-upload','reprocess','review','save-category']) $(id).disabled = true;
+  for (const id of ['choose','first-upload','reprocess','review','save-category','prepare','confirm','book-refresh']) $(id).disabled = true;
   try { await action(); } catch (error) { message(error.message); $('notice').scrollIntoView({block:'center'}); }
   finally {
     busy = false;
-    for (const id of ['choose','first-upload','reprocess','review','save-category']) $(id).disabled = false;
+    for (const id of ['choose','first-upload','reprocess','review','save-category','prepare','book-refresh']) $(id).disabled = false;
+    $('confirm').disabled = !financialPlan?.can_confirm;
   }
 }
 function name(key) { return state.catalog.institutions.find(i=>i.key===key)?.name || 'Sin identificar'; }
@@ -97,6 +111,7 @@ function renderNavigation() {
 }
 function showList() {
   $('overview').hidden = false; $('detail').hidden = true;
+  $('book').hidden = true; $('book-nav').classList.remove('selected');
   $('page-title').textContent = selected ? name(selected) : 'Archivo financiero';
   $('crumb').textContent = selected ? name(selected) : 'Archivo financiero';
   renderNavigation(); renderDocuments();
@@ -120,7 +135,7 @@ function renderDocuments() {
   }
 }
 async function refresh() { state=await api('/api/state'); renderNavigation(); renderDocuments(); }
-const hiddenKeys = new Set(['document_id','account_fingerprint','recipient_fingerprint','relationship_fingerprint','evidence_id','lane','institution','ready_to_import']);
+const hiddenKeys = new Set(['document_id','account_fingerprint','recipient_fingerprint','relationship_fingerprint','evidence_id','lane','institution','ready_to_import','account','transfer_id','id']);
 function renderObject(data, container, level=0) {
   if (data===null || typeof data!=='object') {container.append(el('p',value(data))); return;}
   if (Array.isArray(data)) { renderArray(data,container); return; }
@@ -137,7 +152,7 @@ function renderObject(data, container, level=0) {
     const val=data[key];
     if (Array.isArray(val) && !val.length) continue;
     const details=el('details',undefined,'data-section');
-    details.open = ['summary','rows','entries','observations','fields'].includes(key) && level<2;
+    details.open = ['summary','rows','entries','observations','fields','movements','periods'].includes(key) && level<2;
     details.append(el('summary',label(key)+(Array.isArray(val)?' · '+val.length:'')));
     const content=el('div',undefined,'nested');renderObject(val,content,level+1);details.append(content);container.append(details);
   }
@@ -184,7 +199,8 @@ function renderView() {
 }
 async function openDocument(id) {
   current=await api('/api/documents/'+id);const result=current.result;
-  $('overview').hidden=true;$('detail').hidden=false;$('notice').textContent='';
+  $('overview').hidden=true;$('book').hidden=true;$('detail').hidden=false;$('notice').textContent='';
+  financialPlan=null;$('financial-plan').hidden=true;$('confirm').hidden=true;
   $('crumb').textContent=name(result.institution);$('detail-institution').textContent=name(result.institution);
   $('detail-name').textContent=current.filename;
   const item=state.documents.find(d=>d.id===id);$('detail-period').textContent=item?'Período interior: '+periods(item):'';
@@ -204,6 +220,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
+  if(result.institution==='openbank' && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -232,5 +249,38 @@ $('save-category').onclick=()=>run(async()=>{
   if(!current.result.institution)throw new Error('Primero identifica la institución.');
   await api('/api/group',{institution:current.result.institution,category:$('category').value});await refresh();message('Categoría guardada.');
 });
+function showPlan(plan) {
+  financialPlan=plan;
+  const panel=$('financial-plan');panel.hidden=false;panel.replaceChildren();
+  panel.append(el('h2',plan.status==='imported'?'Importación confirmada':plan.can_confirm?'Plan listo para confirmar':'Plan pendiente de resolver'));
+  for(const issue of plan.issues)panel.append(el('p',issue,'alert'));
+  for(const warning of plan.warnings)panel.append(el('p',warning,'footnote'));
+  renderObject({periods:plan.periods.map(p=>({product:label(p.lane),...p})),
+    movements:plan.movements.map(m=>({product:label(m.lane),...m}))},panel);
+  $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
+}
+$('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan')));
+$('confirm').onclick=()=>run(async()=>{
+  if(!financialPlan?.can_confirm)return;
+  const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash});
+  showPlan(plan);message(plan.duplicate?'El documento ya estaba importado; no se duplicó.':'Importación confirmada. Los movimientos están guardados en el libro financiero.');
+});
+async function openBook() {
+  const data=await api('/api/book');
+  selected=null;renderNavigation();
+  $('overview').hidden=true;$('detail').hidden=true;$('book').hidden=false;
+  $('crumb').textContent='Libro financiero';$('all').classList.remove('selected');$('book-nav').classList.add('selected');
+  const target=$('book-content');target.replaceChildren(el('p',data.note,'footnote'));
+  target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
+  if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
+  else renderArray(data.accounts.map(account=>({
+    account_name:'Openbank · '+label(account.lane), unit:account.unit,
+    through:account.through, closing:account.closing, first_period:account.first_period,
+    interest:account.interest, withholding:account.withholding,
+    periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps
+  })),target);
+}
+$('book-nav').onclick=()=>run(openBook);
+$('book-refresh').onclick=()=>run(openBook);
 run(async()=>{await refresh();showList();});
 window.addEventListener('focus',()=>{if(!busy)fetch('/api/state').then(r=>connection(r.ok)).catch(()=>connection(false));});

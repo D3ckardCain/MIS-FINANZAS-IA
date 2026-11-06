@@ -8,6 +8,7 @@ import secrets
 from urllib.parse import unquote, urlsplit
 
 from .intake import Inbox, MAX_UPLOAD
+from .book import FinancialBook
 
 WEB = Path(__file__).with_name('web')
 
@@ -55,9 +56,15 @@ def make_server(path, port=0):
                 with Inbox(path) as inbox:
                     if route == '/api/state':
                         self.reply(200, dict(token=token, catalog=inbox.catalog(), documents=inbox.list())); return
+                    if route == '/api/book':
+                        with FinancialBook(path) as book: self.reply(200, book.summary())
+                        return
                     if route.startswith('/api/documents/'):
                         parts = route.split('/')
                         identifier = parts[3]
+                        if len(parts) == 5 and parts[4] == 'plan':
+                            with FinancialBook(path) as book: self.reply(200, book.preview(identifier))
+                            return
                         if len(parts) == 5 and parts[4] == 'original':
                             data = inbox.original(identifier)
                             mime = 'application/pdf' if data[:1024].lstrip().startswith(b'%PDF-') else 'application/octet-stream'
@@ -88,6 +95,10 @@ def make_server(path, port=0):
                     parts = route.split('/')
                     if len(parts) == 5 and parts[:3] == ['', 'api', 'documents']:
                         identifier, action = parts[3:]
+                        if action == 'confirm':
+                            with FinancialBook(path) as book:
+                                self.reply(200, book.confirm(identifier,revision=payload['revision'],plan_hash=payload['plan_hash']))
+                            return
                         if action == 'reprocess':
                             result = inbox.reprocess(identifier, expected_revision=payload['revision'],
                                 institution=payload.get('institution') or None, password=payload.get('password') or None)

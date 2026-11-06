@@ -38,7 +38,7 @@ Las imágenes usan el motor Tesseract y sus idiomas instalados localmente; consu
 
 Implementado: aplicación visual local, carga individual PDF/imagen, detección, lectores por vista, archivo de originales, duplicados binarios, persistencia/reapertura, consulta, categorías y revisión documental.
 
-Siguiente trabajo: convertir las salidas heterogéneas de los lectores en movimientos financieros confirmables, conectar esos movimientos al ledger, resolver referencias/traspasos/reinversiones y construir el resumen patrimonial. Guardar una lectura documental no equivale a completar esa contabilidad. No se presentan sumas patrimoniales de observaciones o saldos superpuestos.
+Openbank PDF ya dispone de plan financiero, confirmación al ledger y consulta de cierres por producto. Ver [manual de importación financiera](IMPORTACION-FINANCIERA.md). Siguiente trabajo: extender la normalización a las demás instituciones, resolver referencias/traspasos/reinversiones y completar el resumen patrimonial. Guardar una lectura documental no equivale a confirmar movimientos. No se presentan sumas patrimoniales de observaciones o saldos superpuestos.
 
 Las constancias fiscales tienen lectores independientes; todavía falta conectarlas a este flujo visual. Tampoco hay cálculo fiscal anual, conexión bancaria, sincronización, notificaciones, valoraciones de mercado ni recomendaciones de inversión.
 
