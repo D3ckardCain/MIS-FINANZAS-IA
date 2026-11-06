@@ -123,3 +123,11 @@
 **Interés e ISR:** registrar filas una sola vez; no duplicar depósitos/rendimientos combinados, retención informativa global o anexo fiscal. El cero publicado se conserva por producto; no equivale a impuesto anual definitivo.
 **Fechas y límites:** fecha efectiva de cargo, con fecha de operación separada. Cualquier fila fuera del corte bloquea ambos productos, sin cambiar fechas o importar parcialmente. No se infiere reinversión. Comisiones/IVA no nulos, otros productos e imágenes requieren adaptación.
 **Control:** identidad, moneda, pares únicos, totales normalizados, continuidad, versiones, atomicidad e idempotencia. Referencias ausentes no se inventan; operaciones iguales mantienen evidencia distinta. Sin servicios o dependencias nuevos.
+
+
+## D019 — SuperTasas: efectivo confirmado y contratos observados
+
+**Decisión:** confirmar una sola cuenta de efectivo a la vista; guardar posiciones fechadas en el plan como observaciones, sin cuentas/contratos económicos inventados ni sumar proyecciones al saldo. Aperturas reducen efectivo; retornos de principal son aportaciones, sin ganancia, origen externo o reinversión supuestos.
+**Cobros:** interés a la vista desde la fila, sin duplicar abonos. ISR cero solo acredita el producto publicado. Pagos de interés a plazo sin desglose acreditado de bruto/retención, impuestos/comisiones no nulos y posiciones inconsistentes bloquean el lote.
+**Moneda y contraseña:** unidad desconocida si no está acreditada; revisión MXN por documento, sin sobrescribir moneda extranjera. Para PDF protegido, contraseña transitoria enviada en el cuerpo de las solicitudes locales para releer el original; no se guarda, no forma parte de la huella del plan y se elimina de memoria al abandonar/confirmar.
+**Límites:** cartera histórica de contratos, fiscalidad de cobros a plazo, reinversión y enlaces entre instituciones pendientes. Se reutilizan continuidad, versiones, atomicidad y reintentos; sin dependencias o servicios nuevos.

@@ -50,6 +50,8 @@ El servidor escucha exclusivamente en `127.0.0.1`, verifica Host/Origin y exige 
 
 Validación: pruebas HTTP de carga/consulta/descarga, duplicados, revisión y control de origen; pruebas de reapertura SQLite, detección, PDF protegido, OCR y precisión decimal. La inspección visual en navegador usó datos ficticios; la prueba del transporte HTTP ejecutó el servidor real.
 
+SuperTasas también permite confirmar efectivo a la vista y guardar posiciones a plazo como observaciones fechadas, sin convertir proyecciones en cobros o generar una segunda cuenta. Los pagos a plazo sin desglose acreditado de bruto/retención quedan bloqueados. Ver [manual SuperTasas](IMPORTACION-SUPERTASAS.md), incluido el desbloqueo temporal de PDF protegido sin guardar la contraseña.
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

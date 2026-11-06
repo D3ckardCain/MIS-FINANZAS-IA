@@ -506,3 +506,13 @@
 - Catorce pruebas nuevas cubren dos productos, cashback único, traspaso neutral, origen SPEI pendiente, ISR no nulo/cero, anexo excluido, corte temporal, operación/cargo separados, operaciones iguales legítimas, pares ambiguos, conceptos/moneda, continuidad, meses fuera de orden, duplicados, versiones, rollback, seis instituciones y confirmación HTTP.
 - Suite previa conservada; JavaScript validado. Muestra real utilizada solo para vista previa: bloqueo por fechas fuera del período y ningún movimiento financiero confirmado.
 - Código y manual publicados; confirmación desde imágenes, otros productos y conciliación entre instituciones siguen pendientes.
+
+
+## 2026-11-06 — SuperTasas: efectivo y observaciones a plazo
+
+- Plan y confirmación para efectivo conciliado, con posiciones a plazo fechadas en el plan y visibles por separado; ninguna cuenta o ganancia adicional por proyecciones.
+- Apertura como reducción y devolución de principal como aportación, con origen pendiente; interés a la vista registrado una vez y cero ISR acotado al producto publicado.
+- Moneda explícita o revisada por documento. PDF protegido releído con contraseña transitoria, sin guardarla en plan/base ni alterar originales.
+- Bloqueo de pagos a plazo sin desglose acreditado de bruto/retención y de retenciones/comisiones no nulas, formatos incompletos o posiciones inconsistentes.
+- Diecinueve pruebas nuevas: transacción, versiones, continuidad, meses fuera de orden, siete instituciones, moneda y contraseñas también por HTTP. JavaScript validado y muestra real probada solo mediante plan bloqueado, sin movimientos confirmados.
+- Manual, decisiones y límites actualizados. Sin nuevas dependencias, servicios ni pagos obligatorios.

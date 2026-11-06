@@ -21,7 +21,7 @@ Los abonos del resumen ya incluyen los intereses de la tabla: no se añade de nu
 
 ## Controles y casos documentales
 
-`detail_reconciled` comprueba efectivo, saldos por movimiento, abonos/cargos, período y mapeo de conceptos. `reconciled` exige además ausencia de incidencias en las posiciones. `ready_to_import=False` siempre: no se guardan movimientos reales.
+`detail_reconciled` comprueba efectivo, saldos por movimiento, abonos/cargos, período y mapeo de conceptos. `reconciled` exige además ausencia de incidencias en las posiciones. `ready_to_import=False` en el lector: una extracción no confirma operaciones. La aplicación añade un [plan financiero revisable](IMPORTACION-SUPERTASAS.md) para efectivo y observaciones de posiciones, con confirmación atómica dentro del alcance admitido.
 
 Un saldo inicial sin cifra queda `None`, distinto de cero, y bloquea la conciliación completa. La continuidad de cobertura omite esos enlaces como no verificables. Los saldos negativos entre paréntesis se conservan con signo; no se reordenan filas ni se fabrican ajustes para cuadrarlos.
 
@@ -39,4 +39,6 @@ Se proponen correspondencias de apertura o devolución de principal únicamente 
 
 `review_coverage` verifica períodos y saldos reportados, sin completar historia con proyecciones ni Excel. Se conservan fechas de operación publicadas aunque el orden o los saldos sean problemáticos.
 
-PDF y OCR operan localmente con las dependencias existentes. Las imágenes conservan evidencia OCR revisable, sin heredar automáticamente los controles estructurados del PDF. No hay APIs de pago, conexión bancaria, cálculo SAT ni importación automática. Documentos, contraseñas e informes financieros del titular no se publican en GitHub.
+PDF y OCR operan localmente con las dependencias existentes. Las imágenes conservan evidencia OCR revisable, sin heredar automáticamente los controles estructurados del PDF. No hay APIs de pago, conexión bancaria ni cálculo SAT. La confirmación financiera es explícita y no se activa por guardar una lectura. Documentos, contraseñas e informes financieros del titular no se publican en GitHub.
+
+La moneda de la cuenta se conserva desconocida si no está publicada explícitamente. La etiqueta del rendimiento en pesos mexicanos no basta para acreditar la moneda del producto; el plan permite revisión MXN por documento y bloquea monedas contradictorias.

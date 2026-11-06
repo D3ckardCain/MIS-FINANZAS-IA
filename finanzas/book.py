@@ -52,17 +52,20 @@ class FinancialBook:
         if found:
             return json.loads(found[0]) | dict(status='imported', can_confirm=False)
 
-    def preview(self, identifier, *, currency_confirmation=None, expected_revision=None):
+    def preview(self, identifier, *, currency_confirmation=None, expected_revision=None, password=None):
         with Inbox(self.inbox_path) as inbox:
             doc=inbox.get(identifier)
             if expected_revision is not None and (type(expected_revision) is not int or expected_revision!=doc['revision']):
                 raise ValueError('Revisión desactualizada: vuelve a abrir el documento.')
             existing=self._existing(identifier)
             if existing: return existing
-            plan,_=self._plan(doc,inbox.original(identifier),currency_confirmation=currency_confirmation)
+            plan,_=self._plan(doc,inbox.original(identifier),currency_confirmation=currency_confirmation,password=password)
             return plan
 
-    def _plan(self, doc, content, *, currency_confirmation=None):
+    def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='supertasas' and doc['result']['format']=='pdf':
+            from .book_supertasas import prepare
+            return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
         if doc['result']['institution']=='plata' and doc['result']['format']=='pdf':
             from .book_plata import prepare
             return prepare(self,doc,content)
@@ -252,7 +255,7 @@ class FinancialBook:
             if date.fromisoformat(period['end'])+timedelta(days=1)==date.fromisoformat(start) and Decimal(initial)!=Decimal(period['final']):
                 plan['issues'].append('Saldo final no coincide con apertura siguiente en '+label+'.')
 
-    def confirm(self, identifier, *, revision, plan_hash, currency_confirmation=None):
+    def confirm(self, identifier, *, revision, plan_hash, currency_confirmation=None, password=None):
         # Bloquea cambios de la bandeja mientras se comprueba y confirma el plan.
         # Solo la base financiera se modifica: un único commit abarca todo el lote.
         with Inbox(self.inbox_path) as inbox:
@@ -265,7 +268,7 @@ class FinancialBook:
                     if type(revision) is not int or revision!=doc['revision']:
                         raise ValueError('Revisión desactualizada: vuelve a preparar la importación.')
                     content=inbox.original(identifier)
-                    plan,movements=self._plan(doc,content,currency_confirmation=currency_confirmation)
+                    plan,movements=self._plan(doc,content,currency_confirmation=currency_confirmation,password=password)
                     if not plan['can_confirm']: raise ValueError('El plan contiene problemas pendientes; no se importó nada.')
                     if plan_hash!=plan['plan_hash']:
                         raise ValueError('El plan o el libro cambió: vuelve a preparar la importación.')

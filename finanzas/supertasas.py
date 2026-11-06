@@ -42,6 +42,7 @@ class SuperTasasSummary:
     fees_vat: Decimal
     term_fees: Decimal
     term_fees_vat: Decimal
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -90,6 +91,7 @@ class SuperTasasPreview:
     contract_issues: tuple[str,...]
     lane: str
     shared_account: bool = True
+    currency_markers: tuple[str,...] = ()
 
     @property
     def entries(self):return self.rows if self.lane=='debit' else tuple(r for r in self.rows if r.category not in ('incoming_transfer','outgoing_transfer'))
@@ -160,6 +162,13 @@ class SuperTasasReader:
             field(cash_summary,'(-) Cargos'),field(cash_summary,'Intereses Brutos'),field(cash_summary,'Retención ISR'),
             field(cash_summary,'Intereses Netos'),field(before,'Tasa de interés o rendimiento'),field(cash_summary,'Saldo Promedio diario'),
             field(before,'Total de Comisiones Cobradas'),field(before,'IVA de Comisiones'),field(term_commissions,'Total de Comisiones Cobradas'),field(term_commissions,'IVA de Comisiones'))
+        # La leyenda del rendimiento en pesos no acredita la moneda de la cuenta.
+        currency_text=fold(text)
+        markers=set(re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I))
+        markers={m.upper() for m in markers}
+        if re.search(r'\b(?:moneda\s*:?\s*(?:nacional|pesos mexicanos)|divisa\s*:?\s*pesos mexicanos)\b',currency_text):markers.add('MXN')
+        from dataclasses import replace
+        s=replace(s,unit='MXN' if markers=={'MXN'} else None)
         rows=[];contracts=[];cash_issues=[];contract_issues=[];section=None;header=None;had_cash_header=False
         for pno,page in enumerate(pages,1):
             for lno,line in enumerate(page.splitlines(),1):
@@ -227,7 +236,7 @@ class SuperTasasReader:
         if any(getattr(s,k)!=0 for k in ('retention','fees','fees_vat','term_fees','term_fees_vat')):cash_issues.append('Retención/comisión no nula requiere detalle específico')
         if any(a.effective_date>b.effective_date for a,b in zip(rows,rows[1:])):cash_issues.append('Fechas de movimientos fuera de orden')
         if not contracts:contract_issues.append('Sin posiciones legibles: no se supone inversión cero')
-        return SuperTasasPreview(identifier,start,end,account,s,tuple(rows),tuple(contracts),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(contract_issues)),self.lane)
+        return SuperTasasPreview(identifier,start,end,account,s,tuple(rows),tuple(contracts),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(contract_issues)),self.lane,currency_markers=tuple(sorted(markers)))
 
 
 @dataclass(frozen=True)

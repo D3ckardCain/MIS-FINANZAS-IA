@@ -1,6 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
-let state, current, financialPlan, selected = null, lane = 'debit', busy = false;
+let state, current, financialPlan, financialPassword = null, selected = null, lane = 'debit', busy = false;
 const labels = {
   summary:'Resumen publicado', rows:'Movimientos', entries:'Registros', observations:'Evidencia extraída',
   initial:'Saldo inicial', final:'Saldo final', deposits:'Depósitos', withdrawals:'Retiros',
@@ -52,6 +52,12 @@ const labels = {
   contract_issues:'Alertas de contratos', document_preview:'Lectura documental', evidence:'Evidencia',
   confidence:'Confianza OCR', text:'Texto', unit:'Unidad', value:'Valor', raw_value:'Valor original',
   status:'Estado', periods:'Períodos detectados', account_fingerprint:'Huella de cuenta',
+  term_snapshots:'Posiciones a plazo · observaciones documentales',
+  as_of:'Fecha del estado', projected_gross:'Interés bruto proyectado', projected_retention:'Retención proyectada',
+  projected_net:'Interés neto proyectado', documentary_observation:'Observación documental',
+  capital_at_maturity_reported:'Capital al vencimiento publicado', maturity_amount_form:'Forma del capital al vencimiento',
+  principal_only:'Solo principal', principal_plus_net:'Principal más interés neto',
+  source_document:'Documento de origen', snapshot_key:'Huella de posición',
   document_id:'Huella documental', relationship_fingerprint:'Huella de relación', id:'Identificador',
   evidence_id:'Identificador de evidencia', name:'Campo', operation_kind:'Tipo de operación',
   timezone:'Zona horaria', account:'Cuenta', source_lines:'Líneas de origen',
@@ -133,6 +139,7 @@ function renderNavigation() {
   $('all').classList.toggle('selected', selected === null);
 }
 function showList() {
+  financialPassword=null;
   $('overview').hidden = false; $('detail').hidden = true;
   $('book').hidden = true; $('book-nav').classList.remove('selected');
   $('page-title').textContent = selected ? name(selected) : 'Archivo financiero';
@@ -223,7 +230,7 @@ function renderView() {
 async function openDocument(id) {
   current=await api('/api/documents/'+id);const result=current.result;
   $('overview').hidden=true;$('book').hidden=true;$('detail').hidden=false;$('notice').textContent='';
-  financialPlan=null;$('financial-plan').hidden=true;$('confirm').hidden=true;
+  financialPlan=null;financialPassword=null;$('financial-plan').hidden=true;$('confirm').hidden=true;
   $('crumb').textContent=name(result.institution);$('detail-institution').textContent=name(result.institution);
   $('detail-name').textContent=current.filename;
   const item=state.documents.find(d=>d.id===id);$('detail-period').textContent=item?'Período interior: '+periods(item):'';
@@ -243,7 +250,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -278,6 +285,20 @@ function showPlan(plan) {
   panel.append(el('h2',plan.status==='imported'?'Importación confirmada':plan.can_confirm?'Plan listo para confirmar':'Plan pendiente de resolver'));
   for(const issue of plan.issues)panel.append(el('p',issue,'alert'));
   for(const warning of plan.warnings)panel.append(el('p',warning,'footnote'));
+  if(plan.password_required) {
+    financialPassword=null;
+    const group=el('div'), caption=el('label','Contraseña para releer el PDF protegido');
+    const input=el('input');input.type='password';input.autocomplete='off';
+    input.setAttribute('aria-label','Contraseña para el plan financiero');caption.append(input);
+    const unlock=el('button','Desbloquear plan');
+    unlock.onclick=()=>run(async()=>{
+      financialPassword=input.value;input.value='';
+      try {showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,password:financialPassword}));}
+      catch(error) {financialPassword=null;throw error;}
+    });
+    group.append(caption,unlock,el('p','Solo se mantiene en memoria durante esta revisión; no se guarda en el plan ni en la base de datos.','footnote'));panel.append(group);
+  }
+  if(plan.status==='imported')financialPassword=null;
   if(plan.currency_confirmation_required) {
     const group=el('div');const caption=el('label','Moneda revisada del estado');
     const select=el('select');select.setAttribute('aria-label','Moneda revisada del estado');
@@ -287,7 +308,7 @@ function showPlan(plan) {
     caption.append(select);const apply=el('button','Aplicar revisión de moneda');
     apply.onclick=()=>run(async()=>{
       if(select.value!=='MXN')throw new Error('El documento queda pendiente hasta acreditar una moneda admitida.');
-      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN'}));
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN',password:financialPassword}));
     });
     group.append(caption,apply);panel.append(group);
   }
@@ -295,20 +316,21 @@ function showPlan(plan) {
   const product=row=>row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
+    ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
     ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{}),
     ...(plan.investment_transfer_evidence?{investment_transfer_evidence:plan.investment_transfer_evidence}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
-$('prepare').onclick=()=>run(async()=>showPlan(financialPlan?.currency_confirmation?
-  await api('/api/documents/'+current.id+'/plan',{revision:current.revision,currency_confirmation:financialPlan.currency_confirmation}):
-  await api('/api/documents/'+current.id+'/plan')));
+$('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan',{
+  revision:current.revision,currency_confirmation:financialPlan?.currency_confirmation||null,password:financialPassword})));
 $('confirm').onclick=()=>run(async()=>{
   if(!financialPlan?.can_confirm)return;
   const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash,
-    currency_confirmation:financialPlan.currency_confirmation||null});
+    currency_confirmation:financialPlan.currency_confirmation||null,password:financialPassword});
   showPlan(plan);message(plan.duplicate?'El documento ya estaba importado; no se duplicó.':'Importación confirmada. Los movimientos están guardados en el libro financiero.');
 });
 async function openBook() {
+  financialPassword=null;
   const data=await api('/api/book');
   selected=null;renderNavigation();
   $('overview').hidden=true;$('detail').hidden=true;$('book').hidden=false;

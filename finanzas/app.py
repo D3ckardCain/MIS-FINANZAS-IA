@@ -99,12 +99,12 @@ def make_server(path, port=0):
                             if type(payload['revision']) is not int:raise ValueError('Se requiere la revisión vigente del documento.')
                             with FinancialBook(path) as book:
                                 self.reply(200,book.preview(identifier,expected_revision=payload['revision'],
-                                    currency_confirmation=payload.get('currency_confirmation')))
+                                    currency_confirmation=payload.get('currency_confirmation'),password=payload.get('password')))
                             return
                         if action == 'confirm':
                             with FinancialBook(path) as book:
                                 self.reply(200, book.confirm(identifier,revision=payload['revision'],plan_hash=payload['plan_hash'],
-                                    currency_confirmation=payload.get('currency_confirmation')))
+                                    currency_confirmation=payload.get('currency_confirmation'),password=payload.get('password')))
                             return
                         if action == 'reprocess':
                             result = inbox.reprocess(identifier, expected_revision=payload['revision'],
