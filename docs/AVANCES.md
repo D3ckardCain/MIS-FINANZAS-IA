@@ -588,3 +588,11 @@
 - Etiqueta explícita de efectivo del portafolio en plan y libro; retención/neto de efectivo desconocidos hasta acreditar atribución fiscal.
 - Moneda documentada y PDF protegido con contraseña transitoria; quince pruebas nuevas sobre conceptos, impuestos informativos, gastos, vacíos, duplicados legítimos, versiones, rollback, once instituciones y confirmación HTTP.
 - Muestra real comprobada solo mediante plan bloqueado por inconsistencia del valor inicial de cartera; ningún movimiento personal confirmado. Manual y límites publicados, sin nuevas dependencias o pagos.
+
+### Verificación de importación de efectivo Fintual
+
+- [536 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42307559452).
+- Commit probado: 58b9e27060317cd73ac9f5183a03a245e7390407.
+- Quince pruebas nuevas cubren efectivo único, compra/venta sin ganancia supuesta, ISR informativo sin cargo o cero ficticio, valuación/porcentaje observados, comisión/IVA, vacío explícito, diferencias/NaN/moneda, duplicados legítimos, meses fuera de orden, versiones, rollback, PDF protegido, once instituciones y confirmación HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. La muestra real se utilizó solo para verificar el bloqueo de inconsistencia en la composición del saldo inicial, con cero movimientos personales confirmados.
+- Código y manual publicados; unidades/costo por lote, continuidad de posiciones, atribución fiscal y reinversión confirmada permanecen pendientes.
