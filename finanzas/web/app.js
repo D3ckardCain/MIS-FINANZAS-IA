@@ -19,6 +19,15 @@ const labels = {
   movements:'Movimientos propuestos',
   account_name:'Cuenta / producto',
   product:'Producto',locator:'Referencia de evidencia',
+  shared_account:'Cuenta compartida entre vistas',payment_groups:'Cobros de interés e ISR vinculados',
+  interest_net_of_withholding:'Interés menos ISR retenido',credits:'Depósitos',gross_interest:'Interés bruto',
+  commissions_reported:'Comisiones publicadas',vat_reported:'IVA publicado',average_balance:'Saldo promedio',
+  portfolio_initial_reported:'Posición inicial publicada',portfolio_final_reported:'Posición final publicada',
+  gat_nominal:'GAT nominal',gat_real:'GAT real',other_positions:'Otros productos publicados',
+  description_printed:'Descripción publicada',income_groups:'Cobros vinculados',gross:'Interés bruto',
+  net:'Interés menos retención',reference_root:'Grupo de referencias',
+  interest_reference:'Referencia del interés',withholding_reference:'Referencia del ISR',
+  accrual_start:'Inicio del rango remunerado',accrual_end:'Fin del rango remunerado',
   operation_date:'Fecha de operación', posting_date:'Fecha de cargo', effective_date:'Fecha efectiva',
   date:'Fecha', description:'Descripción', amount:'Importe', deposit:'Abono', withdrawal:'Cargo',
   balance:'Saldo', category:'Tipo de movimiento', currency:'Moneda', exchange_rate:'Tipo de cambio',
@@ -220,7 +229,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(result.institution==='openbank' && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -255,8 +264,10 @@ function showPlan(plan) {
   panel.append(el('h2',plan.status==='imported'?'Importación confirmada':plan.can_confirm?'Plan listo para confirmar':'Plan pendiente de resolver'));
   for(const issue of plan.issues)panel.append(el('p',issue,'alert'));
   for(const warning of plan.warnings)panel.append(el('p',warning,'footnote'));
-  renderObject({periods:plan.periods.map(p=>({product:label(p.lane),...p})),
-    movements:plan.movements.map(m=>({product:label(m.lane),...m}))},panel);
+  const product=row=>row.shared_account?'Cuenta remunerada · ambas vistas':label(row.lane);
+  renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
+    movements:plan.movements.map(m=>({product:product(m),...m})),
+    ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
 $('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan')));
@@ -274,9 +285,9 @@ async function openBook() {
   target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else renderArray(data.accounts.map(account=>({
-    account_name:'Openbank · '+label(account.lane), unit:account.unit,
+    account_name:name(account.institution)+' · '+(account.shared_account?'Cuenta remunerada':label(account.lane)), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
-    interest:account.interest, withholding:account.withholding,
+    interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps
   })),target);
 }

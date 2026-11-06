@@ -1,4 +1,4 @@
-"""Openbank: plan revisable y confirmación financiera atómica sobre el ledger.
+"""Planes revisables y confirmación financiera atómica sobre el ledger.
 
 Los saldos iniciales son anclas documentales, no nuevas aportaciones. Esto
 permite incorporar meses fuera de orden sin duplicar aperturas ni inventar
@@ -61,6 +61,8 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content):
+        if doc['result']['institution']=='mifel' and doc['result']['format']=='pdf':
+            return self._mifel_plan(doc,content)
         identifier=doc['id']
         plan=dict(document_id=identifier, revision=doc['revision'], status='blocked', can_confirm=False,
                   issues=[], warnings=[], periods=[], movements=[], transfers=[])
@@ -145,6 +147,97 @@ class FinancialBook:
         plan['plan_hash']=_hash(plan)
         return plan,tuple(movements)
 
+    def _mifel_plan(self, doc, content):
+        from .mifel import MifelReader
+        identifier=doc['id']
+        plan=dict(document_id=identifier,institution='mifel',revision=doc['revision'],status='blocked',can_confirm=False,
+                  issues=[],warnings=[],periods=[],movements=[],transfers=[],payment_groups=[])
+        # Las dos pestañas describen una misma cuenta remunerada, no dos cuentas.
+        for lane in ('debit','investments'):
+            view=doc['result']['views'].get(lane,{})
+            if view.get('status')!='extracted' or view.get('mode')!='specialized':
+                plan['issues'].append('Mifel requiere ambas vistas específicas de la cuenta compartida.');return plan,()
+        try: preview=MifelReader('investments').read_pdf(content)
+        except ValueError as error:
+            plan['issues'].append(str(error));return plan,()
+        if not preview.reconciled:
+            plan['issues'].extend(dict.fromkeys(preview.issues+preview.detail_issues));return plan,()
+        if not preview.account_fingerprint:
+            plan['issues'].append('Falta identidad de la cuenta remunerada Mifel.');return plan,()
+        account='mifel:'+preview.account_fingerprint
+        period=dict(document_id=identifier,lane='investments',account=account,unit=preview.summary.unit,
+            start=str(preview.period_start),end=str(preview.period_end),
+            initial=str(preview.summary.initial),final=str(preview.summary.final),
+            shared_account=True,view_lanes=['debit','investments'])
+        plan['periods'].append(period)
+        self._check_period(plan,period)
+        movements=[];zero_interest=[]
+        for row in preview.entries:
+            locator=f'pagina {row.page}, linea {row.line}'
+            origin=None
+            if row.category=='interest_paid': kind=Kind.INTEREST;value=row.credit
+            elif row.category=='withholding': kind=Kind.WITHHOLDING;value=row.debit
+            elif row.category=='transfer_unmatched':
+                kind=Kind.CONTRIBUTION if row.credit is not None else Kind.WITHDRAWAL
+                value=row.credit if row.credit is not None else row.debit
+                origin=Origin.UNKNOWN
+            else:
+                plan['issues'].append('Concepto Mifel sin normalización: '+locator);continue
+            if value is None:
+                plan['issues'].append('Importe Mifel sin columna acreditada: '+locator);continue
+            if value==0 and kind==Kind.INTEREST:
+                zero_interest.append(dict(reference=row.reference,effective_date=str(row.effective_date),locator=locator))
+                continue
+            if value==0 and kind!=Kind.WITHHOLDING:
+                plan['issues'].append('Transferencia Mifel de importe cero requiere revisión: '+locator);continue
+            # No se supone que un folio sea globalmente único en todos los ejercicios.
+            reference='period:'+period['start']+':'+period['end']+':'+row.reference
+            movement=Movement(movement_id('mifel',account,reference),account,preview.summary.unit,row.effective_date,
+                kind,value,Evidence(identifier,locator),origin)
+            movements.append(movement)
+            plan['movements'].append(plain(movement)|dict(lane='investments',shared_account=True,
+                reference=row.reference,description=row.description_printed,
+                accrual_start=plain(row.accrual_start),accrual_end=plain(row.accrual_end)))
+        if not any(m.kind==Kind.WITHHOLDING for m in movements) and preview.summary.withholding==0:
+            zero=Movement(movement_id('mifel',account,'period:'+period['start']+':'+period['end']+':isr-summary'),
+                account,preview.summary.unit,preview.period_end,Kind.WITHHOLDING,Decimal('0'),
+                Evidence(identifier,'resumen cuenta remunerada: ISR retenido'))
+            movements.append(zero)
+            plan['movements'].append(plain(zero)|dict(lane='investments',shared_account=True,description='ISR cero publicado en resumen'))
+        plan['payment_groups']=plain(preview.income_groups)
+        plan['zero_interest_observations']=zero_interest
+        plan['reported_terms']={key:plain(getattr(preview.summary,key)) for key in
+            ('annual_rate_reported','gat_nominal','gat_real','average_balance')}
+        if _sum((preview.summary.initial,*(m.signed_amount for m in movements)))!=preview.summary.final:
+            plan['issues'].append('La normalización Mifel no reconstruye su cierre; no se ajusta el saldo.')
+        if _sum(m.amount for m in movements if m.kind==Kind.INTEREST)!=preview.summary.gross_interest:
+            plan['issues'].append('Interés Mifel normalizado no coincide con el resumen.')
+        if _sum(m.amount for m in movements if m.kind==Kind.WITHHOLDING)!=preview.summary.withholding:
+            plan['issues'].append('ISR Mifel normalizado no coincide con el resumen.')
+        plan['warnings'].extend([
+            'Débito e inversiones muestran la misma cuenta remunerada Mifel: se importa una sola vez, sin traspaso ficticio entre pestañas.',
+            'El cobro conserva su fecha publicada; el rango remunerado se guarda aparte aunque alcance otro mes o un fin de semana.',
+            'Interés bruto e ISR se registran por sus filas; el grupo de rendimiento neto y el resumen no generan cobros o retenciones adicionales.',
+            'Las tasas/GAT son los valores históricos del estado, sin recalcular devengo ni impuesto anual.',
+            'Los saldos iniciales son anclas documentales. Los períodos superpuestos se bloquean y los huecos permanecen visibles.'])
+        if any(m.origin==Origin.UNKNOWN for m in movements):
+            plan['warnings'].append('Aportaciones/retiros SPEI quedan con origen pendiente; no se acredita capital externo ni contrapartida propia por coincidencia de importe.')
+        plan['issues']=list(dict.fromkeys(plan['issues']))
+        if not plan['issues']:plan.update(status='ready',can_confirm=True)
+        plan['state_hash']=self._state_hash();plan['plan_hash']=_hash(plan)
+        return plan,tuple(movements)
+
+    def _check_period(self, plan, period):
+        previous=self.db.execute('SELECT start,end,initial,final FROM book_periods WHERE account=? ORDER BY start',
+                                 (period['account'],)).fetchall()
+        for start,end,initial,final in previous:
+            if start<=period['end'] and end>=period['start']:
+                plan['issues'].append('Período superpuesto en cuenta remunerada: revisar documentos antes de duplicar operaciones.')
+            if date.fromisoformat(end)+timedelta(days=1)==date.fromisoformat(period['start']) and Decimal(final)!=Decimal(period['initial']):
+                plan['issues'].append('Saldo inicial no coincide con cierre anterior en cuenta remunerada.')
+            if date.fromisoformat(period['end'])+timedelta(days=1)==date.fromisoformat(start) and Decimal(initial)!=Decimal(period['final']):
+                plan['issues'].append('Saldo final no coincide con apertura siguiente en cuenta remunerada.')
+
     def confirm(self, identifier, *, revision, plan_hash):
         # Bloquea cambios de la bandeja mientras se comprueba y confirma el plan.
         # Solo la base financiera se modifica: un único commit abarca todo el lote.
@@ -164,7 +257,7 @@ class FinancialBook:
                         raise ValueError('El plan o el libro cambió: vuelve a preparar la importación.')
                     starts=[date.fromisoformat(p['start']) for p in plan['periods']]
                     ends=[date.fromisoformat(p['end']) for p in plan['periods']]
-                    self.store.register_document(content,'openbank',min(starts),max(ends))
+                    self.store.register_document(content,doc['result']['institution'],min(starts),max(ends))
                     self.store.review_document(identifier,'approved','Confirmación explícita del plan financiero '+plan_hash)
                     self.store.record_many(movements)
                     for p in plan['periods']:
@@ -186,11 +279,13 @@ class FinancialBook:
                 if date.fromisoformat(previous[1])+timedelta(days=1)<date.fromisoformat(next_[0]):
                     gaps.append(dict(start=str(date.fromisoformat(previous[1])+timedelta(days=1)),end=str(date.fromisoformat(next_[0])-timedelta(days=1))))
             selected=[m for m in ledger.movements if m.account==account]
-            accounts.append(dict(account=account,institution='openbank',lane=lane,unit=unit,
+            institution=account.split(':',1)[0]
+            accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution=='mifel',
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
                 withholding=str(_sum(m.amount for m in selected if m.kind==Kind.WITHHOLDING)),
+                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],
             movements=len(ledger.movements),note='Cierres documentales por cuenta y fecha; intereses y retenciones de períodos importados. No acredita historia completa ni saldo actual de mercado.')

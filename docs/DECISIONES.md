@@ -88,3 +88,10 @@
 **Ventaja:** reintentos no duplican, fallos no dejan importaciones parciales, y traspasos internos mantienen reducción/aportación enlazadas.
 **Historia:** apertura y cierre se conservan como anclas por período; no se generan aportaciones ni aperturas mensuales acumulables. Esto admite meses fuera de orden. El libro muestra el último cierre documental por cuenta y fecha; el neto de movimientos del ledger sin apertura no se presenta como saldo total.
 **Límites:** sin deduplicación económica inferida entre documentos: solapamientos bloqueados, huecos visibles y diferencias de continuidad pendientes. Orígenes de débito desconocidos no se cuentan como capital externo acreditado. Las demás instituciones conservan sus lectores, sin confirmar automáticamente sus salidas.
+
+## D014 — Mifel comparte cuenta entre las dos vistas
+
+**Decisión:** las pestañas operativa e inversión representan la misma cuenta remunerada. Se confirma un solo período y un lote único, con origen SPEI pendiente y sin transferencia ficticia entre pestañas.
+**Cobros:** interés bruto e ISR de filas se conservan separados; los grupos netos y el resumen no originan movimientos adicionales. Fecha de cobro y rango remunerado permanecen independientes. Tasas/GAT se guardan como datos históricos.
+**Control:** cuenta/período/folio identifica cada fila del formato; solapamientos se bloquean. Se reutilizan transacción atómica, versión del plan, anclas y continuidad. El libro distingue institución y cuenta, con interés menos ISR explícito para consulta.
+**Límites:** falta enlace entre instituciones, correcciones, otros productos y confirmación desde imágenes. La retención no determina por sí misma el impuesto anual.

@@ -28,3 +28,7 @@ Inversiones a plazo/fondos en cero no significan que la cuenta remunerada tenga 
 Formatos, referencias, fechas o conceptos desconocidos, rangos ausentes/invertidos y diferencias de un centavo quedan pendientes. Las referencias repetidas se conservan y señalan; no se deduplican operaciones por fecha/importe. El detalle termina en sus totales para no tratar cargos objetados, notas o facturas como movimientos adicionales.
 
 No calcula reglas de devengo diario ni ISR anual o su acreditamiento. El OCR local acepta imágenes sin heredar conciliación PDF. No se importan datos reales ni Excel y `ready_to_import=False` siempre. Los originales e informes financieros permanecen privados; no se añaden APIs de pago.
+
+## Confirmación en la aplicación
+
+El formato textual conciliado ya se conecta al ledger mediante un plan financiero revisable. Ambas pestañas conservan una cuenta única, sin duplicación de capital, interés o ISR. Ver [manual de importación Mifel](IMPORTACION-MIFEL.md). La entrada de imagen sigue siendo evidencia OCR pendiente de confirmación financiera.

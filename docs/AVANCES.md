@@ -416,3 +416,13 @@
 - Trece pruebas nuevas verifican conversión, pares internos, ambigüedad, origen pendiente, precisión, idempotencia, reapertura, continuidad, meses fuera de orden, huecos, versiones/planes obsoletos, rollback completo y confirmación HTTP.
 - Suite previa conservada; JavaScript validado. Inspección visual del plan y del libro con datos ficticios; prueba de generación de plan sobre formato real sin confirmar movimientos.
 - Próxima integración: extender la capa financiera a otra institución, manteniendo los lectores y reglas particulares.
+
+## 2026-11-05 — Mifel: confirmación financiera de cuenta remunerada
+
+- Plan automático y confirmación en la aplicación, con un solo período/cuenta compartida entre ambas vistas.
+- Normalizados interés bruto, retención ISR no nula o cero explícito y aportaciones/reducciones SPEI con origen pendiente.
+- Conservados fecha de cobro, rango remunerado, referencias de los pares y condiciones históricas en el plan, sin duplicar por resumen/grupo.
+- Nuevos controles de cierre/interés/ISR, continuidad y solapamientos; transacción, idempotencia y planes obsoletos reutilizados.
+- Libro multiinstitución: Openbank y Mifel conviven sin colisiones, con cierres por fecha e interés menos ISR de períodos confirmados.
+- Pruebas ficticias y generación de plan sobre el formato real, sin confirmar movimientos personales. Sin dependencias o servicios externos nuevos.
+- Manual Mifel y documentación general actualizados; otras instituciones siguen pendientes de confirmación financiera.
