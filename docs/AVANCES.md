@@ -516,3 +516,11 @@
 - Bloqueo de pagos a plazo sin desglose acreditado de bruto/retención y de retenciones/comisiones no nulas, formatos incompletos o posiciones inconsistentes.
 - Diecinueve pruebas nuevas: transacción, versiones, continuidad, meses fuera de orden, siete instituciones, moneda y contraseñas también por HTTP. JavaScript validado y muestra real probada solo mediante plan bloqueado, sin movimientos confirmados.
 - Manual, decisiones y límites actualizados. Sin nuevas dependencias, servicios ni pagos obligatorios.
+
+### Verificación de importación de efectivo SuperTasas
+
+- [462 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42299302319).
+- Commit probado: a84406f1f824bf6fd9830d8278f144c3f2a0d5ba.
+- Diecinueve pruebas nuevas cubren efectivo único, observaciones a plazo sin duplicación, principal devuelto/apertura, interés e ISR cero acotados, cobros no soportados, moneda publicada/revisada/contradictoria, PDF protegido sin guardar contraseñas, versiones, rollback, continuidad, meses fuera de orden, siete instituciones y confirmación HTTP.
+- Suite previa conservada y JavaScript validado. La muestra real se utilizó solo para comprobar el bloqueo de cobros a plazo sin desglose acreditado, con cero movimientos financieros confirmados.
+- Manual y límites publicados. Cartera contable de contratos, cobros a plazo con detalle fiscal, comisiones/retenciones no nulas, reinversiones y confirmación desde imágenes permanecen pendientes.
