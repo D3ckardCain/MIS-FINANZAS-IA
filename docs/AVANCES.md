@@ -498,3 +498,11 @@
 - Controles de normalización, continuidad, solapamiento, versiones, transacción y reintentos; seis instituciones coexisten sin colisiones.
 - Catorce pruebas nuevas; suite local de 443 pruebas aprobada y JavaScript validado. Muestra real comprobada solo mediante vista previa: bloqueo temporal correcto y cero movimientos confirmados.
 - Manual y decisiones actualizados, sin nuevas dependencias o pagos obligatorios. Otros productos, imágenes y enlaces entre instituciones pendientes de confirmación financiera.
+
+### Verificación de importación financiera Plata
+
+- [443 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42287677713).
+- Commit probado: 06fa7f42d96e4a29591b968d65d8edcf0a6c6f0c.
+- Catorce pruebas nuevas cubren dos productos, cashback único, traspaso neutral, origen SPEI pendiente, ISR no nulo/cero, anexo excluido, corte temporal, operación/cargo separados, operaciones iguales legítimas, pares ambiguos, conceptos/moneda, continuidad, meses fuera de orden, duplicados, versiones, rollback, seis instituciones y confirmación HTTP.
+- Suite previa conservada; JavaScript validado. Muestra real utilizada solo para vista previa: bloqueo por fechas fuera del período y ningún movimiento financiero confirmado.
+- Código y manual publicados; confirmación desde imágenes, otros productos y conciliación entre instituciones siguen pendientes.
