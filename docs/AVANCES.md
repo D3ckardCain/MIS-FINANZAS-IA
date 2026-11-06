@@ -606,3 +606,11 @@
 - Control de Holdings frente a cierre, Cost and Fees frente a comisiones, secciones y conceptos admitidos. PDF protegido con contraseña transitoria, sin guardarla.
 - Diecisiete pruebas de integración y dos del núcleo con datos ficticios: ingreso/impuesto, compra/venta, gastos, acumulados, discrepancias, instrumentos no admitidos, Memopost, versiones, rollback, doce instituciones/USD-MXN y confirmación HTTP.
 - Código y manual preparados sin nuevas dependencias, servicios o pagos obligatorios; ningún movimiento personal confirmado.
+
+### Verificación de importación de efectivo Alpaca
+
+- [555 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42311958286).
+- Commit probado: 8cede6caf098577d5f17bea35cef04aadee9a356.
+- Diecisiete pruebas de integración y dos del núcleo cubren efectivo USD único, dividendos/retención extranjera distintos de interés/ISR mexicano, compra/venta, comisiones y Fees sin duplicar, cero extranjero, valuación/acumulados, Holdings/cierre, moneda/instrumentos, Memopost, meses fuera de orden, versiones, rollback, contraseña transitoria, doce instituciones y confirmación HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Pruebas ficticias y ningún movimiento personal confirmado.
+- Código, manual y límites publicados; lotes/costo, ganancia realizada calculada, fiscalidad mexicana, conversión documentada y reinversiones permanecen pendientes.
