@@ -552,3 +552,11 @@
 - Moneda publicada/revisada y PDF protegido con contraseña transitoria; equivalencias entre contratos no fusionadas automáticamente.
 - Dieciocho pruebas de integración y dos del núcleo: ambos formatos, pagos, timbrado compensado/no compensado, proyecciones, moneda, contraseñas, reintentos, versiones, rollback, nueve instituciones y confirmación HTTP.
 - Muestra real genera plan listo dentro del alcance, sin confirmar movimientos personales. Manual, límites y decisiones guardados; sin nuevas dependencias o pagos.
+
+### Verificación de importación de pagos Kapital
+
+- [500 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42303313799).
+- Commit probado: aaf0dac2a03688857030ba23738b281b3ded1484.
+- Dieciocho pruebas de integración y dos del núcleo cubren ambos formatos, principal/interés/ISR, timbrado compensado/no compensado, devolución sin capital o interés, proyecciones desconocidas, referencias por categoría, moneda, PDF protegido, versiones, rollback, meses fuera de orden, huecos, nueve instituciones y confirmación HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Muestra real utilizada solo para generar un plan listo, con cero movimientos personales confirmados.
+- Código, manual y límites publicados; cartera contractual, equivalencias entre identificadores y reinversión confirmada pendientes.
