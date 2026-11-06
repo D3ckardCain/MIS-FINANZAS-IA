@@ -434,3 +434,13 @@
 - Catorce pruebas nuevas cubren cuenta compartida, ISR no nulo/cero, observación de interés cero, rangos remunerados, aportaciones/reducciones pendientes, duplicados, continuidad, orden de meses, bloqueo de discrepancias, rollback, coexistencia con Openbank y confirmación HTTP.
 - Suite previa conservada; JavaScript validado. Plan automático y cuenta única con interés/ISR/neto comprobados en navegador con datos ficticios.
 - Prueba de generación de plan con formato real sin confirmar movimientos personales. Manual y código públicos; datos financieros privados fuera del repositorio.
+
+## 2026-11-05 — BanCoppel: confirmación financiera de cuenta de paso
+
+- Conectado débito PDF al plan automático y confirmación del libro, sin crear producto de inversión ni segunda cuenta.
+- Efectivo/SPEI/devoluciones como aportaciones/reducciones pendientes de origen y contrapartida, sin capital externo acreditado por suposición.
+- Comisiones e IVA separados en filas de cargos operativos; ISR cero documentado e interés solo si está publicado.
+- Identidad contradictoria rechazada y moneda nacional explícita requerida, sin inferir MXN por símbolo dólar.
+- Reconciliación adicional de importes normalizados, fechas de cambio de año, duplicados binarios, solapamientos, continuidad y atomicidad.
+- Libro con tres instituciones distintas, identificación de cuenta de paso y consulta separada de cargos e interés menos ISR.
+- Manual y pruebas ficticias; muestra real usada para validar plan sin confirmar movimientos personales. Sin dependencias ni pagos nuevos.

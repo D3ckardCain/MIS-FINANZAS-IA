@@ -95,3 +95,10 @@
 **Cobros:** interés bruto e ISR de filas se conservan separados; los grupos netos y el resumen no originan movimientos adicionales. Fecha de cobro y rango remunerado permanecen independientes. Tasas/GAT se guardan como datos históricos.
 **Control:** cuenta/período/folio identifica cada fila del formato; solapamientos se bloquean. Se reutilizan transacción atómica, versión del plan, anclas y continuidad. El libro distingue institución y cuenta, con interés menos ISR explícito para consulta.
 **Límites:** falta enlace entre instituciones, correcciones, otros productos y confirmación desde imágenes. La retención no determina por sí misma el impuesto anual.
+
+## D015 — BanCoppel como cuenta de paso
+
+**Decisión:** confirmar débito como aportaciones/reducciones operativas con origen pendiente, sin inferir rendimiento, capital externo o transferencia propia. Comisiones e IVA son cargos de filas, separados del ISR. Solo un interés explícito es ingreso por interés.
+**Identidad y moneda:** cuenta única y leyenda de moneda nacional requeridas; símbolo dólar, ausencia o contradicción no acreditan MXN. Fechas se resuelven por el período interior, incluido cambio de año.
+**Control:** anclas y continuidad de períodos, evidencia por fila, bloqueo de solapamientos, confirmación atómica y reintentos idempotentes. Depósitos iguales legítimos se conservan; no se enlazan por coincidencia de importe/fecha.
+**Límites:** falta conciliación entre instituciones/origen de efectivo y devoluciones, otros productos, imágenes y formatos con retención no nula. No se abre una inversión desde la pestaña adicional.

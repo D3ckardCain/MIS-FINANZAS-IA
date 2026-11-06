@@ -1,6 +1,6 @@
 # Importación financiera — primera integración: Openbank
 
-La aplicación conecta el lector Openbank PDF con el ledger. Mifel cuenta con su propia integración documentada en [Importación Mifel](IMPORTACION-MIFEL.md). Cada institución conserva sus reglas; imágenes y constancias fiscales todavía no se confirman financieramente.
+La aplicación conecta el lector Openbank PDF con el ledger. Mifel cuenta con su propia integración documentada en [Importación Mifel](IMPORTACION-MIFEL.md). BanCoppel tiene [integración de cuenta de paso](IMPORTACION-BANCOPPEL.md). Cada institución conserva sus reglas; imágenes y constancias fiscales todavía no se confirman financieramente.
 
 ## Flujo de uso
 

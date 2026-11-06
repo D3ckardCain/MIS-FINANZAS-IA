@@ -61,6 +61,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content):
+        if doc['result']['institution']=='bancoppel' and doc['result']['format']=='pdf':
+            from .book_bancoppel import prepare
+            return prepare(self,doc,content)
         if doc['result']['institution']=='mifel' and doc['result']['format']=='pdf':
             return self._mifel_plan(doc,content)
         identifier=doc['id']
@@ -227,16 +230,16 @@ class FinancialBook:
         plan['state_hash']=self._state_hash();plan['plan_hash']=_hash(plan)
         return plan,tuple(movements)
 
-    def _check_period(self, plan, period):
+    def _check_period(self, plan, period, label='cuenta remunerada'):
         previous=self.db.execute('SELECT start,end,initial,final FROM book_periods WHERE account=? ORDER BY start',
                                  (period['account'],)).fetchall()
         for start,end,initial,final in previous:
             if start<=period['end'] and end>=period['start']:
-                plan['issues'].append('Período superpuesto en cuenta remunerada: revisar documentos antes de duplicar operaciones.')
+                plan['issues'].append('Período superpuesto en '+label+': revisar documentos antes de duplicar operaciones.')
             if date.fromisoformat(end)+timedelta(days=1)==date.fromisoformat(period['start']) and Decimal(final)!=Decimal(period['initial']):
-                plan['issues'].append('Saldo inicial no coincide con cierre anterior en cuenta remunerada.')
+                plan['issues'].append('Saldo inicial no coincide con cierre anterior en '+label+'.')
             if date.fromisoformat(period['end'])+timedelta(days=1)==date.fromisoformat(start) and Decimal(initial)!=Decimal(period['final']):
-                plan['issues'].append('Saldo final no coincide con apertura siguiente en cuenta remunerada.')
+                plan['issues'].append('Saldo final no coincide con apertura siguiente en '+label+'.')
 
     def confirm(self, identifier, *, revision, plan_hash):
         # Bloquea cambios de la bandeja mientras se comprueba y confirma el plan.
@@ -281,11 +284,13 @@ class FinancialBook:
             selected=[m for m in ledger.movements if m.account==account]
             institution=account.split(':',1)[0]
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution=='mifel',
+                role='transit' if institution=='bancoppel' else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
                 withholding=str(_sum(m.amount for m in selected if m.kind==Kind.WITHHOLDING)),
                 interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))),
+                charges_fees_and_vat=str(_sum(m.amount for m in selected if m.kind==Kind.FEE)),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],
             movements=len(ledger.movements),note='Cierres documentales por cuenta y fecha; intereses y retenciones de períodos importados. No acredita historia completa ni saldo actual de mercado.')

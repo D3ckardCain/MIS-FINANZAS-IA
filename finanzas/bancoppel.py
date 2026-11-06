@@ -56,6 +56,7 @@ class BanCoppelPreview:
     detail_issues: tuple[str, ...]
     account_fingerprint: str | None
     lane: str = "debit"
+    unit: str | None = None
 
     @property
     def reconciled(self):
@@ -122,14 +123,17 @@ class BanCoppelDebitReader:
     def read_pages(self, pages, identifier):
         pages = tuple(pages)
         text = "\n".join(pages)
+        currency_lines=[fold(line) for page in pages for line in page.splitlines() if fold(line).startswith('moneda ')]
+        unit='MXN' if currency_lines and all(re.fullmatch(r'moneda nacional\s*\$?',line) for line in currency_lines) else None
         if "bancoppel" not in fold(text):
             raise ReaderError("Identidad BanCoppel ausente")
         ranges = periods(text)
         if len(ranges) != 1:
             raise ReaderError("Se requiere un período documental único")
         start, end = ranges[0]
-        account = re.search(r"N[uú]mero\s+de\s+Cuenta:\s*CLABE:\s*(\d{6,})", text, re.I)
-        account_fingerprint = sha256(("bancoppel:" + account[1]).encode()).hexdigest() if account else None
+        accounts = set(re.findall(r"N[uú]mero\s+de\s+Cuenta:\s*CLABE:\s*(\d{6,})", text, re.I))
+        if len(accounts)>1:raise ReaderError("Identidad de cuenta BanCoppel contradictoria")
+        account_fingerprint = sha256(("bancoppel:" + next(iter(accounts))).encode()).hexdigest() if accounts else None
         summaries = []
         for number, page in enumerate(pages, 1):
             if "resumen de la cuenta" not in fold(page):
@@ -230,4 +234,4 @@ class BanCoppelDebitReader:
         if ordinary != summary.withdrawals:
             issues.append("Retiros del detalle y resumen difieren")
         return BanCoppelPreview(identifier, start, end, summary, tuple(entries),
-                               tuple(issues), tuple(detail_issues), account_fingerprint)
+                               tuple(issues), tuple(detail_issues), account_fingerprint,unit=unit)

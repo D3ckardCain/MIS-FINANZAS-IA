@@ -58,3 +58,7 @@ Los controles no prueban cobertura anterior al primer archivo ni que ya exista e
 Este parser depende de la estructura de resumen y detalle conocida. Otros productos, diseños nuevos, PDF escaneado o cifras con formato diferente requieren adaptación; los errores se conservan visibles.
 
 Las pruebas públicas usan extractos ficticios. Cubren cambio de año, saldo alterado, comisiones distintas en resumen/detalle, retención desconocida o positiva, filas ilegibles, PDF, consola, duplicados, cuentas diferentes, huecos y solapamientos. Los documentos reales no son fixtures del repositorio.
+
+## Confirmación en la aplicación
+
+El débito PDF conciliado se conecta al ledger como cuenta de paso. Se exige identidad única y moneda nacional explícita; cargos operativos e ISR permanecen separados y los orígenes de capital pendientes. Ver [manual de importación BanCoppel](IMPORTACION-BANCOPPEL.md). La vista de inversiones y la evidencia OCR no generan un producto financiero adicional.
