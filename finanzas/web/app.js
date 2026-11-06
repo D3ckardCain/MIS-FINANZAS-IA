@@ -37,7 +37,7 @@ const labels = {
   transfer_candidates:'Transferencias candidatas', aggregate:'Resumen global del documento',
   aggregate_isr_basis:'Base observada del ISR global', annex_pages:'Páginas de anexo excluidas',
   issues:'Alertas', detail_issues:'Alertas de detalle', cash_issues:'Alertas de efectivo',
-  contract_issues:'Alertas de contratos', document_preview:'Lectura documental', evidence:'Evidencia OCR',
+  contract_issues:'Alertas de contratos', document_preview:'Lectura documental', evidence:'Evidencia',
   confidence:'Confianza OCR', text:'Texto', unit:'Unidad', value:'Valor', raw_value:'Valor original',
   status:'Estado', periods:'Períodos detectados', account_fingerprint:'Huella de cuenta',
   document_id:'Huella documental', relationship_fingerprint:'Huella de relación', id:'Identificador',
@@ -45,7 +45,8 @@ const labels = {
   timezone:'Zona horaria', account:'Cuenta', source_lines:'Líneas de origen',
   principal:'Capital', principal_paid:'Capital pagado', interest_paid:'Interés pagado',
   maturity:'Vencimiento', rate:'Tasa', start:'Inicio', end:'Fin', quantity:'Cantidad',
-  debit:'Cuenta operativa', investments:'Inversiones', reconciled:'Conciliación',
+  debit:'Cargo', credit:'Abono', investments:'Inversiones', reconciled:'Conciliación',
+  cuenta_a_la_vista_remunerada:'Cuenta a la vista remunerada',
   candidate_requires_review:'Candidato pendiente de revisión', interest_received:'Interés cobrado',
   first_period:'Primer período importado', through:'Cierre al', closing:'Saldo de cierre documental',
   pending_origins:'Orígenes pendientes', gaps:'Huecos entre períodos importados',
@@ -60,6 +61,7 @@ const labels = {
   indistinguishable_zero_retention:'Retención cero: base no distinguible',
 };
 const label = key => Object.hasOwn(labels,key) ? labels[key] : key.replaceAll('_',' ').replace(/^./, c=>c.toUpperCase());
+const laneLabel = lane => lane==='debit'?'Cuenta operativa':label(lane);
 const value = data => data === null ? 'No publicado / desconocido' : typeof data === 'boolean' ? (data ? 'Sí' : 'No') : Object.hasOwn(labels,data) ? labels[data] : String(data);
 function el(tag, text, className) {
   const node = document.createElement(tag);
@@ -144,7 +146,7 @@ function renderDocuments() {
   }
 }
 async function refresh() { state=await api('/api/state'); renderNavigation(); renderDocuments(); }
-const hiddenKeys = new Set(['document_id','account_fingerprint','recipient_fingerprint','relationship_fingerprint','evidence_id','lane','institution','ready_to_import','account','transfer_id','id']);
+const hiddenKeys = new Set(['document_id','account_fingerprint','recipient_fingerprint','relationship_fingerprint','evidence_id','lane','institution','ready_to_import','account','transfer_id','id','view_lanes']);
 function renderObject(data, container, level=0) {
   if (data===null || typeof data!=='object') {container.append(el('p',value(data))); return;}
   if (Array.isArray(data)) { renderArray(data,container); return; }
@@ -264,9 +266,9 @@ function showPlan(plan) {
   panel.append(el('h2',plan.status==='imported'?'Importación confirmada':plan.can_confirm?'Plan listo para confirmar':'Plan pendiente de resolver'));
   for(const issue of plan.issues)panel.append(el('p',issue,'alert'));
   for(const warning of plan.warnings)panel.append(el('p',warning,'footnote'));
-  const product=row=>row.shared_account?'Cuenta remunerada · ambas vistas':label(row.lane);
+  const product=row=>row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
-    movements:plan.movements.map(m=>({product:product(m),...m})),
+    movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
     ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
@@ -285,7 +287,7 @@ async function openBook() {
   target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else renderArray(data.accounts.map(account=>({
-    account_name:name(account.institution)+' · '+(account.shared_account?'Cuenta remunerada':label(account.lane)), unit:account.unit,
+    account_name:name(account.institution)+' · '+(account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps
