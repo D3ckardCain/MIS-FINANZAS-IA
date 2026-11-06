@@ -571,3 +571,11 @@
 - Moneda explícita/revisada y PDF protegido con contraseña transitoria; transacción, reintentos y evidencia por fila/componente reutilizados.
 - Veinte pruebas de integración y una del núcleo con datos ficticios: pagos, IVA, retención, recompensas, diferencias, duplicados legítimos, versiones, rollback, diez instituciones y confirmación HTTP. Ningún movimiento personal confirmado.
 - Manual, límites y decisiones actualizados; sin nuevas dependencias, servicios o pagos obligatorios.
+
+### Verificación de importación de efectivo Doopla
+
+- [521 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42304406900).
+- Commit probado: 47b01d5df4a0e8d97b3c3c5d66df40591a29bada.
+- Veinte pruebas de integración y una del núcleo cubren pago por componentes, IVA separado, recompensa, comisión agrupada, ISR ausente/cero/no nulo y cobertura parcial, cartera/cobranza observadas, anexos repetidos, pagos iguales legítimos, moneda, PDF protegido, versiones, rollback, meses fuera de orden, diez instituciones y confirmación HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Pruebas ficticias y ningún movimiento personal confirmado.
+- Código, manual y límites publicados; cartera contable por préstamo, contrapartidas, reinversión, declaración anual y confirmación desde imágenes pendientes.
