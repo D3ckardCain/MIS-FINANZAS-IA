@@ -61,6 +61,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content):
+        if doc['result']['institution']=='didi' and doc['result']['format']=='pdf':
+            from .book_didi import prepare
+            return prepare(self,doc,content)
         if doc['result']['institution']=='bancoppel' and doc['result']['format']=='pdf':
             from .book_bancoppel import prepare
             return prepare(self,doc,content)
@@ -283,7 +286,7 @@ class FinancialBook:
                     gaps.append(dict(start=str(date.fromisoformat(previous[1])+timedelta(days=1)),end=str(date.fromisoformat(next_[0])-timedelta(days=1))))
             selected=[m for m in ledger.movements if m.account==account]
             institution=account.split(':',1)[0]
-            accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution=='mifel',
+            accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
                 role='transit' if institution=='bancoppel' else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,

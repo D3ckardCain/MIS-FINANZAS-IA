@@ -452,3 +452,13 @@
 - Trece pruebas nuevas cubren cuenta de paso, efectivo/SPEI/devoluciones con origen pendiente, comisiones/IVA/ISR separados, ausencia de interés, cambio de año, operaciones iguales legítimas, identidad y moneda, solapamientos, continuidad, reintentos/reapertura, rollback, tres instituciones y confirmación HTTP.
 - Suite previa conservada y JavaScript validado; muestra real usada para generar plan sin confirmar movimientos personales.
 - Código, manual y decisiones guardados; otras instituciones y conciliación entre cuentas permanecen pendientes.
+
+## 2026-11-05 — DiDi: confirmación financiera de ambos formatos
+
+- Plan automático y confirmación desde la aplicación para ambos formatos textuales de resumen.
+- Cuenta y período únicos compartidos entre pestañas; aportaciones y rendimientos separados sin duplicar el interés incluido en depósitos.
+- Retención cero explícita, referencias continuadas, fechas de cobro y condiciones históricas preservadas; transferencias con origen pendiente.
+- Normalización vuelve a comprobar cierre, depósitos, retiros, interés e ISR; referencias ausentes/repetidas, diferencias o moneda no reconocida bloquean.
+- Solapamientos, continuidad, meses fuera de orden y folios acotados por período; transacción e idempotencia reutilizadas.
+- Cuatro instituciones coexisten en el libro sin fusionar cuentas ni duplicar las compartidas.
+- Manual actualizado, pruebas ficticias y generación de plan con muestra real sin confirmar movimientos personales; sin dependencias o servicios nuevos.

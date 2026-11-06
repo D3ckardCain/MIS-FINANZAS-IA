@@ -31,3 +31,7 @@ La retención explícita de cero es un dato conocido. Una retención distinta de
 El formato reconocido requiere detalle con fecha completa, tipo Depósito/Retiro, importe/saldo MXN y referencias CBS/SNCBS. Otros formatos, comisiones o categorías quedan pendientes si no cuadran o no se reconocen. Un período sin filas requiere revisión; no se presume que no hubo actividad. No se recalcula el saldo promedio a partir de fechas de pago, que pueden agrupar varios días.
 
 Las imágenes pasan por OCR y revisión, sin heredar conciliación del lector PDF. Los originales privados y los informes financieros no se publican. El lector funciona localmente con las dependencias PDF existentes, sin APIs externas.
+
+## Confirmación en la aplicación
+
+Los dos formatos textuales conciliados ya se conectan al ledger. Se conserva una cuenta compartida, se separa el interés incluido en depósitos y se guardan condiciones históricas. Ver [manual de importación DiDi](IMPORTACION-DIDI.md). Imágenes y formatos con retención no nula permanecen pendientes de confirmación financiera.

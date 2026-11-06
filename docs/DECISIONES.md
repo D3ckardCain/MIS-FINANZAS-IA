@@ -102,3 +102,10 @@
 **Identidad y moneda:** cuenta única y leyenda de moneda nacional requeridas; símbolo dólar, ausencia o contradicción no acreditan MXN. Fechas se resuelven por el período interior, incluido cambio de año.
 **Control:** anclas y continuidad de períodos, evidencia por fila, bloqueo de solapamientos, confirmación atómica y reintentos idempotentes. Depósitos iguales legítimos se conservan; no se enlazan por coincidencia de importe/fecha.
 **Límites:** falta conciliación entre instituciones/origen de efectivo y devoluciones, otros productos, imágenes y formatos con retención no nula. No se abre una inversión desde la pestaña adicional.
+
+## D016 — DiDi: interés incluido en depósitos y cuenta compartida
+
+**Decisión:** confirmar una cuenta y un período compartidos por las dos vistas. Los depósitos del resumen incluyen interés, pero el ledger registra capital e interés por sus filas, sin sumarlos dos veces.
+**Identidad:** referencia de operación acotada a cuenta/período; se conservan continuaciones, fechas y evidencia. Operaciones iguales con folios distintos permanecen separadas; estados solapados se bloquean.
+**Condiciones:** tasas y texto de escalones/topes se guardan como información histórica del estado; fecha de cálculo no se interpreta como inicio contractual ni se aplica una tasa única.
+**Límites:** transferencias con origen pendiente, retención no nula sin formato admitido bloqueada, sin reinversión inferida o cálculo SAT. Reutiliza controles de normalización, continuidad, versiones y transacción atómica.

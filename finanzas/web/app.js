@@ -23,6 +23,8 @@ const labels = {
   interest_net_of_withholding:'Interés menos ISR retenido',credits:'Depósitos',gross_interest:'Interés bruto',
   charges_fees_and_vat:'Comisiones e IVA',commission:'Comisión',commission_vat:'IVA de comisión',
   cash_deposit:'Depósito de efectivo',transfer:'Transferencia pendiente de enlazar',transfer_return:'Devolución de transferencia',
+  transfer_unmatched:'Transferencia pendiente de enlazar',rate_disclosure:'Condiciones históricas publicadas',
+  annual_rates_reported:'Tasas anuales publicadas (%)',direction:'Sentido',average:'Saldo promedio',
   role:'Uso de la cuenta',transit:'Cuenta de paso',
   commissions_reported:'Comisiones publicadas',vat_reported:'IVA publicado',average_balance:'Saldo promedio',
   portfolio_initial_reported:'Posición inicial publicada',portfolio_final_reported:'Posición final publicada',
@@ -234,7 +236,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
