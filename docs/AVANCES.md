@@ -462,3 +462,11 @@
 - Solapamientos, continuidad, meses fuera de orden y folios acotados por período; transacción e idempotencia reutilizadas.
 - Cuatro instituciones coexisten en el libro sin fusionar cuentas ni duplicar las compartidas.
 - Manual actualizado, pruebas ficticias y generación de plan con muestra real sin confirmar movimientos personales; sin dependencias o servicios nuevos.
+
+### Verificación de importación financiera DiDi
+
+- [413 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42138993692).
+- Commit probado: d4d46872f0b8d302865f61c9fda666b0b6c70121.
+- Trece pruebas nuevas cubren ambos resúmenes, cuenta compartida, interés incluido en depósitos, folios continuados y escalones preservados, cero/sin interés, orígenes pendientes, duplicados, meses fuera de orden, referencias/moneda/diferencias, rollback, cuatro instituciones y confirmación HTTP.
+- Suite previa conservada y JavaScript validado; muestra real utilizada para generar plan sin confirmar movimientos personales.
+- Código, manual, límites y decisiones guardados. Confirmación financiera de otras instituciones y conciliación entre cuentas siguen pendientes.
