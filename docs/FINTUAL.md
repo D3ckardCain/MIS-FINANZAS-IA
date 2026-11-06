@@ -30,3 +30,8 @@ Se conserva el nombre impreso en la fila, sin homologar automáticamente nombres
 Los meses sin movimientos deben declararlo explícitamente. Un corte anterior reproducido dentro del PDF no sustituye un estado completo faltante. La cobertura usa la misma cuenta identificada y deduplicación por archivo SHA-256.
 
 PDF y OCR funcionan localmente. Las imágenes generan evidencia para revisión, sin heredar conciliación PDF. Los originales e informes del titular se mantienen privados. No se importan datos de Excel ni se calcula declaración anual.
+
+
+## Confirmación desde la aplicación
+
+La aplicación incorpora un [plan de efectivo revisable](IMPORTACION-FINTUAL.md), con posiciones y resumen como observaciones separadas. La confirmación no convierte valuación o rendimiento porcentual en interés cobrado ni descuenta de nuevo el ISR informativo. El libro distingue «Efectivo del portafolio» y mantiene retención/neto de efectivo desconocidos hasta acreditar su atribución. PDF protegido con contraseña transitoria admitido, sin guardarla.

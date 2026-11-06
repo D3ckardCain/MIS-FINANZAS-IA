@@ -141,13 +141,13 @@ class FintualInvestmentReader:
         from .imaging import read_statement_image
         return read_statement_image(content, "fintual", "investments", engine=engine)
 
-    def read_pdf(self, content):
+    def read_pdf(self, content, *, password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf = PdfReader(BytesIO(content))
-            if pdf.is_encrypted:
-                raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError("PDF Fintual protegido: contraseña requerida o no válida")
             pages = tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
         except PyPdfError as error:
             raise ReaderError("PDF Fintual no legible") from error
@@ -158,6 +158,9 @@ class FintualInvestmentReader:
         text = "\n".join(pages)
         if not pages or not re.search(r"\bfintual\b", fold(text)) or "pesos mexicanos" not in fold(text):
             raise ReaderError("Identidad Fintual/MXN no comprobada")
+        codes={m.upper() for m in re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I)}
+        if codes-{'MXN'} or re.search(r'\b(?:moneda|divisa)\s*:?\s*(?:dolares|euros)\b',fold(text)):
+            raise ReaderError('Moneda Fintual contradictoria o no admitida')
         ranges = periods(text)
         account = re.findall(r"No\. cuenta:\s*([A-Z0-9]+(?:-[A-Z0-9]+)*)", pages[0])
         if len(ranges) != 1 or len(set(account)) != 1:

@@ -158,3 +158,11 @@
 **Retención:** ausencia no equivale a cero. El total y neto quedan desconocidos si cualquier período tiene retención desconocida; retención documentada se expone como subtotal de cobertura parcial. Cero explícito conserva su evidencia.
 **Control:** exigir ambas vistas, componentes y cartera conciliados; conservar signo del IVA, fechas y pagos iguales legítimos. Continuidad de efectivo/plataforma y bloqueo de anexo idéntico con actividad de capital, en ambos órdenes de meses.
 **Acceso y límites:** moneda acreditada/revisada por documento y contraseña transitoria para PDF cifrado. Sin nuevas tablas SQL, dependencias o servicios. Cartera contable por préstamo, reinversión, fiscalidad anual, enlaces y confirmación desde imágenes pendientes.
+
+
+## D023 — Fintual: efectivo del portafolio sin valuación como ingreso
+
+**Decisión:** confirmar una cuenta de efectivo del portafolio, con compras/ventas como reducción/aportación de origen pendiente y gastos por columnas. Posiciones, costo promedio, variación, porcentaje, pendientes y total se conservan como observaciones; no se crea otra cuenta o un patrimonio confirmado.
+**ISR:** cifra informativa conservada íntegra, sin cargo adicional de efectivo ni retención cero ficticia. Retención/neto de efectivo desconocidos hasta acreditar asignación; no se deriva impuesto anual o ganancia realizada.
+**Control:** lectura específica y conciliación completa, signos, moneda documentada, evidencia por fila/componente, continuidad de efectivo, versiones, atomicidad y reintentos. PDF protegido con contraseña transitoria; sin nuevas tablas, dependencias o servicios.
+**Límites:** unidades, costo por lote, continuidad de posiciones/pendientes, atribución fiscal, reinversiones y confirmación desde imágenes pendientes. El cierre del libro está rotulado como efectivo del portafolio.

@@ -73,6 +73,8 @@ const labels = {
   iva_recibido:'IVA recibido',iva_pagado:'IVA pagado',recompensa:'Recompensa',
   vat_received:'IVA recibido',vat_paid:'IVA pagado',rewards:'Recompensas',
   withholding_documented:'Retención documentada · cobertura parcial',
+  fund_initial_positions:'Fondos · posición anterior observada',fund_final_positions:'Fondos · posición actual observada',
+  fund_summary_observation:'Resumen de fondos observado',
   loan_snapshots:'Cartera de préstamos · observaciones documentales',arrears_observations:'Atrasos y cobranza observados',
   aportacion:'Aportación',retiro:'Retiro',interes_cobrado:'Interés cobrado',isr_retenido:'ISR retenido',
   transferencia_propia:'Transferencia propia',pendiente:'Origen pendiente',
@@ -256,7 +258,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -319,12 +321,15 @@ function showPlan(plan) {
     group.append(caption,apply);panel.append(group);
   }
   if(plan.currency_source==='user_review')panel.append(el('p','Moneda del plan: MXN, indicada expresamente por el usuario.','footnote'));
-  const product=row=>row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
+  const product=row=>row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
     ...(plan.renewal_proposals?{renewal_proposals:plan.renewal_proposals}:{}),
     ...(plan.investment_summary_observation?{investment_summary_observation:plan.investment_summary_observation}:{}),
+    ...(plan.fund_initial_positions?{fund_initial_positions:plan.fund_initial_positions}:{}),
+    ...(plan.fund_final_positions?{fund_final_positions:plan.fund_final_positions}:{}),
+    ...(plan.fund_summary_observation?{fund_summary_observation:plan.fund_summary_observation}:{}),
     ...(plan.loan_snapshots?{loan_snapshots:plan.loan_snapshots}:{}),
     ...(plan.arrears_observations?{arrears_observations:plan.arrears_observations}:{}),
     ...(plan.platform_summary_observation?{platform_summary_observation:plan.platform_summary_observation}:{}),
@@ -351,7 +356,7 @@ async function openBook() {
   target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else renderArray(data.accounts.map(account=>({
-    account_name:name(account.institution)+' · '+(account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
+    account_name:name(account.institution)+' · '+(account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),

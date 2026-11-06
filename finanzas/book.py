@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='fintual' and doc['result']['format']=='pdf':
+            from .book_fintual import prepare
+            return prepare(self,doc,content,password=password)
         if doc['result']['institution']=='doopla' and doc['result']['format']=='pdf':
             from .book_doopla import prepare
             return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
@@ -310,7 +313,7 @@ class FinancialBook:
                 self.db.execute('SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,)))
             institution=account.split(':',1)[0]
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
-                role='transit' if institution=='bancoppel' else None,
+                role='transit' if institution=='bancoppel' else 'fund_cash' if institution=='fintual' else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),

@@ -579,3 +579,12 @@
 - Veinte pruebas de integración y una del núcleo cubren pago por componentes, IVA separado, recompensa, comisión agrupada, ISR ausente/cero/no nulo y cobertura parcial, cartera/cobranza observadas, anexos repetidos, pagos iguales legítimos, moneda, PDF protegido, versiones, rollback, meses fuera de orden, diez instituciones y confirmación HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Pruebas ficticias y ningún movimiento personal confirmado.
 - Código, manual y límites publicados; cartera contable por préstamo, contrapartidas, reinversión, declaración anual y confirmación desde imágenes pendientes.
+
+
+## 2026-11-06 — Fintual: efectivo del portafolio y valuación observada
+
+- Plan automático y confirmación de efectivo con compras/ventas, depósitos/retiros y comisión/IVA separados; origen de capital pendiente.
+- Posiciones anterior/actual, costo, valuación, variación, porcentaje, pendientes e ISR informativo conservados como observaciones sin ingresos/cargos adicionales.
+- Etiqueta explícita de efectivo del portafolio en plan y libro; retención/neto de efectivo desconocidos hasta acreditar atribución fiscal.
+- Moneda documentada y PDF protegido con contraseña transitoria; quince pruebas nuevas sobre conceptos, impuestos informativos, gastos, vacíos, duplicados legítimos, versiones, rollback, once instituciones y confirmación HTTP.
+- Muestra real comprobada solo mediante plan bloqueado por inconsistencia del valor inicial de cartera; ningún movimiento personal confirmado. Manual y límites publicados, sin nuevas dependencias o pagos.
