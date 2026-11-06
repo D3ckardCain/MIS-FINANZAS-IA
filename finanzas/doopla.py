@@ -53,6 +53,7 @@ class DooplaSummary:
     net_investments: Decimal
     cash_final: Decimal
     page: int = 1
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -120,6 +121,7 @@ class DooplaPreview:
     component_issues: tuple[str, ...]
     lane: str
     shared_account: bool = True
+    currency_markers: tuple[str, ...] = ()
 
     @property
     def cash_reconciled(self):
@@ -173,13 +175,13 @@ class DooplaReader:
         from .imaging import read_statement_image
         return read_statement_image(content, "doopla", self.lane, engine=engine)
 
-    def read_pdf(self, content):
+    def read_pdf(self, content, *, password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf = PdfReader(BytesIO(content))
-            if pdf.is_encrypted:
-                raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError("PDF Doopla protegido: contraseña requerida o no válida")
             pages = tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
         except PyPdfError as error:
             raise ReaderError("PDF Doopla no legible") from error
@@ -199,6 +201,12 @@ class DooplaReader:
             raise ReaderError("Identidad de cliente ausente o contradictoria")
         fingerprint = sha256(("doopla:" + clients.pop()).encode()).hexdigest()
         summary = _summary(pages[0])
+        markers={m.upper() for m in re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I)}
+        if re.search(r'\bmoneda\s*:?\s*(?:nacional|pesos mexicanos)\b',fold(text)):markers.add('MXN')
+        if re.search(r'\b(?:moneda|divisa)\s*:?\s*dolares\b',fold(text)):markers.add('USD')
+        if re.search(r'\b(?:moneda|divisa)\s*:?\s*euros\b',fold(text)):markers.add('EUR')
+        from dataclasses import replace
+        summary=replace(summary,unit='MXN' if markers=={'MXN'} else None)
         entries, loans, arrears, totals, differences = [], [], [], [], []
         issues, cash_issues, components = [], [], []
 
@@ -316,7 +324,7 @@ class DooplaReader:
         unique = lambda values: tuple(dict.fromkeys(values))
         return DooplaPreview(identifier, start, end, fingerprint, summary, tuple(entries), tuple(loans),
                              loan_totals, tuple(arrears), tuple(differences), unique(issues),
-                             unique(cash_issues), unique(components), self.lane)
+                             unique(cash_issues), unique(components), self.lane,currency_markers=tuple(sorted(markers)))
 
 
 @dataclass(frozen=True)

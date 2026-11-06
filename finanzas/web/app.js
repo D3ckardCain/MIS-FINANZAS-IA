@@ -70,6 +70,10 @@ const labels = {
   first_period:'Primer período importado', through:'Cierre al', closing:'Saldo de cierre documental',
   pending_origins:'Orígenes pendientes', gaps:'Huecos entre períodos importados',
   devolucion_comision:'Devolución de comisión',
+  iva_recibido:'IVA recibido',iva_pagado:'IVA pagado',recompensa:'Recompensa',
+  vat_received:'IVA recibido',vat_paid:'IVA pagado',rewards:'Recompensas',
+  withholding_documented:'Retención documentada · cobertura parcial',
+  loan_snapshots:'Cartera de préstamos · observaciones documentales',arrears_observations:'Atrasos y cobranza observados',
   aportacion:'Aportación',retiro:'Retiro',interes_cobrado:'Interés cobrado',isr_retenido:'ISR retenido',
   transferencia_propia:'Transferencia propia',pendiente:'Origen pendiente',
   capital_externo:'Capital externo confirmado',kind:'Tipo',origin:'Origen',
@@ -252,7 +256,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -321,6 +325,10 @@ function showPlan(plan) {
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
     ...(plan.renewal_proposals?{renewal_proposals:plan.renewal_proposals}:{}),
     ...(plan.investment_summary_observation?{investment_summary_observation:plan.investment_summary_observation}:{}),
+    ...(plan.loan_snapshots?{loan_snapshots:plan.loan_snapshots}:{}),
+    ...(plan.arrears_observations?{arrears_observations:plan.arrears_observations}:{}),
+    ...(plan.platform_summary_observation?{platform_summary_observation:plan.platform_summary_observation}:{}),
+    ...(plan.commission_components_observation?{commission_components_observation:plan.commission_components_observation}:{}),
     ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{}),
     ...(plan.investment_transfer_evidence?{investment_transfer_evidence:plan.investment_transfer_evidence}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
@@ -346,6 +354,8 @@ async function openBook() {
     account_name:name(account.institution)+' · '+(account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
+    ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),
+    ...(account.institution==='doopla'?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
     charges_fees_and_vat:account.charges_fees_and_vat,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps
   })),target);

@@ -25,7 +25,7 @@ La vista débito muestra la perspectiva del efectivo de la plataforma, no una cu
 
 `detail_reconciled` también exige que los componentes publicados de cada pago coincidan con su total. Las diferencias de un centavo se conservan, con página/línea e importes originales; no se redondean para ocultarlas.
 
-`reconciled` exige además ecuación del valor de cuenta, resumen frente a movimientos, totales de cartera frente a filas y capital pendiente más efectivo frente al valor final. Una sección correcta no compensa otra pendiente. Todos los resultados siguen con `ready_to_import=False`.
+`reconciled` exige además ecuación del valor de cuenta, resumen frente a movimientos, totales de cartera frente a filas y capital pendiente más efectivo frente al valor final. Una sección correcta no compensa otra pendiente. El lector mantiene `ready_to_import=False`: extraer no confirma movimientos. La aplicación dispone de un [plan financiero separado](IMPORTACION-DOOPLA.md) para efectivo por componente y cartera observada, con confirmación explícita y atómica.
 
 La consola muestra por defecto estados, cantidades de filas/diferencias y problemas, sin importes ni alias. `--details` incluye datos sensibles; usarlo únicamente en un entorno privado.
 
@@ -43,4 +43,4 @@ El valor de una fila de cartera puede diferir del total del anexo. Se preservan 
 
 Los movimientos de estos formatos no aportan un ID de operación único. Alias, fecha e importe pueden repetirse legítimamente: no se fusionan ni se eliminan filas por esa coincidencia. Se conserva archivo SHA-256 y página/línea para revisión. Falta resolver identidad económica antes de importar y enlazar transferencias propias.
 
-Se reconocen tablas de disposición fija con fechas DD-MM-AAAA e importes del formato documentado. Filas o signos inesperados quedan pendientes. Los PDF escaneados se deben revisar mediante el lector de imagen/OCR existente; una imagen no hereda conciliación PDF. No hay todavía interfaz de importación ni datos reales guardados en el libro contable.
+Se reconocen tablas de disposición fija con fechas DD-MM-AAAA e importes del formato documentado. Filas o signos inesperados quedan pendientes. Los PDF escaneados se deben revisar mediante el lector de imagen/OCR existente; una imagen no hereda conciliación PDF. La interfaz admite confirmación dentro del alcance del manual; no se han guardado movimientos reales. La moneda ausente requiere revisión MXN por documento y el PDF protegido usa contraseña temporal sin guardarla.

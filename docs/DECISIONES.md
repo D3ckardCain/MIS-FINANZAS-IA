@@ -149,3 +149,12 @@
 **Cobros:** interés/ISR pagados desde sus filas sin sumar componentes otra vez al resumen. Campos futuros desconocidos del formato anterior siguen nulos. Las proyecciones no generan impuesto o ingreso efectivo.
 **Control:** ambas vistas conciliadas, identidad, moneda explícita/revisada, categorías por folio, saldos, continuidad, versiones, atomicidad e idempotencia. PDF protegido con contraseña temporal, sin persistirla; sin nueva migración SQL, dependencia o servicio.
 **Límites:** cartera contable de contratos, equivalencias/vencimientos entre documentos, reinversión, imágenes y conceptos nuevos pendientes. Interés/ISR no nulo de cheques y comisiones anteriores requieren mapeo específico.
+
+
+## D022 — Doopla: principal, interés, IVA y retención desconocida
+
+**Decisión:** confirmar una cuenta de efectivo con componentes de cada pago; préstamos, valor de plataforma y atrasos son observaciones fechadas. Devolución de principal/cancelación aportan y la inversión reduce efectivo, sin contrapartida, capital externo o reinversión supuestos.
+**Núcleo:** IVA recibido, IVA pagado y recompensa como tipos distintos; no afectan capital externo, interés o ISR. Comisión agrupada se registra con IVA una vez; desglose publicado conserva evidencia sin cargos duplicados.
+**Retención:** ausencia no equivale a cero. El total y neto quedan desconocidos si cualquier período tiene retención desconocida; retención documentada se expone como subtotal de cobertura parcial. Cero explícito conserva su evidencia.
+**Control:** exigir ambas vistas, componentes y cartera conciliados; conservar signo del IVA, fechas y pagos iguales legítimos. Continuidad de efectivo/plataforma y bloqueo de anexo idéntico con actividad de capital, en ambos órdenes de meses.
+**Acceso y límites:** moneda acreditada/revisada por documento y contraseña transitoria para PDF cifrado. Sin nuevas tablas SQL, dependencias o servicios. Cartera contable por préstamo, reinversión, fiscalidad anual, enlaces y confirmación desde imágenes pendientes.

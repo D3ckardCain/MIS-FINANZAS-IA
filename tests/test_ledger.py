@@ -15,6 +15,14 @@ def movement(id, account="ahorro_a", kind=Kind.CONTRIBUTION, amount="100", **kwa
 
 
 class LedgerTests(unittest.TestCase):
+    def test_vat_and_rewards_change_cash_without_capital_interest_or_isr(self):
+        book=Ledger()
+        for name,kind,amount in [('iva',Kind.VAT_RECEIVED,'.32'),('entero',Kind.VAT_PAID,'.64'),('premio',Kind.REWARD,'1')]:
+            book.record(movement(name,kind=kind,amount=amount))
+        self.assertEqual(book.balances()[('ahorro_a','MXN')],D('.68'))
+        self.assertEqual(book.external_contributions('MXN'),0);self.assertEqual(book.interest_received('MXN'),0)
+        self.assertIsNone(book.withholding_recorded('MXN'));self.assertEqual(book.pending_origins(),())
+
     def test_fee_refund_restores_cash_without_external_capital_or_interest(self):
         book=Ledger();book.record(movement('cargo',kind=Kind.FEE,amount='.01'))
         book.record(movement('devolucion',kind=Kind.FEE_REFUND,amount='.01'))

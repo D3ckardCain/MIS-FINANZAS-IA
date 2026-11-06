@@ -56,6 +56,8 @@ Hey permite confirmar principal, interés bruto e ISR pagados en la cuenta opera
 
 Kapital confirma pagos operativos en los dos formatos reconocidos y guarda pagarés como observaciones. Timbrado y descuento conservan sus filas; la devolución de comisión no se cuenta como capital o interés y los cargos se muestran netos. Ver [manual Kapital](IMPORTACION-KAPITAL.md), incluidos moneda y contraseña transitoria.
 
+Doopla confirma efectivo por componentes, con IVA recibido/pagado y recompensas separados. Cartera y atrasos son observaciones; ISR ausente o cobertura mensual parcial dejan desconocidos la retención total y el neto. Ver [manual Doopla](IMPORTACION-DOOPLA.md), incluidos moneda, contraseña transitoria y bloqueo de anexos repetidos con actividad de capital.
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

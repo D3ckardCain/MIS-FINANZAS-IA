@@ -560,3 +560,14 @@
 - Dieciocho pruebas de integración y dos del núcleo cubren ambos formatos, principal/interés/ISR, timbrado compensado/no compensado, devolución sin capital o interés, proyecciones desconocidas, referencias por categoría, moneda, PDF protegido, versiones, rollback, meses fuera de orden, huecos, nueve instituciones y confirmación HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Muestra real utilizada solo para generar un plan listo, con cero movimientos personales confirmados.
 - Código, manual y límites publicados; cartera contractual, equivalencias entre identificadores y reinversión confirmada pendientes.
+
+
+## 2026-11-06 — Doopla: efectivo por componentes y cobertura de retención
+
+- Plan automático y confirmación de pagos separados en principal/interés/IVA; inversión/cancelación y depósitos/retiros con origen pendiente.
+- IVA recibido/pagado y recompensa como tipos específicos, sin capital/interés/ISR artificiales; comisión con IVA agrupada registrada una sola vez.
+- ISR ausente queda desconocido; total y neto también si hay meses con cobertura incompleta. Retención documentada parcial y cero explícito diferenciados.
+- Cartera y cobranza observadas sin cobros acumulados o pérdidas automáticas; continuidad de efectivo/plataforma y anexo repetido con actividad de capital bloqueado, en ambos órdenes de importación.
+- Moneda explícita/revisada y PDF protegido con contraseña transitoria; transacción, reintentos y evidencia por fila/componente reutilizados.
+- Veinte pruebas de integración y una del núcleo con datos ficticios: pagos, IVA, retención, recompensas, diferencias, duplicados legítimos, versiones, rollback, diez instituciones y confirmación HTTP. Ningún movimiento personal confirmado.
+- Manual, límites y decisiones actualizados; sin nuevas dependencias, servicios o pagos obligatorios.

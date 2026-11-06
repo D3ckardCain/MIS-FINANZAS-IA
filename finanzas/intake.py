@@ -126,6 +126,9 @@ def analyze(content, *, institution=None, password=None, engine=None):
                     elif institution == 'kapital':
                         from .kapital import KapitalReader
                         preview = KapitalReader(lane).read_pdf(content, password=password)
+                    elif institution == 'doopla':
+                        from .doopla import DooplaReader
+                        preview = DooplaReader(lane).read_pdf(content, password=password)
                     else:
                         preview = reader.read_reconciled_pdf(content)
                     mode = 'specialized'

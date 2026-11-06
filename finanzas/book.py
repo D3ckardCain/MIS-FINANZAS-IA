@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='doopla' and doc['result']['format']=='pdf':
+            from .book_doopla import prepare
+            return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
         if doc['result']['institution']=='kapital' and doc['result']['format']=='pdf':
             from .book_kapital import prepare
             return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
@@ -302,14 +305,21 @@ class FinancialBook:
                 if date.fromisoformat(previous[1])+timedelta(days=1)<date.fromisoformat(next_[0]):
                     gaps.append(dict(start=str(date.fromisoformat(previous[1])+timedelta(days=1)),end=str(date.fromisoformat(next_[0])-timedelta(days=1))))
             selected=[m for m in ledger.movements if m.account==account]
+            retained=[m.amount for m in selected if m.kind==Kind.WITHHOLDING]
+            withholding_complete=not any(json.loads(row[0]).get('withholding_status')=='unknown' for row in
+                self.db.execute('SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,)))
             institution=account.split(':',1)[0]
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
                 role='transit' if institution=='bancoppel' else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
-                withholding=str(_sum(m.amount for m in selected if m.kind==Kind.WITHHOLDING)),
-                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))),
+                withholding=str(_sum(retained)) if retained and withholding_complete else None,
+                withholding_documented=str(_sum(retained)) if retained else None,withholding_complete=withholding_complete,
+                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))) if retained and withholding_complete else None,
+                vat_received=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_RECEIVED)),
+                vat_paid=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_PAID)),
+                rewards=str(_sum(m.amount for m in selected if m.kind==Kind.REWARD)),
                 charges_fees_and_vat=str(_sum(m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.FEE,Kind.FEE_REFUND))),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],

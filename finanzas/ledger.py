@@ -13,6 +13,9 @@ class Kind(str, Enum):
     WITHHOLDING = "isr_retenido"
     FEE = "comision"
     FEE_REFUND = "devolucion_comision"
+    VAT_RECEIVED = "iva_recibido"
+    VAT_PAID = "iva_pagado"
+    REWARD = "recompensa"
 
 
 class Origin(str, Enum):
@@ -69,7 +72,7 @@ class Movement:
 
     @property
     def signed_amount(self):
-        return self.amount.copy_negate() if self.kind in (Kind.WITHDRAWAL, Kind.WITHHOLDING, Kind.FEE) else self.amount
+        return self.amount.copy_negate() if self.kind in (Kind.WITHDRAWAL, Kind.WITHHOLDING, Kind.FEE, Kind.VAT_PAID) else self.amount
 
 
 def _sum(values):
