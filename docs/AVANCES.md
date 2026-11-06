@@ -479,3 +479,11 @@
 - Control adicional de fechas, cargos/abonos y totales; conceptos de compra/comisión/interés/ISR no nulos requieren adaptación antes de confirmar.
 - Interfaz de moneda inspeccionada con datos ficticios; envío/revisión/confirmación probados por HTTP real, con rollback, versiones, reintentos y cinco instituciones.
 - El reporte real permanece bloqueado por no publicar saldos, sin confirmar movimientos personales. Código y manual sin nuevas dependencias o servicios obligatorios.
+
+### Verificación de importación operativa Fondeadora
+
+- [429 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42236172498).
+- Commit probado: 4c8e752dad3887aa0affd7272331a3eabf139750.
+- Dieciséis pruebas nuevas cubren estados completos/vacíos, reportes sin saldo, destino desconocido, moneda publicada/revisada, restricciones y versiones HTTP, fechas, conceptos no mapeados, duplicados, continuidad, tasas desconocidas/cero, rollback y coexistencia de cinco instituciones.
+- Suite previa conservada y JavaScript validado. Control de selección de moneda comprobado en navegador con una muestra ficticia; envío y confirmación comprobados por HTTP real.
+- Reporte real correctamente bloqueado por ausencia de saldos de apertura/cierre; sin confirmar movimientos personales. Bóvedas, productos adicionales y reportes parciales permanecen fuera de la confirmación financiera.
