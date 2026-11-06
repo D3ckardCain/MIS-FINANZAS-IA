@@ -534,3 +534,11 @@
 - Se exige conciliación de ambas vistas: discrepancias de proyección bloquean el lote completo sin importar solo efectivo.
 - Dieciocho pruebas nuevas: retención real/cero, capital, proyecciones, folios por categoría, moneda, contraseñas, continuidad, transacción, reintentos, ocho instituciones y confirmación HTTP.
 - Muestra real usada únicamente para plan: diferencia de Total Vigentes correctamente bloqueada y ningún movimiento personal confirmado. Manual, límites y decisiones actualizados; sin nuevas dependencias o pagos.
+
+### Verificación de importación de pagos Hey
+
+- [480 pruebas aprobadas, sin omisiones, intento 2](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42300205474/attempts/2).
+- Commit probado: 5779daa7e4aacd8bb256c973af45ebeaf4e14a7b.
+- Dieciocho pruebas nuevas cubren efectivo único, principal y apertura, bruto/neto/ISR real y cero, proyecciones y devengo, renovación pendiente con cuatro evidencias, categorías por referencia, moneda revisada, PDF protegido sin guardar contraseña, discrepancias, continuidad, meses fuera de orden, versiones, rollback, ocho instituciones y confirmación HTTP.
+- Suite local y JavaScript aprobados. El primer intento remoto agotó el tiempo descargando paquetes OCR, antes de ejecutar pruebas; el reintento del mismo commit pasó completo sin cambios de código.
+- Muestra real utilizada solo para verificar el bloqueo por diferencia de Total Vigentes; ningún movimiento personal confirmado. Manual y límites publicados; cartera contractual y reinversión confirmada permanecen pendientes.
