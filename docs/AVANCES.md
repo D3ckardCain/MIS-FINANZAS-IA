@@ -426,3 +426,11 @@
 - Libro multiinstitución: Openbank y Mifel conviven sin colisiones, con cierres por fecha e interés menos ISR de períodos confirmados.
 - Pruebas ficticias y generación de plan sobre el formato real, sin confirmar movimientos personales. Sin dependencias o servicios externos nuevos.
 - Manual Mifel y documentación general actualizados; otras instituciones siguen pendientes de confirmación financiera.
+
+### Verificación de importación financiera Mifel
+
+- [387 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42135626963).
+- Commit probado: 98585b689ba2f96c6c956ad649a3995952cea2a2.
+- Catorce pruebas nuevas cubren cuenta compartida, ISR no nulo/cero, observación de interés cero, rangos remunerados, aportaciones/reducciones pendientes, duplicados, continuidad, orden de meses, bloqueo de discrepancias, rollback, coexistencia con Openbank y confirmación HTTP.
+- Suite previa conservada; JavaScript validado. Plan automático y cuenta única con interés/ISR/neto comprobados en navegador con datos ficticios.
+- Prueba de generación de plan con formato real sin confirmar movimientos personales. Manual y código públicos; datos financieros privados fuera del repositorio.
