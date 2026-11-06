@@ -444,3 +444,11 @@
 - Reconciliación adicional de importes normalizados, fechas de cambio de año, duplicados binarios, solapamientos, continuidad y atomicidad.
 - Libro con tres instituciones distintas, identificación de cuenta de paso y consulta separada de cargos e interés menos ISR.
 - Manual y pruebas ficticias; muestra real usada para validar plan sin confirmar movimientos personales. Sin dependencias ni pagos nuevos.
+
+### Verificación de importación financiera BanCoppel
+
+- [400 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42136586720).
+- Commit probado: 445543852e83afc35e68c82edcafea879df44d42.
+- Trece pruebas nuevas cubren cuenta de paso, efectivo/SPEI/devoluciones con origen pendiente, comisiones/IVA/ISR separados, ausencia de interés, cambio de año, operaciones iguales legítimas, identidad y moneda, solapamientos, continuidad, reintentos/reapertura, rollback, tres instituciones y confirmación HTTP.
+- Suite previa conservada y JavaScript validado; muestra real usada para generar plan sin confirmar movimientos personales.
+- Código, manual y decisiones guardados; otras instituciones y conciliación entre cuentas permanecen pendientes.
