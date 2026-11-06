@@ -408,3 +408,11 @@
 - Control de versión y huella del plan/libro; reintentos idempotentes, sin cambios silenciosos en importaciones existentes.
 - Primera consulta del libro con cierres por producto/fecha e intereses/retenciones de períodos importados.
 - Pruebas y vista visual con documentos ficticios; ninguna contabilidad real confirmada. Otras instituciones, correcciones y resumen patrimonial completo siguen pendientes.
+
+### Verificación de importación financiera Openbank
+
+- [373 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42134255465).
+- Commit probado: ba69f6b09666b2598cc7e3869e703ff7a40b373f.
+- Trece pruebas nuevas verifican conversión, pares internos, ambigüedad, origen pendiente, precisión, idempotencia, reapertura, continuidad, meses fuera de orden, huecos, versiones/planes obsoletos, rollback completo y confirmación HTTP.
+- Suite previa conservada; JavaScript validado. Inspección visual del plan y del libro con datos ficticios; prueba de generación de plan sobre formato real sin confirmar movimientos.
+- Próxima integración: extender la capa financiera a otra institución, manteniendo los lectores y reglas particulares.
