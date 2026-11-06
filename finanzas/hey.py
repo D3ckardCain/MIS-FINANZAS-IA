@@ -25,7 +25,7 @@ class HeyCashSummary:
     commissions: Decimal
     other_debits: Decimal
     final: Decimal
-    unit: str = "MXN"
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -37,7 +37,7 @@ class HeyInvestmentSummary:
     withholding_reported: Decimal
     allocation: Decimal
     current_contract_total_reported: Decimal
-    unit: str = "MXN"
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -113,6 +113,7 @@ class HeyPreview:
     cash_issues: tuple[str, ...]
     investment_issues: tuple[str, ...]
     lane: str
+    currency_markers: tuple[str, ...] = ()
 
     @property
     def summary(self):
@@ -156,13 +157,13 @@ class HeyReader:
         from .imaging import read_statement_image
         return read_statement_image(content, "hey", self.lane, engine=engine)
 
-    def read_pdf(self, content):
+    def read_pdf(self, content, *, password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf = PdfReader(BytesIO(content))
-            if pdf.is_encrypted:
-                raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError("PDF Hey protegido: contraseña requerida o no válida")
             raw = tuple(p.extract_text() or "" for p in pdf.pages)
             layout = tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
         except PyPdfError as error:
@@ -202,6 +203,12 @@ class HeyReader:
         if len(live_total) != 1:
             raise ReaderError("Total Vigentes ausente o ambiguo")
         investment_summary = HeyInvestmentSummary(*summaries[0], amount(live_total[0]))
+        markers={m.upper() for m in re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I)}
+        if re.search(r'\bmoneda\s*:?\s*(?:nacional|pesos mexicanos)\b',fold(text)):markers.add('MXN')
+        from dataclasses import replace
+        unit='MXN' if markers=={'MXN'} else None
+        cash_summary=replace(cash_summary,unit=unit)
+        investment_summary=replace(investment_summary,unit=unit)
         portfolio = re.findall(r"Total Portafolio\s+(" + _AMOUNT + r")", pages[0])
         if len(portfolio)!=1:
             raise ReaderError("Total Portafolio Hey ausente o ambiguo")
@@ -352,4 +359,4 @@ class HeyReader:
         if cash_issues:
             proposals = []
         return HeyPreview(identifier,start,end,fingerprint,cash_summary,investment_summary,portfolio_total,tuple(entries),tuple(contracts),
-            tuple(proposals),tuple(differences),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(investment_issues)),self.lane)
+            tuple(proposals),tuple(differences),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(investment_issues)),self.lane,tuple(sorted(markers)))

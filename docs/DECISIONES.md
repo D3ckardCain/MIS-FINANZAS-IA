@@ -131,3 +131,12 @@
 **Cobros:** interés a la vista desde la fila, sin duplicar abonos. ISR cero solo acredita el producto publicado. Pagos de interés a plazo sin desglose acreditado de bruto/retención, impuestos/comisiones no nulos y posiciones inconsistentes bloquean el lote.
 **Moneda y contraseña:** unidad desconocida si no está acreditada; revisión MXN por documento, sin sobrescribir moneda extranjera. Para PDF protegido, contraseña transitoria enviada en el cuerpo de las solicitudes locales para releer el original; no se guarda, no forma parte de la huella del plan y se elimina de memoria al abandonar/confirmar.
 **Límites:** cartera histórica de contratos, fiscalidad de cobros a plazo, reinversión y enlaces entre instituciones pendientes. Se reutilizan continuidad, versiones, atomicidad y reintentos; sin dependencias o servicios nuevos.
+
+
+## D020 — Hey: efectivo pagado y renovación pendiente
+
+**Decisión:** confirmar pagos de una cuenta operativa; guardar pagarés, resumen de inversiones y renovación como evidencia fechada del plan, sin otra cuenta, capital externo supuesto o cartera contractual inventada. Principal devuelto aporta a efectivo y la nueva apertura lo reduce.
+**Rendimiento e ISR:** interés bruto y retención de filas, una vez. Neto del resumen, devengo incluido en saldo y proyecciones contractuales son conceptos distintos. Las cuatro evidencias de renovación se conservan como propuesta sin aprobar reinversión ni duplicar el interés.
+**Control:** exigir conciliación de ambas vistas; diferencias contractuales bloquean todo el lote aunque efectivo cuadre. Referencias iguales admiten categorías diferentes; fechas, columnas, continuidad, versiones, transacción e idempotencia preservadas.
+**Moneda y acceso:** unidad desconocida si no se acredita; revisión MXN por documento sin sobrescribir moneda extranjera. Contraseña temporal para lectura y confirmación de PDF cifrado, sin persistirla. Sin nuevas dependencias ni servicios.
+**Límites:** no se reconstruye composición del saldo anterior de pagarés, cartera histórica, reinversión o patrimonio total; imágenes, pagos parciales, comisiones operativas y conceptos nuevos requieren adaptación.

@@ -524,3 +524,13 @@
 - Diecinueve pruebas nuevas cubren efectivo único, observaciones a plazo sin duplicación, principal devuelto/apertura, interés e ISR cero acotados, cobros no soportados, moneda publicada/revisada/contradictoria, PDF protegido sin guardar contraseñas, versiones, rollback, continuidad, meses fuera de orden, siete instituciones y confirmación HTTP.
 - Suite previa conservada y JavaScript validado. La muestra real se utilizó solo para comprobar el bloqueo de cobros a plazo sin desglose acreditado, con cero movimientos financieros confirmados.
 - Manual y límites publicados. Cartera contable de contratos, cobros a plazo con detalle fiscal, comisiones/retenciones no nulas, reinversiones y confirmación desde imágenes permanecen pendientes.
+
+
+## 2026-11-06 — Hey: pagos efectivos, pagarés y renovación pendiente
+
+- Plan automático y confirmación atómica de efectivo con principal, interés bruto e ISR separados; neto, devengo y proyecciones sin nuevos cobros.
+- Pagarés/resumen de inversiones observados por fecha y propuestas de renovación con sus cuatro evidencias pendientes; sin segunda cuenta, reinversión o capital externo inventados.
+- Moneda explícita o revisada por documento y lectura de PDF protegido con contraseña transitoria, sin guardarla.
+- Se exige conciliación de ambas vistas: discrepancias de proyección bloquean el lote completo sin importar solo efectivo.
+- Dieciocho pruebas nuevas: retención real/cero, capital, proyecciones, folios por categoría, moneda, contraseñas, continuidad, transacción, reintentos, ocho instituciones y confirmación HTTP.
+- Muestra real usada únicamente para plan: diferencia de Total Vigentes correctamente bloqueada y ningún movimiento personal confirmado. Manual, límites y decisiones actualizados; sin nuevas dependencias o pagos.

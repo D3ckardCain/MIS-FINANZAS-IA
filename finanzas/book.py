@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='hey' and doc['result']['format']=='pdf':
+            from .book_hey import prepare
+            return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
         if doc['result']['institution']=='supertasas' and doc['result']['format']=='pdf':
             from .book_supertasas import prepare
             return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)

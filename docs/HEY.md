@@ -27,14 +27,16 @@ Los contratos vencidos en el período se cotejan con principal, interés y reten
 
 Se proponen vínculos entre cuatro filas contiguas de una misma fecha: principal, interés y retención del contrato origen, seguidos por apertura de otro contrato por el importe neto. Deben existir referencias vinculables a contratos únicos. Si el detalle operativo no concilia, no se generan propuestas.
 
-Cada propuesta conserva los cuatro localizadores y `needs_review=True`. No se confirma ni se escribe en el libro. El nuevo contrato puede recibir capital retornado e interés neto; la apertura no es otro ingreso ni capital externo nuevo del consolidado. Los contratos vencidos no se suman a los vigentes para valorar el patrimonio al corte.
+Cada propuesta conserva los cuatro localizadores y `needs_review=True`. La aplicación puede guardarla como evidencia dentro del plan financiero aceptado, sin confirmar un vínculo de reinversión ni generar movimientos adicionales. El nuevo contrato puede recibir capital retornado e interés neto; la apertura no es otro ingreso ni capital externo nuevo del consolidado. Los contratos vencidos no se suman a los vigentes para valorar el patrimonio al corte.
 
 ## Evidencia, estados y límites
 
 Los cargos/abonos se reconocen por sus columnas de disposición visual y se contrastan contra cada saldo, los totales y el resumen. Los contratos se extraen en modo estándar para conservar fechas que ciertos PDF reordenan visualmente. Cada fila indica `source_extraction`, página y línea.
 
-La vista débito puede conciliar mientras inversiones mantiene diferencias. Los estados corresponden únicamente a las comprobaciones implementadas; `ready_to_import=False` siempre. Las imágenes no heredan conciliación del PDF.
+La vista débito puede conciliar mientras inversiones mantiene diferencias. Los estados corresponden únicamente a las comprobaciones implementadas; `ready_to_import=False` en el lector; la aplicación dispone de un [plan separado con confirmación financiera explícita](IMPORTACION-HEY.md) para efectivo y observaciones de pagarés. Las imágenes no heredan conciliación del PDF.
 
 El formato reconocido cubre estos movimientos de pagarés. Conceptos operativos adicionales, pagos parciales, cambios de estructura o referencias ambiguas quedan pendientes; el lector documental general sigue disponible. No se reconstruye la composición del saldo anterior sin sus estados, no se calcula costo fiscal ni declaración anual y no se importan datos reales o Excel.
 
 Sin dependencias nuevas, servicios de pago ni acceso a APIs financieras. Documentos e informes del titular permanecen privados.
+
+La moneda se conserva desconocida si no está publicada explícitamente; el plan permite revisión MXN por documento. La API de PDF admite contraseña explícita en memoria y el plan puede releer originales protegidos sin guardarla.

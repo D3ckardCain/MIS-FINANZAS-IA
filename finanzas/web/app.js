@@ -53,6 +53,7 @@ const labels = {
   confidence:'Confianza OCR', text:'Texto', unit:'Unidad', value:'Valor', raw_value:'Valor original',
   status:'Estado', periods:'Períodos detectados', account_fingerprint:'Huella de cuenta',
   term_snapshots:'Posiciones a plazo · observaciones documentales',
+  renewal_proposals:'Propuestas de reinversión pendientes', investment_summary_observation:'Resumen de inversiones observado',
   as_of:'Fecha del estado', projected_gross:'Interés bruto proyectado', projected_retention:'Retención proyectada',
   projected_net:'Interés neto proyectado', documentary_observation:'Observación documental',
   capital_at_maturity_reported:'Capital al vencimiento publicado', maturity_amount_form:'Forma del capital al vencimiento',
@@ -250,7 +251,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -317,6 +318,8 @@ function showPlan(plan) {
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
+    ...(plan.renewal_proposals?{renewal_proposals:plan.renewal_proposals}:{}),
+    ...(plan.investment_summary_observation?{investment_summary_observation:plan.investment_summary_observation}:{}),
     ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{}),
     ...(plan.investment_transfer_evidence?{investment_transfer_evidence:plan.investment_transfer_evidence}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;

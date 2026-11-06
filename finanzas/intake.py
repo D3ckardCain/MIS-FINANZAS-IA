@@ -120,6 +120,9 @@ def analyze(content, *, institution=None, password=None, engine=None):
                     if institution == 'supertasas':
                         from .supertasas import SuperTasasReader
                         preview = SuperTasasReader(lane).read_pdf(content, password=password)
+                    elif institution == 'hey':
+                        from .hey import HeyReader
+                        preview = HeyReader(lane).read_pdf(content, password=password)
                     else:
                         preview = reader.read_reconciled_pdf(content)
                     mode = 'specialized'

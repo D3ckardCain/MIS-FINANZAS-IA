@@ -52,6 +52,8 @@ Validación: pruebas HTTP de carga/consulta/descarga, duplicados, revisión y co
 
 SuperTasas también permite confirmar efectivo a la vista y guardar posiciones a plazo como observaciones fechadas, sin convertir proyecciones en cobros o generar una segunda cuenta. Los pagos a plazo sin desglose acreditado de bruto/retención quedan bloqueados. Ver [manual SuperTasas](IMPORTACION-SUPERTASAS.md), incluido el desbloqueo temporal de PDF protegido sin guardar la contraseña.
 
+Hey permite confirmar principal, interés bruto e ISR pagados en la cuenta operativa, conservando pagarés y propuestas de renovación como observaciones pendientes, sin segunda cuenta contable o reinversión automática. Las diferencias de contratos bloquean el lote completo aunque el efectivo concilie. Ver [manual Hey](IMPORTACION-HEY.md), con moneda revisada y contraseña transitoria para originales protegidos.
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.
