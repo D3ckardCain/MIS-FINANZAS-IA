@@ -1,6 +1,6 @@
 # Organización aprobada del panel
 
-Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Bandeja visual local implementada: categorías, instituciones, dos vistas, carga y revisión documental. Openbank, Mifel, BanCoppel y DiDi PDF tienen plan e importación al libro financiero; Mifel y DiDi figuran como una sola cuenta remunerada por institución; resumen patrimonial completo y demás instituciones pendientes.
+Decisión del titular: categorías separadas, instituciones dentro de cada categoría y dos vistas dentro de cada institución. Bandeja visual local implementada: categorías, instituciones, dos vistas, carga y revisión documental. Openbank, Mifel, BanCoppel y DiDi PDF tienen plan e importación al libro financiero; Fondeadora añade importación de estados operativos completos con revisión de moneda; Mifel y DiDi figuran como una sola cuenta remunerada por institución; resumen patrimonial completo y demás instituciones pendientes.
 
 ## Navegación
 

@@ -25,6 +25,13 @@ const labels = {
   cash_deposit:'Depósito de efectivo',transfer:'Transferencia pendiente de enlazar',transfer_return:'Devolución de transferencia',
   transfer_unmatched:'Transferencia pendiente de enlazar',rate_disclosure:'Condiciones históricas publicadas',
   annual_rates_reported:'Tasas anuales publicadas (%)',direction:'Sentido',average:'Saldo promedio',
+  internal_transfer:'Traspaso pendiente de identificar',term_transfer:'Apartado pendiente de identificar',
+  deposit_unmatched:'Aportación pendiente de origen',investment_transfer_evidence:'Evidencia de traspasos o Apartados',
+  destination_unverified:'Destino y propiedad pendientes de comprobar',
+  withdrawals_or_spending:'Retiros o gastos publicados',purchases:'Compras publicadas',
+  currency_markers:'Monedas reconocidas en el documento',issuer_printed:'Emisor publicado',scope:'Alcance',
+  operational_cash:'Cuenta operativa',account_statement:'Estado de cuenta',movement_report:'Reporte de movimientos',
+  format:'Formato',investment_balance:'Saldo de inversión',commissions:'Comisiones',
   role:'Uso de la cuenta',transit:'Cuenta de paso',
   commissions_reported:'Comisiones publicadas',vat_reported:'IVA publicado',average_balance:'Saldo promedio',
   portfolio_initial_reported:'Posición inicial publicada',portfolio_final_reported:'Posición final publicada',
@@ -236,7 +243,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -271,16 +278,34 @@ function showPlan(plan) {
   panel.append(el('h2',plan.status==='imported'?'Importación confirmada':plan.can_confirm?'Plan listo para confirmar':'Plan pendiente de resolver'));
   for(const issue of plan.issues)panel.append(el('p',issue,'alert'));
   for(const warning of plan.warnings)panel.append(el('p',warning,'footnote'));
+  if(plan.currency_confirmation_required) {
+    const group=el('div');const caption=el('label','Moneda revisada del estado');
+    const select=el('select');select.setAttribute('aria-label','Moneda revisada del estado');
+    for(const [code,text] of [['','Seleccionar'],['MXN','Pesos mexicanos (MXN)'],['unknown','Otra moneda / no puedo confirmarla']]) {
+      const option=el('option',text);option.value=code;select.append(option);
+    }
+    caption.append(select);const apply=el('button','Aplicar revisión de moneda');
+    apply.onclick=()=>run(async()=>{
+      if(select.value!=='MXN')throw new Error('El documento queda pendiente hasta acreditar una moneda admitida.');
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN'}));
+    });
+    group.append(caption,apply);panel.append(group);
+  }
+  if(plan.currency_source==='user_review')panel.append(el('p','Moneda del plan: MXN, indicada expresamente por el usuario.','footnote'));
   const product=row=>row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
-    ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{})},panel);
+    ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{}),
+    ...(plan.investment_transfer_evidence?{investment_transfer_evidence:plan.investment_transfer_evidence}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
-$('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan')));
+$('prepare').onclick=()=>run(async()=>showPlan(financialPlan?.currency_confirmation?
+  await api('/api/documents/'+current.id+'/plan',{revision:current.revision,currency_confirmation:financialPlan.currency_confirmation}):
+  await api('/api/documents/'+current.id+'/plan')));
 $('confirm').onclick=()=>run(async()=>{
   if(!financialPlan?.can_confirm)return;
-  const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash});
+  const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash,
+    currency_confirmation:financialPlan.currency_confirmation||null});
   showPlan(plan);message(plan.duplicate?'El documento ya estaba importado; no se duplicó.':'Importación confirmada. Los movimientos están guardados en el libro financiero.');
 });
 async function openBook() {

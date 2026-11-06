@@ -1,5 +1,5 @@
 """Fondeadora: cuenta operativa y evidencia de traspasos, sin inventar Bóvedas."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from decimal import Decimal
 from hashlib import sha256
@@ -48,7 +48,7 @@ class FondeadoraSummary:
     annual_rate_reported: Decimal | None
     gat_nominal: Decimal | None
     gat_real: Decimal | None
-    unit: str = "MXN"
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -93,6 +93,7 @@ class FondeadoraPreview:
     scope: str
     shared_account: bool = True
     investment_balance: None = None
+    currency_markers: tuple[str, ...] = ()
 
     @property
     def investment_candidates(self):
@@ -191,6 +192,10 @@ class FondeadoraReader:
                 labelled(first_lines, "Compras"), labelled(first_lines, "Comisiones totales"),
                 labelled(first_lines, "Interés ganado"), labelled(first_lines, "Impuestos retenidos"),
                 rate("Tasa de rendimiento anual"), rate("GAT) nominal"), rate("GAT) real"))
+        markers=set(re.findall(r'\b(MXN|USD|EUR|GBP|JPY|CAD)\b',text,re.I))
+        markers={v.upper() for v in markers}
+        if re.search(r'\bmoneda nacional\b|\bpesos mexicanos\b',fold(text)):markers.add('MXN')
+        summary=replace(summary,unit='MXN' if markers=={'MXN'} else None)
         entries, movement_table = [], False
         for page_number, page in enumerate(pages[1:], 2):
             for line_number, line in enumerate(page.splitlines(), 1):
@@ -261,4 +266,4 @@ class FondeadoraReader:
         return FondeadoraPreview(identifier, start, end, fingerprint, issuer,
             "movement_report" if is_report else "account_statement", summary, tuple(entries), tuple(differences),
             tuple(dict.fromkeys(issues)), tuple(dict.fromkeys(details)), self.lane,
-            "investment_transfer_evidence" if self.lane == "investments" else "operational_cash")
+            "investment_transfer_evidence" if self.lane == "investments" else "operational_cash",currency_markers=tuple(sorted(markers)))

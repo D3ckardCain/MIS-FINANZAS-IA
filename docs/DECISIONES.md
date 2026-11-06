@@ -109,3 +109,9 @@
 **Identidad:** referencia de operación acotada a cuenta/período; se conservan continuaciones, fechas y evidencia. Operaciones iguales con folios distintos permanecen separadas; estados solapados se bloquean.
 **Condiciones:** tasas y texto de escalones/topes se guardan como información histórica del estado; fecha de cálculo no se interpreta como inicio contractual ni se aplica una tasa única.
 **Límites:** transferencias con origen pendiente, retención no nula sin formato admitido bloqueada, sin reinversión inferida o cálculo SAT. Reutiliza controles de normalización, continuidad, versiones y transacción atómica.
+
+## D017 — Fondeadora operativa y moneda acreditada o revisada
+
+**Decisión:** confirmar únicamente estados operativos completos y conciliados. Reportes sin apertura/cierre permanecen evidencia parcial; saldo operativo cero no acredita saldo cero de Bóveda. Traspasos/Apartados registran flujo operativo con origen/destino pendientes, sin cuenta o propiedad inventada.
+**Moneda:** la extracción conserva moneda desconocida si no aparece. La aplicación permite revisión explícita MXN para ese documento, vinculada al plan/revisión y conservada al confirmar. No puede sobrescribir moneda extranjera/contradictoria ni habilitar otros conceptos faltantes.
+**Control:** apertura/cierre y totales normalizados, fechas sin reordenar, conceptos no mapeados bloqueados, tasas vacías distintas de cero y transacción/idempotencia existentes. Sin nuevas dependencias, servicios, tablas de preferencias globales o cambios al original.

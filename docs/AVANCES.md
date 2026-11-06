@@ -470,3 +470,12 @@
 - Trece pruebas nuevas cubren ambos resúmenes, cuenta compartida, interés incluido en depósitos, folios continuados y escalones preservados, cero/sin interés, orígenes pendientes, duplicados, meses fuera de orden, referencias/moneda/diferencias, rollback, cuatro instituciones y confirmación HTTP.
 - Suite previa conservada y JavaScript validado; muestra real utilizada para generar plan sin confirmar movimientos personales.
 - Código, manual, límites y decisiones guardados. Confirmación financiera de otras instituciones y conciliación entre cuentas siguen pendientes.
+
+## 2026-11-06 — Fondeadora: cuenta operativa y revisión explícita de moneda
+
+- Confirmación de estados operativos completos y conciliados; reportes sin apertura/cierre conservados como evidencia, sin saldos o impuestos inventados.
+- Entradas/salidas, traspasos y Apartados con origen/destino pendientes; ninguna Bóveda, reinversión o segundo saldo creado desde las pestañas.
+- Moneda desconocida conservada en extracción. Selección MXN revisada desde la app, vinculada al plan y confirmación; no sobrescribe moneda publicada contradictoria ni se aplica a otros documentos.
+- Control adicional de fechas, cargos/abonos y totales; conceptos de compra/comisión/interés/ISR no nulos requieren adaptación antes de confirmar.
+- Interfaz de moneda inspeccionada con datos ficticios; envío/revisión/confirmación probados por HTTP real, con rollback, versiones, reintentos y cinco instituciones.
+- El reporte real permanece bloqueado por no publicar saldos, sin confirmar movimientos personales. Código y manual sin nuevas dependencias o servicios obligatorios.

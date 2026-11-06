@@ -38,7 +38,7 @@ Las imágenes usan el motor Tesseract y sus idiomas instalados localmente; consu
 
 Implementado: aplicación visual local, carga individual PDF/imagen, detección, lectores por vista, archivo de originales, duplicados binarios, persistencia/reapertura, consulta, categorías y revisión documental.
 
-Openbank, Mifel, BanCoppel y DiDi PDF ya disponen de plan financiero, confirmación al ledger y consulta de cierres por producto. Mifel y DiDi conservan una sola cuenta remunerada por institución en sus dos vistas. Ver [manual de Openbank](IMPORTACION-FINANCIERA.md), [manual de Mifel](IMPORTACION-MIFEL.md), [manual de BanCoppel](IMPORTACION-BANCOPPEL.md) y [manual de DiDi](IMPORTACION-DIDI.md). Siguiente trabajo: extender la normalización a las demás instituciones, resolver referencias/traspasos/reinversiones y completar el resumen patrimonial. Guardar una lectura documental no equivale a confirmar movimientos. No se presentan sumas patrimoniales de observaciones o saldos superpuestos.
+Openbank, Mifel, BanCoppel y DiDi PDF, y estados operativos completos Fondeadora, disponen de plan financiero, confirmación al ledger y consulta de cierres por producto. Mifel y DiDi conservan una sola cuenta remunerada por institución en sus dos vistas. Ver [manual de Openbank](IMPORTACION-FINANCIERA.md), [manual de Mifel](IMPORTACION-MIFEL.md), [manual de BanCoppel](IMPORTACION-BANCOPPEL.md), [manual de DiDi](IMPORTACION-DIDI.md) y [manual operativo Fondeadora](IMPORTACION-FONDEADORA.md). Siguiente trabajo: extender la normalización a las demás instituciones, resolver referencias/traspasos/reinversiones y completar el resumen patrimonial. Guardar una lectura documental no equivale a confirmar movimientos. No se presentan sumas patrimoniales de observaciones o saldos superpuestos.
 
 Las constancias fiscales tienen lectores independientes; todavía falta conectarlas a este flujo visual. Tampoco hay cálculo fiscal anual, conexión bancaria, sincronización, notificaciones, valoraciones de mercado ni recomendaciones de inversión.
 
@@ -49,3 +49,7 @@ Funciona sin Internet después de instalar Python, las bibliotecas y, para imág
 El servidor escucha exclusivamente en `127.0.0.1`, verifica Host/Origin y exige un token local para cambios. No publica el archivo en la LAN ni en Internet. La base contiene documentos y datos sensibles sin cifrado propio: conserva las protecciones normales del equipo. La aplicación no modifica los estados fuente compartidos ni usa Excel como fuente de movimientos.
 
 Validación: pruebas HTTP de carga/consulta/descarga, duplicados, revisión y control de origen; pruebas de reapertura SQLite, detección, PDF protegido, OCR y precisión decimal. La inspección visual en navegador usó datos ficticios; la prueba del transporte HTTP ejecutó el servidor real.
+
+### Moneda ausente en un estado operativo Fondeadora
+
+El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

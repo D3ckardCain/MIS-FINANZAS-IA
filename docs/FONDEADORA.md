@@ -37,3 +37,7 @@ Algunos PDF presentan espacios de fuente dentro de palabras, números y porcenta
 No hay ID económico único por operación. No se deduplican filas por importe/fecha ni se enlazan cuentas por coincidencia de titular. Faltan contratos/estados de inversión para principal, fechas de vigencia/vencimiento, tasa, reinversión, rendimiento y retención de Apartados/Bóvedas.
 
 El OCR local sigue disponible para ambas vistas y no hereda conciliación PDF. Los originales y los informes privados no se publican. Sin APIs nuevas, costos obligatorios, importación de Excel ni cálculo fiscal anual.
+
+## Confirmación en la aplicación
+
+Los estados operativos completos y conciliados se conectan al ledger mediante un plan, con revisión expresa de moneda cuando no está publicada. Los reportes sin saldos, los datos de Bóveda y los conceptos monetarios aún sin mapeo no se confirman por suposición. Ver [manual de importación operativa Fondeadora](IMPORTACION-FONDEADORA.md).
