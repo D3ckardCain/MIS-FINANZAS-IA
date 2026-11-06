@@ -12,6 +12,7 @@ class Kind(str, Enum):
     INTEREST = "interes_cobrado"
     WITHHOLDING = "isr_retenido"
     FEE = "comision"
+    FEE_REFUND = "devolucion_comision"
 
 
 class Origin(str, Enum):

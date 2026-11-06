@@ -69,6 +69,7 @@ const labels = {
   candidate_requires_review:'Candidato pendiente de revisión', interest_received:'Interés cobrado',
   first_period:'Primer período importado', through:'Cierre al', closing:'Saldo de cierre documental',
   pending_origins:'Orígenes pendientes', gaps:'Huecos entre períodos importados',
+  devolucion_comision:'Devolución de comisión',
   aportacion:'Aportación',retiro:'Retiro',interes_cobrado:'Interés cobrado',isr_retenido:'ISR retenido',
   transferencia_propia:'Transferencia propia',pendiente:'Origen pendiente',
   capital_externo:'Capital externo confirmado',kind:'Tipo',origin:'Origen',
@@ -251,7 +252,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};

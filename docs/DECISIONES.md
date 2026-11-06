@@ -140,3 +140,12 @@
 **Control:** exigir conciliación de ambas vistas; diferencias contractuales bloquean todo el lote aunque efectivo cuadre. Referencias iguales admiten categorías diferentes; fechas, columnas, continuidad, versiones, transacción e idempotencia preservadas.
 **Moneda y acceso:** unidad desconocida si no se acredita; revisión MXN por documento sin sobrescribir moneda extranjera. Contraseña temporal para lectura y confirmación de PDF cifrado, sin persistirla. Sin nuevas dependencias ni servicios.
 **Límites:** no se reconstruye composición del saldo anterior de pagarés, cartera histórica, reinversión o patrimonio total; imágenes, pagos parciales, comisiones operativas y conceptos nuevos requieren adaptación.
+
+
+## D021 — Kapital y devolución de comisión sin capital artificial
+
+**Decisión:** confirmar efectivo de ambos formatos, con pagarés/saldos de inversiones como observaciones fechadas. Principal devuelto aporta y apertura reduce efectivo; sin contrapartida, capital externo, equivalencia contractual o reinversión supuestos.
+**Timbrado:** añadir tipo `devolucion_comision` al núcleo, positivo y sin origen de capital. Conservar cargo/descuento como movimientos distintos incluso con folio común. Saldo incluye ambos; interés y capital externo los excluyen. Cargos del resumen financiero muestran comisiones menos devoluciones.
+**Cobros:** interés/ISR pagados desde sus filas sin sumar componentes otra vez al resumen. Campos futuros desconocidos del formato anterior siguen nulos. Las proyecciones no generan impuesto o ingreso efectivo.
+**Control:** ambas vistas conciliadas, identidad, moneda explícita/revisada, categorías por folio, saldos, continuidad, versiones, atomicidad e idempotencia. PDF protegido con contraseña temporal, sin persistirla; sin nueva migración SQL, dependencia o servicio.
+**Límites:** cartera contable de contratos, equivalencias/vencimientos entre documentos, reinversión, imágenes y conceptos nuevos pendientes. Interés/ISR no nulo de cheques y comisiones anteriores requieren mapeo específico.

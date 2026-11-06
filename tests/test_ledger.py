@@ -15,6 +15,18 @@ def movement(id, account="ahorro_a", kind=Kind.CONTRIBUTION, amount="100", **kwa
 
 
 class LedgerTests(unittest.TestCase):
+    def test_fee_refund_restores_cash_without_external_capital_or_interest(self):
+        book=Ledger();book.record(movement('cargo',kind=Kind.FEE,amount='.01'))
+        book.record(movement('devolucion',kind=Kind.FEE_REFUND,amount='.01'))
+        self.assertEqual(book.balances()[('ahorro_a','MXN')],0)
+        self.assertEqual(book.external_contributions('MXN'),0)
+        self.assertEqual(book.interest_received('MXN'),0)
+        self.assertEqual(book.pending_origins(),())
+
+    def test_fee_refund_requires_positive_amount_and_no_capital_origin(self):
+        for args in ({'amount':'0'},{'amount':'-1'},{'origin':Origin.EXTERNAL}):
+            with self.assertRaises(ValueError):movement('invalid',kind=Kind.FEE_REFUND,**args)
+
     def test_transfer_contribution_at_destination_without_inflating_external_capital(self):
         book = Ledger()
         for m in (movement("aporte"), movement("salida", kind=Kind.WITHDRAWAL, amount="40",

@@ -123,6 +123,9 @@ def analyze(content, *, institution=None, password=None, engine=None):
                     elif institution == 'hey':
                         from .hey import HeyReader
                         preview = HeyReader(lane).read_pdf(content, password=password)
+                    elif institution == 'kapital':
+                        from .kapital import KapitalReader
+                        preview = KapitalReader(lane).read_pdf(content, password=password)
                     else:
                         preview = reader.read_reconciled_pdf(content)
                     mode = 'specialized'

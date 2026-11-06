@@ -542,3 +542,13 @@
 - Dieciocho pruebas nuevas cubren efectivo único, principal y apertura, bruto/neto/ISR real y cero, proyecciones y devengo, renovación pendiente con cuatro evidencias, categorías por referencia, moneda revisada, PDF protegido sin guardar contraseña, discrepancias, continuidad, meses fuera de orden, versiones, rollback, ocho instituciones y confirmación HTTP.
 - Suite local y JavaScript aprobados. El primer intento remoto agotó el tiempo descargando paquetes OCR, antes de ejecutar pruebas; el reintento del mismo commit pasó completo sin cambios de código.
 - Muestra real utilizada solo para verificar el bloqueo por diferencia de Total Vigentes; ningún movimiento personal confirmado. Manual y límites publicados; cartera contractual y reinversión confirmada permanecen pendientes.
+
+
+## 2026-11-06 — Kapital: pagos en ambos formatos y timbrado compensado
+
+- Plan automático y confirmación de pagos operativos, con pagarés/saldos de inversión observados por fecha; sin duplicar capital o proyecciones.
+- Principal, interés e ISR pagados separados; apertura anterior conserva signo impreso y reduce efectivo, con origen pendiente.
+- Tipo de devolución de comisión en el núcleo: descuento y cargo de timbrado preservados, sin aportación/ganancia artificial y con cargos netos en el libro.
+- Moneda publicada/revisada y PDF protegido con contraseña transitoria; equivalencias entre contratos no fusionadas automáticamente.
+- Dieciocho pruebas de integración y dos del núcleo: ambos formatos, pagos, timbrado compensado/no compensado, proyecciones, moneda, contraseñas, reintentos, versiones, rollback, nueve instituciones y confirmación HTTP.
+- Muestra real genera plan listo dentro del alcance, sin confirmar movimientos personales. Manual, límites y decisiones guardados; sin nuevas dependencias o pagos.

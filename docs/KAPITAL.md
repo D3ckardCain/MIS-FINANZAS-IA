@@ -7,7 +7,7 @@ python -m finanzas.readers estado.pdf --institution kapital --lane debit --recon
 python -m finanzas.readers estado.pdf --institution kapital --lane investments --reconcile
 ```
 
-Las dos vistas comparten evidencia, con resúmenes distintos: efectivo e inversión. Los estados reales siguen sin importarse y `ready_to_import=False` permanece incluso cuando las comprobaciones concilian.
+Las dos vistas comparten evidencia, con resúmenes distintos: efectivo e inversión. `ready_to_import=False` permanece en el lector incluso si las comprobaciones concilian: extraer no confirma movimientos. La aplicación añade un [plan financiero explícito](IMPORTACION-KAPITAL.md) para pagos operativos y observaciones de pagarés, con confirmación atómica.
 
 ## Reglas de cada formato
 
@@ -43,3 +43,5 @@ Se usan únicamente los encabezados de período para fechar el estado: apertura 
 Los conceptos desconocidos, columnas inesperadas, referencias/categorías repetidas y diferencias exactas quedan pendientes. Un folio compartido entre principal/interés/ISR o cargo/descuento no implica duplicidad económica. Faltan identidad económica de importación y confirmación de contrapartidas.
 
 El lector está limitado a las estructuras verificadas. Una cartera sin tablas reconocidas no se presume vacía. Las imágenes generan evidencia para revisar, sin heredar conciliación PDF. No calcula declaración anual ni determina la naturaleza fiscal definitiva de una retención. Los informes financieros y originales permanecen privados.
+
+La confirmación registra el descuento de timbrado como devolución de comisión, con signo positivo y sin capital externo o interés. La moneda no publicada queda desconocida y requiere revisión MXN. El PDF protegido puede releerse con contraseña temporal, sin guardarla.

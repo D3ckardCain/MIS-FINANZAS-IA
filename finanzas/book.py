@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='kapital' and doc['result']['format']=='pdf':
+            from .book_kapital import prepare
+            return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
         if doc['result']['institution']=='hey' and doc['result']['format']=='pdf':
             from .book_hey import prepare
             return prepare(self,doc,content,currency_confirmation=currency_confirmation,password=password)
@@ -307,7 +310,7 @@ class FinancialBook:
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
                 withholding=str(_sum(m.amount for m in selected if m.kind==Kind.WITHHOLDING)),
                 interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))),
-                charges_fees_and_vat=str(_sum(m.amount for m in selected if m.kind==Kind.FEE)),
+                charges_fees_and_vat=str(_sum(m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.FEE,Kind.FEE_REFUND))),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],
             movements=len(ledger.movements),note='Cierres documentales por cuenta y fecha; intereses y retenciones de períodos importados. No acredita historia completa ni saldo actual de mercado.')

@@ -36,14 +36,14 @@ class KapitalCashSummary:
     investment_retention_component: Decimal | None
     investment_principal_inflow: Decimal | None = None
     investment_principal_outflow: Decimal | None = None
-    unit: str = "MXN"
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
 class KapitalInvestmentSummary:
     initial: Decimal
     final: Decimal
-    unit: str = "MXN"
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -112,6 +112,7 @@ class KapitalPreview:
     cash_issues: tuple[str, ...]
     investment_issues: tuple[str, ...]
     lane: str
+    currency_markers: tuple[str, ...] = ()
 
     @property
     def summary(self):
@@ -237,12 +238,13 @@ class KapitalReader:
         from .imaging import read_statement_image
         return read_statement_image(content,"kapital",self.lane,engine=engine)
 
-    def read_pdf(self,content):
+    def read_pdf(self,content,*,password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf=PdfReader(BytesIO(content))
-            if pdf.is_encrypted:raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError("PDF Kapital protegido: contraseña requerida o no válida")
             pages=tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
             raw=tuple(p.extract_text() or "" for p in pdf.pages)
         except PyPdfError as error:raise ReaderError("PDF Kapital no legible") from error
@@ -260,6 +262,10 @@ class KapitalReader:
         fingerprint=sha256(("kapital:"+accounts.pop()).encode()).hexdigest()
         legacy="RESUMEN DEL PERIODO" in text
         cash,investment=(_legacy_summary if legacy else _current_summary)(pages[0])
+        markers={m.upper() for m in re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I)}
+        if re.search(r'\bmoneda\s*:?\s*(?:nacional|pesos mexicanos|mn)\b|\b[\d.,]+\s+mn\b',fold(text)):markers.add('MXN')
+        unit='MXN' if markers=={'MXN'} else None
+        cash=replace(cash,unit=unit);investment=replace(investment,unit=unit)
         contracts=_contracts(pages,legacy)
         entries=[];cash_issues=[];investment_issues=[];differences=[];table_seen=False
         for pno,page in enumerate(pages,1):
@@ -339,7 +345,7 @@ class KapitalReader:
             check("Interés de inversiones vencidas difiere del detalle",cash.investment_interest_component,total("interest_paid"),investment_issues)
             check("ISR de inversiones vencidas difiere del detalle",cash.investment_retention_component,total("withholding"),investment_issues)
             check("Comisión efectiva frente a timbrado y descuento no coincide",cash.commissions_reported,_sum((total("stamp_fee"),total("stamp_discount").copy_negate())),cash_issues)
-        return KapitalPreview(identifier,start,end,fingerprint,"legacy" if legacy else "current",cash,investment,contracts,tuple(entries),tuple(differences),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(investment_issues)),self.lane)
+        return KapitalPreview(identifier,start,end,fingerprint,"legacy" if legacy else "current",cash,investment,contracts,tuple(entries),tuple(differences),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(investment_issues)),self.lane,tuple(sorted(markers)))
 
 
 @dataclass(frozen=True)
