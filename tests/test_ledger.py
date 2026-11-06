@@ -15,6 +15,17 @@ def movement(id, account="ahorro_a", kind=Kind.CONTRIBUTION, amount="100", **kwa
 
 
 class LedgerTests(unittest.TestCase):
+    def test_dividend_and_foreign_tax_do_not_become_interest_or_mexican_isr(self):
+        book=Ledger();book.record(movement('div',kind=Kind.DIVIDEND,amount='2',unit='USD'))
+        book.record(movement('nra',kind=Kind.FOREIGN_WITHHOLDING,amount='1',unit='USD'))
+        self.assertEqual(book.balances()[('ahorro_a','USD')],D('1'))
+        self.assertEqual(book.interest_received('USD'),0);self.assertIsNone(book.withholding_recorded('USD'))
+        self.assertEqual(book.external_contributions('USD'),0)
+
+    def test_foreign_withholding_zero_requires_explicit_tax_kind(self):
+        self.assertEqual(movement('zero',kind=Kind.FOREIGN_WITHHOLDING,amount='0').signed_amount,0)
+        with self.assertRaises(ValueError):movement('zero-div',kind=Kind.DIVIDEND,amount='0')
+
     def test_vat_and_rewards_change_cash_without_capital_interest_or_isr(self):
         book=Ledger()
         for name,kind,amount in [('iva',Kind.VAT_RECEIVED,'.32'),('entero',Kind.VAT_PAID,'.64'),('premio',Kind.REWARD,'1')]:

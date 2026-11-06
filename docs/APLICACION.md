@@ -60,6 +60,8 @@ Doopla confirma efectivo por componentes, con IVA recibido/pagado y recompensas 
 
 Fintual confirma efectivo del portafolio y conserva fondos/valuación/rendimiento/ISR informativo como observaciones. El libro distingue su efectivo del total de fondos; la retención de efectivo permanece desconocida hasta acreditar su asignación. Ver [manual Fintual](IMPORTACION-FINTUAL.md).
 
+Alpaca confirma efectivo USD con dividendos, intereses, comisiones y retención extranjera separados. Posiciones/costo/resultados son observaciones; no se calcula ISR mexicano, ganancia por lote o conversión a MXN. Ver [manual Alpaca](IMPORTACION-ALPACA.md).
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

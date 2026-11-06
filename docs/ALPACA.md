@@ -33,3 +33,8 @@ No hay identidad económica única por ejecución, reconstrucción general de lo
 La retención extranjera se registra en USD y separada del ISR bancario mexicano; no se determina su acreditamiento ni impuesto anual. Las notas legales generales no se convierten en tasas/cargos aplicados al titular.
 
 La ausencia de acciones en Holdings no acredita cierre de cuenta ni ausencia histórica de movimientos. Los campos vacíos o guiones requieren revisión; las imágenes pasan por OCR sin heredar conciliación PDF. No se han importado estados reales ni datos de Excel.
+
+
+## Confirmación de efectivo desde la aplicación
+
+La aplicación incorpora un [plan de efectivo USD revisable](IMPORTACION-ALPACA.md). Dividendos, intereses y retenciones extranjeras quedan separados; no se convierten en ISR mexicano ni se duplica la valuación como ingreso. Posiciones/resultados son observaciones y la confirmación no reconstruye costo por lote. El libro distingue efectivo del portafolio. PDF protegido admitido con contraseña transitoria, sin guardarla.

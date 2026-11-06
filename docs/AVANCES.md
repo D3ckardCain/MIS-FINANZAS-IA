@@ -596,3 +596,13 @@
 - Quince pruebas nuevas cubren efectivo único, compra/venta sin ganancia supuesta, ISR informativo sin cargo o cero ficticio, valuación/porcentaje observados, comisión/IVA, vacío explícito, diferencias/NaN/moneda, duplicados legítimos, meses fuera de orden, versiones, rollback, PDF protegido, once instituciones y confirmación HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. La muestra real se utilizó solo para verificar el bloqueo de inconsistencia en la composición del saldo inicial, con cero movimientos personales confirmados.
 - Código y manual publicados; unidades/costo por lote, continuidad de posiciones, atribución fiscal y reinversión confirmada permanecen pendientes.
+
+
+## 2026-11-06 — Alpaca: efectivo USD, dividendos y retención extranjera
+
+- Plan automático y confirmación de efectivo USD con compras/ventas, dividendos/intereses, comisiones y retención extranjera separados; sin ISR mexicano supuesto ni conversión de monedas.
+- Tipos de dividendo y retención extranjera en el núcleo, incluido cero extranjero explícito sin generar cero mexicano.
+- Posiciones/costo/resultados, acumulados y operaciones conservados como observaciones; Memopost solo excluido con efecto monetario cero acreditado.
+- Control de Holdings frente a cierre, Cost and Fees frente a comisiones, secciones y conceptos admitidos. PDF protegido con contraseña transitoria, sin guardarla.
+- Diecisiete pruebas de integración y dos del núcleo con datos ficticios: ingreso/impuesto, compra/venta, gastos, acumulados, discrepancias, instrumentos no admitidos, Memopost, versiones, rollback, doce instituciones/USD-MXN y confirmación HTTP.
+- Código y manual preparados sin nuevas dependencias, servicios o pagos obligatorios; ningún movimiento personal confirmado.

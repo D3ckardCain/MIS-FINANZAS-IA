@@ -132,6 +132,9 @@ def analyze(content, *, institution=None, password=None, engine=None):
                     elif institution == 'fintual' and lane == 'investments':
                         from .fintual import FintualInvestmentReader
                         preview = FintualInvestmentReader().read_pdf(content, password=password)
+                    elif institution == 'alpaca':
+                        from .alpaca import AlpacaReader
+                        preview = AlpacaReader(lane).read_pdf(content, password=password)
                     else:
                         preview = reader.read_reconciled_pdf(content)
                     mode = 'specialized'

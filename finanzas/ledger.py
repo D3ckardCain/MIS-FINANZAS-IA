@@ -16,6 +16,8 @@ class Kind(str, Enum):
     VAT_RECEIVED = "iva_recibido"
     VAT_PAID = "iva_pagado"
     REWARD = "recompensa"
+    DIVIDEND = "dividendo_cobrado"
+    FOREIGN_WITHHOLDING = "retencion_extranjera"
 
 
 class Origin(str, Enum):
@@ -57,7 +59,7 @@ class Movement:
             raise ValueError("Tipo de movimiento inválido")
         if not isinstance(self.amount, Decimal) or not self.amount.is_finite():
             raise ValueError("Importe Decimal finito requerido; no usar float")
-        if self.amount < 0 or (self.amount == 0 and self.kind != Kind.WITHHOLDING):
+        if self.amount < 0 or (self.amount == 0 and self.kind not in (Kind.WITHHOLDING,Kind.FOREIGN_WITHHOLDING)):
             raise ValueError("Importe positivo; cero solo para retención documentada")
         if len(self.amount.as_tuple().digits) > 36 or not -30 <= self.amount.as_tuple().exponent <= 30:
             raise ValueError("Importe fuera de la precisión admitida")
@@ -72,7 +74,7 @@ class Movement:
 
     @property
     def signed_amount(self):
-        return self.amount.copy_negate() if self.kind in (Kind.WITHDRAWAL, Kind.WITHHOLDING, Kind.FEE, Kind.VAT_PAID) else self.amount
+        return self.amount.copy_negate() if self.kind in (Kind.WITHDRAWAL, Kind.WITHHOLDING, Kind.FOREIGN_WITHHOLDING, Kind.FEE, Kind.VAT_PAID) else self.amount
 
 
 def _sum(values):

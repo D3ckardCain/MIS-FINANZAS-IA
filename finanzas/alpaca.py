@@ -124,13 +124,13 @@ class AlpacaReader:
         from .imaging import read_statement_image
         return read_statement_image(content, "alpaca", self.lane, engine=engine)
 
-    def read_pdf(self, content):
+    def read_pdf(self, content, *, password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf = PdfReader(BytesIO(content))
-            if pdf.is_encrypted:
-                raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError("PDF Alpaca protegido: contraseña requerida o no válida")
             pages = tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
         except PyPdfError as error:
             raise ReaderError("PDF Alpaca no legible") from error

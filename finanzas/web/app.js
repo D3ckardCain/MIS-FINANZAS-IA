@@ -74,6 +74,9 @@ const labels = {
   vat_received:'IVA recibido',vat_paid:'IVA pagado',rewards:'Recompensas',
   withholding_documented:'Retención documentada · cobertura parcial',
   fund_initial_positions:'Fondos · posición anterior observada',fund_final_positions:'Fondos · posición actual observada',
+  dividends:'Dividendos cobrados',foreign_withholding:'Retención extranjera',income_net_foreign_withholding:'Ingresos menos retención extranjera',
+  dividendo_cobrado:'Dividendo cobrado',retencion_extranjera:'Retención extranjera',stock_positions:'Posiciones observadas de acciones/ETF',
+  stock_summary_observation:'Resumen bursátil observado',trade_observations:'Operaciones observadas',memo_observations:'Anotaciones Memopost',
   fund_summary_observation:'Resumen de fondos observado',
   loan_snapshots:'Cartera de préstamos · observaciones documentales',arrears_observations:'Atrasos y cobranza observados',
   aportacion:'Aportación',retiro:'Retiro',interes_cobrado:'Interés cobrado',isr_retenido:'ISR retenido',
@@ -258,7 +261,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','alpaca'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -327,6 +330,10 @@ function showPlan(plan) {
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
     ...(plan.renewal_proposals?{renewal_proposals:plan.renewal_proposals}:{}),
     ...(plan.investment_summary_observation?{investment_summary_observation:plan.investment_summary_observation}:{}),
+    ...(plan.stock_positions?{stock_positions:plan.stock_positions}:{}),
+    ...(plan.stock_summary_observation?{stock_summary_observation:plan.stock_summary_observation}:{}),
+    ...(plan.trade_observations?{trade_observations:plan.trade_observations}:{}),
+    ...(plan.memo_observations?{memo_observations:plan.memo_observations}:{}),
     ...(plan.fund_initial_positions?{fund_initial_positions:plan.fund_initial_positions}:{}),
     ...(plan.fund_final_positions?{fund_final_positions:plan.fund_final_positions}:{}),
     ...(plan.fund_summary_observation?{fund_summary_observation:plan.fund_summary_observation}:{}),
@@ -360,6 +367,7 @@ async function openBook() {
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),
+    ...(account.institution==='alpaca'?{dividends:account.dividends,foreign_withholding:account.foreign_withholding,income_net_foreign_withholding:account.income_net_foreign_withholding}:{}),
     ...(account.institution==='doopla'?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
     charges_fees_and_vat:account.charges_fees_and_vat,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps

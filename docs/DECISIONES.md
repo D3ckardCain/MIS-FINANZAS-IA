@@ -166,3 +166,11 @@
 **ISR:** cifra informativa conservada íntegra, sin cargo adicional de efectivo ni retención cero ficticia. Retención/neto de efectivo desconocidos hasta acreditar asignación; no se deriva impuesto anual o ganancia realizada.
 **Control:** lectura específica y conciliación completa, signos, moneda documentada, evidencia por fila/componente, continuidad de efectivo, versiones, atomicidad y reintentos. PDF protegido con contraseña transitoria; sin nuevas tablas, dependencias o servicios.
 **Límites:** unidades, costo por lote, continuidad de posiciones/pendientes, atribución fiscal, reinversiones y confirmación desde imágenes pendientes. El cierre del libro está rotulado como efectivo del portafolio.
+
+
+## D024 — Alpaca: dividendos USD e impuesto extranjero separados
+
+**Decisión:** confirmar una cuenta de efectivo USD; operaciones, posiciones, costo y resultados quedan como observaciones sin cartera contable de lotes. Compra reduce y venta aporta efectivo con origen pendiente, sin ganancia realizada o capital externo supuestos.
+**Núcleo:** tipos separados para dividendo cobrado y retención extranjera; esta última admite cero explícito y reduce efectivo, sin afectar interés o ISR mexicano. La consulta separa ingresos y retención extranjera, sin conversión a MXN ni acreditamiento fiscal automático.
+**Control:** conciliar ambas vistas, Holdings frente a Ending Value, ingresos/cargos, operaciones y comisiones. Memopost excluido del efectivo solo con importe/comisión cero; otros efectos, instrumentos no admitidos o guiones monetarios quedan bloqueados. Acumulados anuales no generan cobros otra vez.
+**Acceso y límites:** contraseña transitoria para PDF protegido; continuidad, versiones, atomicidad y reintentos existentes. Sin nuevas tablas/dependencias/servicios. Lotes, fiscalidad mexicana, conversión documentada, contrapartidas e imágenes pendientes.

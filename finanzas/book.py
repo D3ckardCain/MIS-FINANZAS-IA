@@ -63,6 +63,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
+        if doc['result']['institution']=='alpaca' and doc['result']['format']=='pdf':
+            from .book_alpaca import prepare
+            return prepare(self,doc,content,password=password)
         if doc['result']['institution']=='fintual' and doc['result']['format']=='pdf':
             from .book_fintual import prepare
             return prepare(self,doc,content,password=password)
@@ -313,7 +316,7 @@ class FinancialBook:
                 self.db.execute('SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,)))
             institution=account.split(':',1)[0]
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
-                role='transit' if institution=='bancoppel' else 'fund_cash' if institution=='fintual' else None,
+                role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
@@ -323,6 +326,9 @@ class FinancialBook:
                 vat_received=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_RECEIVED)),
                 vat_paid=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_PAID)),
                 rewards=str(_sum(m.amount for m in selected if m.kind==Kind.REWARD)),
+                dividends=str(_sum(m.amount for m in selected if m.kind==Kind.DIVIDEND)),
+                foreign_withholding=str(_sum(m.amount for m in selected if m.kind==Kind.FOREIGN_WITHHOLDING)),
+                income_net_foreign_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.DIVIDEND,Kind.FOREIGN_WITHHOLDING))),
                 charges_fees_and_vat=str(_sum(m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.FEE,Kind.FEE_REFUND))),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],
