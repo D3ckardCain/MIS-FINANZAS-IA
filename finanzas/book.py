@@ -66,6 +66,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None, cash_opening_confirmation=None, operation_review=None):
+        if doc['result']['institution']=='nu' and doc['result']['format']=='pdf':
+            from .book_nu import prepare
+            return prepare(self,doc,content,password=password,currency_confirmation=currency_confirmation,operation_review=operation_review)
         if doc['result']['institution']=='cetesdirecto' and doc['result']['format']=='pdf':
             from .book_cetesdirecto import prepare
             return prepare(self,doc,content,password=password)
@@ -334,7 +337,7 @@ class FinancialBook:
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
                 custodian='alpaca' if source_profile=='alpaca' else None,
                 portfolio='Acciones USD' if source_profile=='alpaca' else 'Fondos MXN' if institution=='fintual' else None,
-                role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
+                role=('cajitas_aggregate' if lane=='investments' else 'collateral' if lane=='guarantee' else None) if institution=='nu' else 'transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL))) if interest_complete else None,

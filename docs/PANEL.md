@@ -51,3 +51,8 @@ Identidad corregida por el titular: Fintual MXN y Fintual USD pertenecen a Fintu
 ## Evolución implementada
 
 El libro financiero presenta tablas por categoría/institución/cuenta/moneda, filtro de cuenta y períodos documentales cronológicos. Cada fila muestra apertura, aportaciones, retiros, interés, retención, neto y cierre; su detalle abre componentes, diferencias y documento. Los huecos y cambios posteriores del libro son visibles. No suma monedas o valuaciones ni transforma cortes en meses naturales. [Manual de evolución](EVOLUCION.md).
+
+
+## Nu en el libro
+
+Cuenta Nu, Cajitas agregadas y garantía acreditada se muestran como cuentas separadas por producto. Las dos vistas documentales permanecen disponibles. La revisión de apertura/distribución global antecede a la confirmación; saldo disponible/congelado y cambios por nombre quedan como observaciones, sin duplicar activos. [Manual de importación](IMPORTACION-NU.md).

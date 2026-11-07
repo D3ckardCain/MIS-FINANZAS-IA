@@ -2,6 +2,8 @@
 const $ = id => document.getElementById(id);
 let state, current, financialPlan, financialPassword = null, selected = null, lane = 'debit', busy = false;
 const labels = {
+  nu_summary_observation:'Resumen global Nu observado',nu_changes_observation:'Cambios documentales por Cajita',nu_freeze_observations:'Congelamientos y liberaciones observados',
+  cajitas_aggregate:'Cajitas · agregado',collateral:'Crédito con garantía',guarantee:'Garantía',
   calculated_final:'Cierre calculado desde el libro vigente',closing_difference:'Diferencia: calculado menos documental',cash_change:'Cambio neto de efectivo',
   external_contributions:'Aportaciones externas / cashback acreditados',cashback_contributions:'Aportaciones de cashback',
   own_transfer_in:'Aportaciones desde cuentas propias',own_transfer_out:'Reducciones hacia cuentas propias',
@@ -275,7 +277,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto','cetesdirecto'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto','cetesdirecto','nu'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -349,6 +351,38 @@ function showPlan(plan) {
     });
     group.append(caption,apply);panel.append(group);
   }
+  if(plan.nu_buckets?.length && (plan.nu_review_required||plan.operation_review?.nu) && plan.status!=='imported') {
+    const form=el('div',undefined,'panel resolution');form.append(el('h2','Acreditar distribución Nu por producto'));
+    form.append(el('p','El estado publica totales globales. Verifica con fuentes adicionales las aperturas y la distribución del interés e ISR: no son saldos individuales por Cajita ni pagos diarios. Usa 0 solo si lo acreditaste.','footnote'));
+    const controls={};
+    for(const bucket of plan.nu_buckets) {
+      const box=el('fieldset');box.append(el('legend',bucket.label));
+      box.append(el('p',`Cierre publicado: ${bucket.final} MXN · Cambio por filas, sin interés/ISR global: ${bucket.changes_without_income} MXN`,'footnote'));
+      controls[bucket.key]={};
+      for(const [key,title] of [['initial','Saldo inicial acreditado'],['gross_interest','Interés bruto acreditado'],['withholding','ISR retenido acreditado']]) {
+        const caption=el('label',title),input=el('input');input.type='text';input.inputMode='decimal';
+        input.setAttribute('aria-label',title+' '+bucket.label);
+        input.value=plan.operation_review?.nu?.buckets?.[bucket.key]?.[key]??(key==='initial'?bucket.previous_initial??'':'');
+        controls[bucket.key][key]=input;caption.append(input);box.append(caption);
+      }
+      if(bucket.previous_initial!==null)box.append(el('p','Apertura enlazada al cierre contiguo confirmado: '+bucket.previous_initial+' MXN.','footnote'));
+      form.append(box);
+    }
+    const caption=el('label',undefined,'opening-review'),check=el('input');check.type='checkbox';
+    caption.append(check,el('span','Verifiqué con mis fuentes las aperturas y esta distribución por producto.'));form.append(caption);
+    const apply=el('button','Aplicar revisión Nu');apply.onclick=()=>run(async()=>{
+      if(!check.checked)throw new Error('Acredita el desglose Nu con tus fuentes antes de aplicarlo.');
+      const buckets={};
+      for(const [bucket,fields] of Object.entries(controls)){
+        buckets[bucket]={};for(const [key,input] of Object.entries(fields)){
+          const amount=input.value.trim();if(!/^[0-9]+(?:\.[0-9]+)?$/.test(amount))throw new Error('Completa cada importe Nu con punto decimal y sin signos.');
+          buckets[bucket][key]=amount;
+        }
+      }
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,password:financialPassword,
+        currency_confirmation:plan.currency_confirmation||null,operation_review:{nu:{document_id:current.id,revision:plan.revision,buckets}}}));
+    });form.append(apply);panel.append(form);
+  }
   if(plan.review_rows?.length) {
     const form=el('div',undefined,'panel resolution');form.append(el('h2','Completar desglose de operaciones'));
     form.append(el('p','Verifica cada componente con tus fuentes. No se reparten totales mensuales por porcentaje. Las cancelaciones requieren elegir su original; no se borrarán operaciones.','footnote'));
@@ -411,7 +445,7 @@ function showPlan(plan) {
     });form.append(apply);panel.append(form);
   }
   if(plan.currency_source==='user_review')panel.append(el('p','Moneda del plan: MXN, indicada expresamente por el usuario.','footnote'));
-  const product=row=>row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
+  const product=row=>row.role==='cajitas_aggregate'?'Cajitas · agregado':row.role==='collateral'?'Crédito con garantía':row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
@@ -429,6 +463,7 @@ function showPlan(plan) {
     ...(plan.fund_initial_positions?{fund_initial_positions:plan.fund_initial_positions}:{}),
     ...(plan.fund_final_positions?{fund_final_positions:plan.fund_final_positions}:{}),
     ...(plan.fund_summary_observation?{fund_summary_observation:plan.fund_summary_observation}:{}),
+    ...(plan.nu_summary_observation?{nu_summary_observation:plan.nu_summary_observation,nu_changes_observation:plan.nu_changes_observation,nu_freeze_observations:plan.nu_freeze_observations}:{}),
     ...(plan.loan_snapshots?{loan_snapshots:plan.loan_snapshots}:{}),
     ...(plan.arrears_observations?{arrears_observations:plan.arrears_observations}:{}),
     ...(plan.platform_summary_observation?{platform_summary_observation:plan.platform_summary_observation}:{}),
@@ -450,7 +485,7 @@ $('confirm').onclick=()=>run(async()=>{
 });
 function accountTitle(account) {
   return name(account.institution)+(account.portfolio?' · '+account.portfolio:'')+' · '+
-    (account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane));
+    (account.role==='cajitas_aggregate'?'Cajitas · agregado':account.role==='collateral'?'Crédito con garantía':account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane));
 }
 function renderEvolution(data,target) {
   const section=el('section',undefined,'evolution');section.append(el('h2','Evolución por período'),el('p',data.note,'footnote'));
@@ -520,7 +555,7 @@ async function openBook() {
   renderEvolution(evolution,target);
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else {const summary=el('details',undefined,'data-section');summary.append(el('summary','Resumen acumulado por cuenta'));target.append(summary);renderArray(data.accounts.map(account=>({
-    account_name:name(account.institution)+(account.portfolio?' · '+account.portfolio:'')+' · '+(account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
+    account_name:accountTitle(account), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),

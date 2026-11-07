@@ -88,6 +88,8 @@ class NuPreview:
     lane: str
     shared_account: bool = True
     issuer_reported: str = ""
+    sections_seen: tuple[str, ...] = ()
+    currency_markers: tuple[str, ...] = ()
 
     @property
     def entries(self):return self.account_events if self.lane=="debit" else self.investment_events
@@ -130,12 +132,13 @@ class NuReader:
         from .imaging import read_statement_image
         return read_statement_image(content,"nu",self.lane,engine=engine)
 
-    def read_pdf(self,content):
+    def read_pdf(self,content,*,password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf=PdfReader(BytesIO(content))
-            if pdf.is_encrypted:raise ReaderError("PDF cifrado")
+            if pdf.is_encrypted and (not isinstance(password,str) or not password or not pdf.decrypt(password)):
+                raise ReaderError("PDF Nu protegido: requiere contraseña válida")
             pages=tuple(p.extract_text(extraction_mode="layout") or "" for p in pdf.pages)
         except PyPdfError as error:raise ReaderError("PDF Nu no legible") from error
         return self.read_pages(pages,sha256(content).hexdigest())
@@ -187,7 +190,7 @@ class NuReader:
             check("Disponible más congelado difiere de Total Cajitas",cajitas,_sum((summary.available_cajitas,summary.frozen_cajitas)),composition)
         elif summary.available_cajitas is not None or summary.frozen_cajitas is not None:composition.append("Distribución disponible/congelado parcial")
         if summary.commissions!=0:summary_issues.append("Comisión Nu no nula requiere mapeo de su inclusión en gastos")
-        account_events=[];investment_events=[];section=None;current=None
+        account_events=[];investment_events=[];section=None;current=None;sections_seen=set()
         def finish():
             nonlocal current
             if current is None:return
@@ -209,9 +212,9 @@ class NuReader:
                 if lno<=header_end+1:continue
                 normalized=fold(line)
                 if normalized.startswith("dinero generado en tu cuenta nu"):finish();section=None
-                elif "movimientos en tu cuenta" in normalized:finish();section="account"
-                elif "movimientos de tus cajitas" in normalized:finish();section="cajitas"
-                elif "movimientos de tu cajita nu credito" in normalized:finish();section="guarantee"
+                elif "movimientos en tu cuenta" in normalized:finish();section="account";sections_seen.add(section)
+                elif "movimientos de tus cajitas" in normalized:finish();section="cajitas";sections_seen.add(section)
+                elif "movimientos de tu cajita nu credito" in normalized:finish();section="guarantee";sections_seen.add(section)
                 if normalized.startswith(("nu mexico financiera","nubank, s.a., institucion de banca multiple")):break
                 if "saldo promedio del periodo" in normalized or "este dinero funciona" in normalized:
                     finish();section=None;continue
@@ -239,8 +242,13 @@ class NuReader:
         detail=[]
         if any(not start<=e.effective_date<=end for e in account_events+investment_events):detail.append("Fecha de evidencia Nu fuera del período")
         if any(len(e.value_candidates)!=1 for e in account_events+investment_events):detail.append("Evidencia Nu con importe ausente/ambiguo, conservada sin convertir en cero")
+        currencies=set(re.findall(r'\b(?:MXN|USD|EUR)\b',text.upper()))
+        if re.search(r'pesos mexicanos|monto en pesos',fold(text)):currencies.add('MXN')
+        if re.search(r'\bdolares\b',fold(text)):currencies.add('USD')
+        if re.search(r'\beuros\b',fold(text)):currencies.add('EUR')
         preview=NuPreview(identifier,start,end,fingerprint,summary,tuple(account_events),tuple(investment_events),tuple(differences),
-            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(composition)),tuple(detail),self.lane,issuer_reported=issuers[0])
+            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(composition)),tuple(detail),self.lane,issuer_reported=issuers[0],
+            sections_seen=tuple(sorted(sections_seen)),currency_markers=tuple(sorted(currencies)))
         from dataclasses import replace
         review=review_nu_document(preview)
         return replace(preview,detail_issues=tuple(dict.fromkeys(detail+list(review.issues))))

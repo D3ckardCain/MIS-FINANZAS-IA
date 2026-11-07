@@ -130,7 +130,10 @@ def analyze(content, *, institution=None, password=None, engine=None):
                 raise ValueError('Este lector requiere una captura de la operación.')
             else:
                 try:
-                    if institution == 'supertasas':
+                    if institution == 'nu':
+                        from .nu import NuReader
+                        preview = NuReader(lane).read_pdf(content, password=password)
+                    elif institution == 'supertasas':
                         from .supertasas import SuperTasasReader
                         preview = SuperTasasReader(lane).read_pdf(content, password=password)
                     elif institution == 'hey':

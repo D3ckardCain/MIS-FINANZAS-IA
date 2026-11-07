@@ -56,3 +56,8 @@ Se conservan tasas/etiquetas publicadas de interés e ISR, GAT y cada retención
 Cuando el estado solamente publica rendimiento global y saldos agregados de Cajitas, no se puede certificar el cierre de cada Cajita. Se entregan sus cambios y el rendimiento sin asignar, y `detail_reconciled` permanece falso con la causa concreta. Una diferencia en la composición global también bloquea conciliación completa. Resolver esos casos exige evidencia adicional; no más fórmulas ni un ajuste artificial.
 
 Los datos de pagos de tarjeta/garantía sirven para rastrear efectivo, sin crear un módulo de presupuesto o deuda de tarjeta. Los IDs documentales no son IDs económicos y no deduplican capturas diferentes. Las imágenes conservan OCR local revisable, sin heredar las verificaciones de un PDF. No se usa Excel como movimientos, conexión bancaria, servicios de pago o importación automática. Fuentes e informes financieros permanecen privados.
+
+
+## Confirmación financiera de agregados
+
+El lector documental sigue sin confirmar movimientos por sí solo. La aplicación incorpora ahora el [flujo revisado de importación Nu](IMPORTACION-NU.md): Cuenta/Cajitas agregadas/garantía separados, aperturas y distribución de interés/ISR acreditadas, traspasos enlazados y confirmación atómica. No certifica saldos o rendimientos individuales por Cajita; los globales reconocidos al cierre se distinguen de pagos diarios. PDF protegido y moneda revisada admitidos; imágenes conservan alcance documental.

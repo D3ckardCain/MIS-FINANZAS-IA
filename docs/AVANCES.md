@@ -701,3 +701,12 @@
 - Commit probado: 6351a1c52db88f6e09b49e7d94ca1a92b02711d6.
 - Diecisiete pruebas nuevas: anclas y traspasos sin capital duplicado, períodos fuera de orden/huecos, desconocido/cero, Fintual MXN/USD, cobros sin desglose, cancelaciones históricas, precisión decimal, revisiones dentro/fuera de período y cuenta, coexistencia de trece instituciones, lectura consistente y HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa. No se modificaron datos personales. La revisión visual en navegador permanece pendiente por ausencia de Chromium en este entorno.
+
+
+## 2026-11-06 — Nu: confirmación financiera con distribución acreditada
+
+- Cuenta/Cajitas agregadas/garantía separadas, con revisión de aperturas y distribución de bruto/ISR ligada a documento, versión y plan. Globales registrados una vez al cierre por resumen, no como pagos diarios.
+- Traspasos con dos patas documentales únicas; congelar/descongelar conserva observación neutral, sin capital externo, ingresos o reinversión ficticios.
+- Controles de composición, tablas, signos, fechas, importes, conceptos, depósitos/gastos brutos, cierres y continuidad. Apertura contigua no asigna rendimientos no nulos automáticamente.
+- PDF protegido con contraseña temporal, revisión de moneda, emisor histórico, confirmación atómica y evolución por producto. Sin saldos individuales inventados por Cajita ni nuevas dependencias/pagos.
+- Diecinueve pruebas nuevas, exclusivamente ficticias; ningún movimiento personal importado. Manual IMPORTACION-NU.md, documentación y decisión D029 actualizados. Revisión visual de navegador pendiente por ausencia de Chromium en el entorno.

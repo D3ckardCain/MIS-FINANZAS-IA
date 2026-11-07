@@ -76,3 +76,8 @@ Identidad corregida por el titular: Fintual MXN y Fintual USD pertenecen a Fintu
 ## Evolución por período
 
 En **Libro financiero**, selecciona una cuenta/producto y consulta las tablas por período documental. Abre el control de cada fila para ver diferencias, componentes y documento de origen. Los huecos y movimientos corregidos fuera de cobertura permanecen visibles; desconocido no se convierte en cero. Consulta el [manual de evolución](EVOLUCION.md).
+
+
+## Nu: distribución revisada por producto
+
+Nu permite confirmar PDF textual con cuenta, Cajitas agregadas y garantía separados. Si faltan aperturas o asignación de interés/ISR, completa la revisión en el plan con evidencia adicional. Los globales se reconocen al cierre del período, sin inventar pagos diarios o saldos individuales por Cajita. [Manual Nu](IMPORTACION-NU.md).

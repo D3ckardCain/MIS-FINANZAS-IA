@@ -208,3 +208,11 @@
 **Núcleo/consulta:** tipos para reverso de interés/IVA recibido y devolución de ISR/IVA retenido; netos coherentes en ledger y libro, sin tratar devoluciones como ganancia o capital externo. Comisiones usan devolución existente. Cambios de acumulados y saldos se cotejan entre meses contiguos, en ambos órdenes.
 **Interfaz:** campos por operación, selección de préstamo y original, declaración de revisión y plan final confirmable; decisiones ligadas a versión/hash y conservadas entre revisiones de apertura/moneda. Tabla vacía explícita distinguida de ausente. Eventos/enlaces forman parte de la transacción y reintentos existentes.
 **Alcance:** flujo de PDF textual conocido, sin suponer evidencia ausente, fiscalidad anual, titularidad externa o reinversión. Sin nuevas tablas, dependencias, servicios o pagos. Fintual mantiene la identidad corregida.
+
+
+## D029 — Nu: agregados separados con distribución revisada
+
+**Decisión:** confirmar Cuenta Nu y Cajitas agregadas como cuentas distintas, y garantía publicada con saldo/actividad/historia por separado. No certificar cada Cajita desde un agregado.
+**Evidencia:** aperturas y asignación del bruto/ISR por producto requieren fuentes adicionales revisadas, salvo apertura contigua y globales cero acreditados. La revisión identifica documento/versión y queda ligada al hash del plan.
+**Controles:** suma de aperturas/bruto/ISR frente al resumen, cierre por producto, depósitos/gastos por separado, tablas, fechas, signos, parejas únicas, moneda, continuidad, solapamientos, transacción e idempotencia.
+**Tiempo y alcance:** los conceptos globales se reconocen al cierre por resumen, sin fechas diarias inventadas. Congelar/liberar es observación neutral de liquidez; no rendimiento, otro activo o reinversión. Emisor y tasas históricos conservados. Contratos y cierres individuales por Cajita, cashback, fiscalidad anual e imágenes financieras pendientes. Sin nuevas tablas, dependencias o pagos.
