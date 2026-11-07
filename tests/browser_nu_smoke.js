@@ -9,7 +9,7 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
   assert.equal(typeof WebSocket,'function','La prueba requiere Node con WebSocket nativo');
   const chrome=process.env.CHROME_BIN||['google-chrome','google-chrome-stable','chromium','chromium-browser'].find(bin=>spawnSync('which',[bin]).status===0);
   assert.ok(chrome,'Chrome no está instalado en este ejecutor');
-  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'nu-browser-'));let app,browser,ws;
+  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'nu-browser-'));let app,browser,ws,closeBrowser;
   try {
     app=spawn(process.env.FINANZAS_TEST_PYTHON||'python3',['-m','tests.browser_nu_fixture'],{stdio:['ignore','pipe','pipe']});
     const url=await timeout(new Promise((resolve,reject)=>{let text='';app.stdout.on('data',chunk=>{text+=chunk;const m=text.match(/NU_TEST_URL=(http:\/\/127\.0\.0\.1:\d+)/);if(m)resolve(m[1]);});app.on('error',reject);app.on('exit',()=>reject(Error('Servidor de prueba detenido')));}));
@@ -19,6 +19,7 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
     let seq=0;const pending=new Map(),errors=[];
     ws.addEventListener('message',event=>{const msg=JSON.parse(event.data);if(msg.id){const task=pending.get(msg.id);pending.delete(msg.id);if(task)(msg.error?task.reject(Error(msg.error.message)):task.resolve(msg.result));}else if(msg.method==='Runtime.exceptionThrown')errors.push(msg.params.exceptionDetails.text);});
     const send=(method,params={},sessionId)=>timeout(new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));}));
+    closeBrowser=()=>send('Browser.close');
     const {targetId}=await send('Target.createTarget',{url:'about:blank'}),{sessionId}=await send('Target.attachToTarget',{targetId,flatten:true});
     const cmd=(method,params={})=>send(method,params,sessionId);
     await cmd('Runtime.enable');await cmd('Page.enable');await cmd('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
@@ -41,5 +42,5 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
     assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'La página móvil desborda el ancho; las tablas deben desplazar internamente');
     fs.writeFileSync('artifacts/nu-mobile.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
     assert.deepEqual(errors,[]);console.log('Nu navegador: revisión individual, confirmación, evolución, monedas y móvil aprobados.');
-  } finally {if(ws)ws.close();if(browser){const closed=new Promise(r=>browser.once('exit',r));browser.kill();await Promise.race([closed,delay(2000)]);}if(app)app.kill();fs.rmSync(profile,{recursive:true,force:true});}
+  } finally {if(browser){const closed=browser.exitCode!==null?Promise.resolve():new Promise(r=>browser.once('exit',r));if(closeBrowser)await Promise.race([closeBrowser().catch(()=>{}),delay(1000)]);if(browser.exitCode===null)browser.kill();await Promise.race([closed,delay(2000)]);}if(ws)ws.close();if(app)app.kill();fs.rmSync(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
 })().catch(error=>{console.error(error.message);process.exitCode=1;});

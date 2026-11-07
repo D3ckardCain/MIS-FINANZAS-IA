@@ -547,7 +547,7 @@ function renderEvolution(data,target) {
         head.append(hr);
         for(const row of a.history){
           if(row.gap_before){const gap=el('tr',undefined,'coverage-gap'),td=el('td',`Sin cobertura documental: ${row.gap_before.start} → ${row.gap_before.end}. No se reconstruyen movimientos.`);td.colSpan=9;gap.append(td);body.append(gap);}
-          const tr=el('tr');tr.append(el('td',row.start+' → '+row.end));
+          const tr=el('tr'),periodCell=el('td',undefined,'period-cell');periodCell.append(el('span',row.start),el('span','→ '+row.end,'subtext'));tr.append(periodCell);
           for(const key of ['initial','contributions','withdrawals','interest','withholding','interest_net_of_withholding','final'])tr.append(el('td',money(row[key]),'money'));
           const control=el('td'),details=el('details'),toggle=el('summary',row.reconciled?'Cierre conciliado':'Revisar diferencias');
           details.append(toggle);

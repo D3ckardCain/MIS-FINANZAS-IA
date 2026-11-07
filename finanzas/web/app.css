@@ -5,3 +5,5 @@
 .resolution fieldset{min-width:0;border:1px solid var(--border);border-radius:6px;padding:14px;margin:0 0 16px}.resolution legend{padding:0 6px;color:var(--text);font-size:12px}.resolution fieldset label{min-width:170px;max-width:100%}.resolution fieldset input{width:170px}
 
 .evolution{margin-top:28px}.evolution h3{font-size:13px;color:var(--muted);font-weight:500;margin:26px 0 12px}.evolution caption{text-align:left;padding:8px 17px;color:var(--muted);font-size:11px}.evolution .money{text-align:right;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.evolution .coverage-gap{color:#d29922;background:#d299220c}.evolution td details{min-width:185px}.evolution td details[open]{min-width:290px}.evolution td summary{cursor:pointer;color:var(--blue)}.evolution .kv{grid-template-columns:1fr 1fr}.evolution .kv dt,.evolution .kv dd{padding:7px;font-size:11px}.evolution td button{margin-top:10px}
+
+.evolution .period-cell{min-width:125px;white-space:nowrap}.evolution .period-cell>span{display:block}
