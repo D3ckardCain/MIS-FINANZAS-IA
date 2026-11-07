@@ -762,3 +762,13 @@
 - Identidad por fill/pago/instante de bot. Varias fotos compatibles añaden evidencia; orden con varios fills no se colapsa y un conflicto no sobrescribe. SQLite local, revisión/hash, transacción, rollback, idempotencia y reapertura.
 - Nuevo panel Registro cripto por plataforma/cuenta/activo/tipo, fuentes accesibles y operaciones paginadas. Fuera del ledger de bancos; sin paquetes, APIs o pagos nuevos.
 - Diecinueve pruebas nuevas, fuentes exclusivamente ficticias; ningún registro personal confirmado. Manual REGISTRO-CRIPTO.md y decisión D032. Comprobación Chrome añadida junto con Nu/traspasos; resultados remotos por verificar.
+
+
+## 2026-11-07 — Verificación final del registro cripto
+
+- [707 pruebas aprobadas, sin omisiones, y tres flujos Chrome aprobados](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42381269241).
+- Commit probado: 302c149cd3d4fcf5371d4591c6dfc29664a08334.
+- Diecinueve pruebas nuevas del registro: identidad por ejecución/pago/resumen, foto adicional, cuentas/plataformas/unidades, desconocido/cero, precisión, fecha con desplazamiento, observaciones de futuros/bots, atomicidad, reintentos, versiones/hash y HTTP con imagen original.
+- Chrome completó lectura de la captura original, revisión y confirmación spot, consulta por activo y ancho móvil, además de Nu y traspasos. Se inspeccionaron capturas ficticias de revisión, escritorio y móvil.
+- Se corrigió la sincronización de la prueba de navegador: espera a que termine la confirmación visual antes de abrir Registro cripto. El fallo anterior no requería modificar los datos ni la contabilidad.
+- Manual y código publicados. No se importaron operaciones personales. Las variaciones registradas siguen separadas de saldos completos, fiscalidad/costo por lote y contabilidad de futuros/wallets; no se inventan datos de esas etapas.

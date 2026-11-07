@@ -52,3 +52,8 @@ Funciona localmente sin Internet con los extras OCR ya existentes. No incorpora 
 Diecinueve pruebas nuevas, exclusivamente ficticias: OCR revisable, compra/venta, activo de comisión, desconocido/cero, dos fotos y varios fills, cuentas/plataformas/USD/USDT, conflictos, estados/IDs/unidades/importes/horas, precisión decimal, pagos, futuros/bots observados, atomicidad, reintentos/reapertura, revisión/hash, PDF rechazado y HTTP con imagen original.
 
 Chrome automatizado prueba apertura de la captura original, edición/revisión spot, plan antes de confirmar, registro por activo separado del banco y ancho móvil. Los flujos Nu y traspasos permanecen en la suite. Las capturas de prueba son ficticias y se conservan un día.
+
+
+## Validación publicada
+
+[707 pruebas y flujos Chrome de Nu, traspasos y cripto aprobados](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42381269241). Capturas de revisión de la imagen, registro en escritorio y móvil inspeccionadas con datos ficticios. El flujo de navegador confirma una ejecución spot y comprueba sus variaciones nativas sin crear movimientos bancarios.
