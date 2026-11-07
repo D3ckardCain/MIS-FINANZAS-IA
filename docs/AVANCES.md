@@ -647,3 +647,13 @@
 - Catorce pruebas nuevas cubren candidato de apertura sin aprobación automática, revisión ligada al plan/versión, valores inválidos, principal/pago único, interés/IVA/ISR/comisión, ambigüedades, cero/ausencia de retención, enlace contiguo, meses fuera de orden, solapamientos, moneda, rollback, contraseña y flujo HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa. Documentos ficticios y ningún movimiento personal confirmado.
 - Código y manual publicados. Pagos múltiples, cancelaciones, cartera contable, reinversión, fiscalidad anual y confirmación desde imágenes pendientes. Identidad Fintual MXN/USD preservada.
+
+
+## 2026-11-06 — CETESdirecto: efectivo liquidado y cobros sin desglose
+
+- Plan automático y confirmación de efectivo, compras, cobros e ISR; posiciones, precios, resultados y acumulados como observaciones.
+- Amortización/venta como cobro de valores sin asignación de principal/interés, sin calcular capital desde valuación o duplicar el interés informado. Interés clasificado/neto desconocidos mientras falte asignación.
+- Registro y liquidación separados; fecha efectiva de liquidación dentro del período. Folios con distintas operaciones y cobros iguales legítimos conservan evidencias.
+- Moneda documentada y contraseña transitoria para PDF protegido; columnas, cierres y totales normalizados, transacción y reintentos existentes.
+- Dieciocho pruebas de integración y una del núcleo: efectivo/valuación, cobros, interés/ISR período-acumulado, fechas, códigos, vacíos, duplicados, meses fuera de orden, versiones/rollback, HTTP y coexistencia sin alterar Fintual MXN/USD.
+- Muestra real usada solo para verificar bloqueo por efectivo de resumen/detalle discordante, sin confirmar movimientos personales. Manual y límites documentados, sin nuevas dependencias o pagos.

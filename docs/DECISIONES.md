@@ -190,3 +190,12 @@
 **Desglose:** exigir un pago único enlazado a préstamo preexistente, principal cotejado con variación de su saldo y total del pago cotejado con interés/IVA mensuales. Retención única desglosada en IVA/ISR por su fecha; comisión con IVA una vez. Rechazar repartos entre múltiples operaciones, cancelaciones y referencias ambiguas.
 **Control:** ambas vistas y todas las demás conciliaciones permanecen exigidas. Apertura como ancla, sin aportación ficticia; revisiones de moneda y apertura independientes y ligadas al plan. Reutilizar versiones, continuidad, transacción y reintentos.
 **Límites:** cartera y acumulados observados, sin reinversión, fiscalidad anual o pérdidas automáticas. PDF protegido con contraseña temporal. Sin nuevas tablas, dependencias o servicios; Fintual conserva la identidad corregida del titular.
+
+
+## D027 — CETESdirecto: efectivo y cobros sin principal supuesto
+
+**Decisión:** confirmar efectivo por fecha de liquidación; conservar registro y liquidación publicados. Registro previo al mes admitido con liquidación dentro; liquidación fuera bloquea. Posiciones/resultados son observaciones, no otro saldo contable.
+**Núcleo:** categoría positiva de cobro de valores sin desglose para amortización/venta, sin atribuir capital externo o interés. Valuación inicial no acredita capital/costo. Interés del período queda informado por separado y no genera otro cobro.
+**Consulta:** interés clasificado y neto desconocidos si algún período tiene asignación pendiente; importe informado y cobro completo se muestran separados. ISR de filas una vez; acumulados anuales no se reimportan. Cero explícito se conserva cuando corresponde.
+**Control:** conciliación completa, columnas por código, orden/fecha de liquidación, normalización, continuidad, versiones, atomicidad e idempotencia. Moneda publicada y contraseña temporal. Fintual MXN/USD conserva su identidad.
+**Límites:** desglose de cobros, títulos/costo por lote, continuidad de posiciones, reinversión, contrapartidas, impuestos anuales e imágenes pendientes. Sin nuevas tablas, dependencias o servicios.

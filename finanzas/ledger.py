@@ -18,6 +18,7 @@ class Kind(str, Enum):
     REWARD = "recompensa"
     DIVIDEND = "dividendo_cobrado"
     FOREIGN_WITHHOLDING = "retencion_extranjera"
+    SECURITY_PROCEEDS = "cobro_valores_sin_desglose"
 
 
 class Origin(str, Enum):

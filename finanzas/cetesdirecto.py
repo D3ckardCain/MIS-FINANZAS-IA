@@ -151,13 +151,13 @@ class CetesDirectoInvestmentReader:
         from .imaging import read_statement_image
         return read_statement_image(content, "cetesdirecto", "investments", engine=engine)
 
-    def read_pdf(self, content):
+    def read_pdf(self, content, *, password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             reader = PdfReader(BytesIO(content))
-            if reader.is_encrypted:
-                raise ReaderError("PDF CETESdirecto cifrado")
+            if reader.is_encrypted and (password is None or not reader.decrypt(password)):
+                raise ReaderError("PDF CETESdirecto protegido: contraseña requerida o no válida")
             pages = tuple(page.extract_text() or "" for page in reader.pages)
         except PyPdfError as error:
             raise ReaderError("PDF CETESdirecto no legible") from error
@@ -183,6 +183,8 @@ class CetesDirectoInvestmentReader:
         initial_number, initial = initial_pages[0]
         if not re.search(r"Moneda:\s*(?:MXN\s+)?PESOS\b", final, re.I):
             raise ReaderError("Moneda CETESdirecto ausente o no admitida por este perfil")
+        codes={m.upper() for m in re.findall(r'\bMoneda:\s*([A-Z]{3})\b',text,re.I)}
+        if codes-{'MXN'}:raise ReaderError('Moneda CETESdirecto contradictoria')
         # Variación tipográfica observada en la etiqueta fiscal nueva.
         final = re.sub(r"Retenidodel", "Retenido del", final, flags=re.I)
         reported_results = []

@@ -74,6 +74,11 @@ const labels = {
   vat_received:'IVA recibido',vat_paid:'IVA pagado',rewards:'Recompensas',
   withholding_documented:'Retención documentada · cobertura parcial',
   fund_initial_positions:'Fondos · posición anterior observada',fund_final_positions:'Fondos · posición actual observada',
+  cobro_valores_sin_desglose:'Cobro de valores · desglose pendiente',security_proceeds:'Cobros de valores sin desglose',
+  interest_reported:'Interés informado · sin asignación a cobros',security_receipts:'Cobros pendientes de separar en capital/interés',
+  security_initial_positions:'Valores · posición inicial observada',security_final_positions:'Valores · posición final observada',
+  security_summary_observation:'Resumen de valores observado',reported_results_observation:'Resultados informativos',
+  principal_interest_unallocated:'Capital/interés sin asignación',
   dividends:'Dividendos cobrados',foreign_withholding:'Retención extranjera',income_net_foreign_withholding:'Ingresos menos retención extranjera',
   dividendo_cobrado:'Dividendo cobrado',retencion_extranjera:'Retención extranjera',stock_positions:'Posiciones observadas de acciones/ETF',
   stock_summary_observation:'Resumen bursátil observado',trade_observations:'Operaciones observadas',memo_observations:'Anotaciones Memopost',
@@ -261,7 +266,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto','cetesdirecto'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -342,6 +347,11 @@ function showPlan(plan) {
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
     ...(plan.renewal_proposals?{renewal_proposals:plan.renewal_proposals}:{}),
     ...(plan.investment_summary_observation?{investment_summary_observation:plan.investment_summary_observation}:{}),
+    ...(plan.security_initial_positions?{security_initial_positions:plan.security_initial_positions}:{}),
+    ...(plan.security_final_positions?{security_final_positions:plan.security_final_positions}:{}),
+    ...(plan.security_summary_observation?{security_summary_observation:plan.security_summary_observation}:{}),
+    ...(plan.reported_results_observation?{reported_results_observation:plan.reported_results_observation}:{}),
+    ...(plan.security_receipts?{security_receipts:plan.security_receipts}:{}),
     ...(plan.stock_positions?{stock_positions:plan.stock_positions}:{}),
     ...(plan.stock_summary_observation?{stock_summary_observation:plan.stock_summary_observation}:{}),
     ...(plan.trade_observations?{trade_observations:plan.trade_observations}:{}),
@@ -379,6 +389,7 @@ async function openBook() {
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),
+    ...(account.institution==='cetesdirecto'?{interest_reported:account.interest_reported,security_proceeds:account.security_proceeds}:{}),
     ...(account.custodian==='alpaca'?{dividends:account.dividends,foreign_withholding:account.foreign_withholding,income_net_foreign_withholding:account.income_net_foreign_withholding}:{}),
     ...(['doopla','yotepresto'].includes(account.institution)?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
     charges_fees_and_vat:account.charges_fees_and_vat,

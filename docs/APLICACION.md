@@ -64,6 +64,8 @@ Fintual USD confirma efectivo USD con dividendos, intereses, comisiones y retenc
 
 YoTePresto permite revisar expresamente la apertura candidata de efectivo o enlazarla a un cierre contiguo confirmado compatible. Solo admite pago único con principal cotejado al préstamo y retención de fecha única; nunca convierte el saldo global en efectivo. Ver [manual YoTePresto](IMPORTACION-YOTEPRESTO.md).
 
+CETESdirecto confirma efectivo por fecha de liquidación y registra ventas/amortizaciones como cobros sin desglose de principal/interés. El libro distingue interés informado del clasificado; este último y el neto permanecen desconocidos si falta asignación. Ver [manual CETESdirecto](IMPORTACION-CETESDIRECTO.md).
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

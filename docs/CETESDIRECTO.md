@@ -66,3 +66,8 @@ review_coverage puede comparar posición total de resúmenes consecutivos de una
 Pruebas públicas con datos ficticios y PDF generado en memoria; verificación adicional de formatos privados fuera del repositorio. El parser requiere un bloque único de detalle de efectivo y posiciones inicial/final únicas; diseños o tablas multipágina diferentes requieren adaptación.
 
 Los documentos reales, sus importes y el inventario del titular permanecen privados.
+
+
+## Plan financiero explícito
+
+La aplicación incorpora un [plan de efectivo liquidado](IMPORTACION-CETESDIRECTO.md), con posiciones/resultados observados e ISR desde sus cargos. Ventas y amortizaciones se registran como cobros de valores sin desglose; no se deduce principal desde valuación ni se añade interés informado como otro cobro. Interés clasificado/neto quedan desconocidos mientras falte asignación. PDF protegido admite contraseña temporal, sin guardarla.

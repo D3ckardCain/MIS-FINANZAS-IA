@@ -151,6 +151,9 @@ def analyze(content, *, institution=None, password=None, engine=None):
                     elif institution == 'yotepresto':
                         from .yotepresto import YoTePrestoReader
                         preview = YoTePrestoReader(lane).read_pdf(content, password=password)
+                    elif institution == 'cetesdirecto' and lane == 'investments':
+                        from .cetesdirecto import CetesDirectoInvestmentReader
+                        preview = CetesDirectoInvestmentReader().read_pdf(content, password=password)
                     else:
                         preview = reader.read_reconciled_pdf(content)
                     mode = 'specialized'

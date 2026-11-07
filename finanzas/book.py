@@ -66,6 +66,9 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None, cash_opening_confirmation=None):
+        if doc['result']['institution']=='cetesdirecto' and doc['result']['format']=='pdf':
+            from .book_cetesdirecto import prepare
+            return prepare(self,doc,content,password=password)
         if doc['result']['institution']=='yotepresto' and doc['result']['format']=='pdf':
             from .book_yotepresto import prepare
             return prepare(self,doc,content,password=password,currency_confirmation=currency_confirmation,cash_opening_confirmation=cash_opening_confirmation)
@@ -318,20 +321,25 @@ class FinancialBook:
                     gaps.append(dict(start=str(date.fromisoformat(previous[1])+timedelta(days=1)),end=str(date.fromisoformat(next_[0])-timedelta(days=1))))
             selected=[m for m in ledger.movements if m.account==account]
             retained=[m.amount for m in selected if m.kind==Kind.WITHHOLDING]
-            withholding_complete=not any(json.loads(row[0]).get('withholding_status')=='unknown' for row in
-                self.db.execute('SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,)))
+            batches=[json.loads(row[0]) for row in self.db.execute(
+                'SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,))]
+            withholding_complete=not any(b.get('withholding_status')=='unknown' for b in batches)
+            interest_complete=not any(b.get('interest_status')=='unknown' for b in batches)
             source_profile=account.split(':',1)[0]
             institution='fintual' if source_profile=='alpaca' else source_profile
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
                 custodian='alpaca' if source_profile=='alpaca' else None,
                 portfolio='Acciones USD' if source_profile=='alpaca' else 'Fondos MXN' if institution=='fintual' else None,
-                role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca') else None,
+                role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
-                interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)),
+                interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)) if interest_complete else None,
+                interest_complete=interest_complete,
+                interest_reported=str(_sum(Decimal(b['interest_reported_observation']) for b in batches if 'interest_reported_observation' in b)) if institution=='cetesdirecto' else None,
+                security_proceeds=str(_sum(m.amount for m in selected if m.kind==Kind.SECURITY_PROCEEDS)),
                 withholding=str(_sum(retained)) if retained and withholding_complete else None,
                 withholding_documented=str(_sum(retained)) if retained else None,withholding_complete=withholding_complete,
-                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))) if retained and withholding_complete else None,
+                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))) if retained and withholding_complete and interest_complete else None,
                 vat_received=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_RECEIVED)),
                 vat_paid=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_PAID)),
                 rewards=str(_sum(m.amount for m in selected if m.kind==Kind.REWARD)),

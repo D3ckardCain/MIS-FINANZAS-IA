@@ -15,6 +15,12 @@ def movement(id, account="ahorro_a", kind=Kind.CONTRIBUTION, amount="100", **kwa
 
 
 class LedgerTests(unittest.TestCase):
+    def test_security_receipt_changes_cash_without_capital_or_interest_assumption(self):
+        book=Ledger();book.record(movement('cobro',kind=Kind.SECURITY_PROCEEDS,amount='11'))
+        self.assertEqual(book.balances()[('ahorro_a','MXN')],D('11'))
+        self.assertEqual(book.external_contributions('MXN'),0);self.assertEqual(book.interest_received('MXN'),0)
+        self.assertIsNone(book.withholding_recorded('MXN'))
+
     def test_dividend_and_foreign_tax_do_not_become_interest_or_mexican_isr(self):
         book=Ledger();book.record(movement('div',kind=Kind.DIVIDEND,amount='2',unit='USD'))
         book.record(movement('nra',kind=Kind.FOREIGN_WITHHOLDING,amount='1',unit='USD'))
