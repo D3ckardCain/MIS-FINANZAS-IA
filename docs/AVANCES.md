@@ -622,3 +622,10 @@
 - Detección, selección manual, bandeja, plan y libro muestran Fintual. Nuevos documentos financieros guardan Fintual como institución; MXN/USD mantienen cuentas e importes separados.
 - Compatibilidad con documentos/lotes previos sin reescribir originales o auditoría, alterar referencias financieras o duplicar movimientos. Catálogo sin institución independiente Alpaca.
 - Ocho pruebas nuevas de identidad, selección, dos portafolios, registro en base, compatibilidad, agrupación y flujo HTTP; manuales y documentación corregidos.
+
+### Verificación de identidad Fintual
+
+- [563 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42316543597).
+- Commit probado: 99ae699ce479e5bc67e304f0400bfaf1d5638991.
+- Ocho pruebas nuevas verifican institución/candidatos/catálogo Fintual, selección del lector USD, registro financiero como Fintual, cuentas MXN/USD separadas, presentación compatible de documentos/lotes anteriores sin reescribir auditoría ni duplicar, agrupación y HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa. Corrección limitada a identidad, presentación y compatibilidad; importes e impuestos sin cambios.
