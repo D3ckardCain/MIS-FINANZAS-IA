@@ -39,6 +39,7 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
     assert.equal(await evaluate("fetch('/api/crypto').then(r=>r.json()).then(d=>d.operations.length)"),0);
     await evaluate("[...document.querySelectorAll('#crypto-review button')].find(b=>b.textContent==='Confirmar registro cripto').click()");
     await until("fetch('/api/crypto').then(r=>r.json()).then(d=>d.operations.length===1)");
+    await until("busy===false && [...document.querySelectorAll('#crypto-review button')].some(b=>b.textContent==='Ver registro cripto')");
     await evaluate('document.querySelector("#crypto-nav").click()');await until('!document.querySelector("#crypto").hidden');
     const data=await evaluate("fetch('/api/crypto').then(r=>r.json())");
     assert.equal(data.operations.length,1);assert.equal(data.documents,1);assert.equal(data.operations[0].kind,'spot_buy');
