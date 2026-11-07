@@ -694,3 +694,10 @@
 - Cierre calculado frente al documental, huecos contiguos, revisiones posteriores y movimientos fuera de cobertura visibles, sin ajustar o reescribir el libro.
 - Diecisiete pruebas nuevas con datos ficticios; coexistencia de trece instituciones integradas y Fintual MXN/USD sin institución independiente del custodio. Sin dependencias o pagos nuevos. Manual EVOLUCION.md y plan actualizados.
 - Verificación sintáctica JavaScript y flujo HTTP; validación visual en navegador pendiente porque el ejecutable Chromium no está disponible en este entorno. Ningún dato personal importado.
+
+### Verificación de evolución financiera
+
+- [646 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42326357613).
+- Commit probado: 6351a1c52db88f6e09b49e7d94ca1a92b02711d6.
+- Diecisiete pruebas nuevas: anclas y traspasos sin capital duplicado, períodos fuera de orden/huecos, desconocido/cero, Fintual MXN/USD, cobros sin desglose, cancelaciones históricas, precisión decimal, revisiones dentro/fuera de período y cuenta, coexistencia de trece instituciones, lectura consistente y HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa. No se modificaron datos personales. La revisión visual en navegador permanece pendiente por ausencia de Chromium en este entorno.
