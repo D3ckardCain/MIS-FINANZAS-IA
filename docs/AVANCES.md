@@ -745,3 +745,11 @@
 - Evolución acepta la conciliación de origen acreditada sin falsa diferencia de efectivo; cambios financieros/evidencia posteriores señalan el vínculo para revisión. Lotes originales preservados.
 - Once pruebas nuevas y 688 pruebas locales aprobadas, sin omisiones; JavaScript comprobado. Navegador CI ampliado a traspasos, además de Nu; capturas exclusivamente ficticias por un día.
 - Manual TRASPASOS-ENTRE-CUENTAS.md y decisión D031. Sin datos personales, nuevas dependencias o pagos; conversiones, comisiones/tramos y conciliación uno a varios permanecen fuera del flujo de pareja completa.
+
+### Verificación de traspasos entre cuentas
+
+- [688 pruebas aprobadas, sin omisiones, y Chrome aprobado](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42330762816).
+- Commit probado: 8ac3e6abbb6f96712845deade4dee4595668c8a6.
+- Once pruebas nuevas cubren acreditación, compatibilidad, dos fechas/efectos conservados, exclusión de capital económico no transferible y evidencia cambiada, varias coincidencias, versiones/hash, rollback de ambas patas, idempotencia, reapertura, evolución y revisión posterior; HTTP incluido.
+- Chrome comprobó selección, acreditación, plan, confirmación, evolución sin diferencias ficticias y ancho móvil; el flujo Nu también sigue aprobado. Capturas ficticias de escritorio/móvil inspeccionadas; tabla de vínculos móvil legible con desplazamiento interno.
+- Procesos Chrome aislados y cierre de prueba robusto ante perfiles temporales ocupados. Código/manual publicados; ningún documento o movimiento personal importado. Sin dependencias o pagos operativos nuevos.

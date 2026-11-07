@@ -28,3 +28,8 @@ No es un mecanismo para reclasificar libremente capital, inventar reinversión o
 Funciona sin Internet con el servicio local iniciado. No añade paquetes, servicios ni pagos. La consulta y los planes leen una instantánea consistente. Se reutilizan las restricciones HTTP locales y las revisiones del ledger; la tabla `book_transfer_links` conserva la acreditación del vínculo.
 
 Once pruebas nuevas con documentos ficticios verifican candidatos sin asignación automática, propiedad explícita, dos fechas/importe conservados, exclusiones, moneda, varias entradas iguales, plan/versiones, rollback, reintento/reapertura, evolución y correcciones posteriores; flujo HTTP incluido. El navegador de CI prueba selección, acreditación, plan, confirmación, evolución y ancho móvil. Ningún dato personal se importa.
+
+
+## Validación publicada
+
+[688 pruebas y flujos Chrome aprobados](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42330762816). Capturas ficticias revisadas en escritorio y móvil. Los datos de prueba no corresponden a movimientos del titular.
