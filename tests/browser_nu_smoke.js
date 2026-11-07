@@ -13,7 +13,7 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
   try {
     app=spawn(process.env.FINANZAS_TEST_PYTHON||'python3',['-m','tests.browser_nu_fixture'],{stdio:['ignore','pipe','pipe']});
     const url=await timeout(new Promise((resolve,reject)=>{let text='';app.stdout.on('data',chunk=>{text+=chunk;const m=text.match(/NU_TEST_URL=(http:\/\/127\.0\.0\.1:\d+)/);if(m)resolve(m[1]);});app.on('error',reject);app.on('exit',()=>reject(Error('Servidor de prueba detenido')));}));
-    browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+    browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{detached:true,stdio:['ignore','ignore','pipe']});
     const endpoint=await timeout(new Promise((resolve,reject)=>{let text='';browser.stderr.on('data',chunk=>{text+=chunk;const m=text.match(/DevTools listening on (ws:\/\/[^\s]+)/);if(m)resolve(m[1]);});browser.on('error',reject);browser.on('exit',()=>reject(Error('Chrome de prueba detenido')));}));
     ws=new WebSocket(endpoint);await timeout(new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});}));
     let seq=0;const pending=new Map(),errors=[];
@@ -42,5 +42,5 @@ const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>
     assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'La página móvil desborda el ancho; las tablas deben desplazar internamente');
     fs.writeFileSync('artifacts/nu-mobile.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
     assert.deepEqual(errors,[]);console.log('Nu navegador: revisión individual, confirmación, evolución, monedas y móvil aprobados.');
-  } finally {if(browser){const closed=browser.exitCode!==null?Promise.resolve():new Promise(r=>browser.once('exit',r));if(closeBrowser)await Promise.race([closeBrowser().catch(()=>{}),delay(1000)]);if(browser.exitCode===null)browser.kill();await Promise.race([closed,delay(2000)]);}if(ws)ws.close();if(app)app.kill();fs.rmSync(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
+  } finally {if(browser){const closed=browser.exitCode!==null?Promise.resolve():new Promise(r=>browser.once('exit',r));if(closeBrowser)await Promise.race([closeBrowser().catch(()=>{}),delay(1000)]);try{process.kill(-browser.pid,'SIGTERM');}catch(error){if(error.code!=='ESRCH')throw error;}await Promise.race([closed,delay(2000)]);}if(ws)ws.close();if(app)app.kill();try{fs.rmSync(profile,{recursive:true,force:true,maxRetries:3,retryDelay:200});}catch(error){if(!['ENOTEMPTY','EBUSY'].includes(error.code))throw error;console.log('Perfil ficticio temporal pendiente de la limpieza del ejecutor.');}}
 })().catch(error=>{console.error(error.message);process.exitCode=1;});
