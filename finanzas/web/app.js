@@ -169,7 +169,7 @@ function renderNavigation() {
 function showList() {
   financialPassword=null;
   $('overview').hidden = false; $('detail').hidden = true;
-  $('book').hidden = true; $('book-nav').classList.remove('selected');
+  $('book').hidden = true; $('book-nav').classList.remove('selected');$('crypto').hidden=true;$('crypto-nav').classList.remove('selected');
   $('page-title').textContent = selected ? name(selected) : 'Archivo financiero';
   $('crumb').textContent = selected ? name(selected) : 'Archivo financiero';
   renderNavigation(); renderDocuments();
@@ -252,11 +252,15 @@ function renderView() {
   else if(view.data) {
     const mode=view.mode==='specialized'?'Lector específico':view.mode==='ocr'?'Lectura OCR local':'Lectura documental';
     const text=mode+' · '+(view.reconciled?'Controles del lector sin diferencias detectadas.':'Hay controles pendientes de revisión.');
-    $('view').append(el('p',text,'footnote'));renderObject(view.data,$('view'));
+    $('view').append(el('p',text,'footnote'));
+    if(['bingx','pionex'].includes(result.institution)){const details=el('details',undefined,'data-section');details.append(el('summary','Lectura OCR y campos candidatos'));renderObject(view.data,details);$('view').append(details);}
+    else renderObject(view.data,$('view'));
   } else $('view').append(el('p','Esta vista no pudo extraerse con el formato disponible. El original está conservado.','muted'));
 }
 async function openDocument(id) {
   current=await api('/api/documents/'+id);const result=current.result;
+  if(['bingx','pionex'].includes(result.institution))lane='investments';
+  $('crypto').hidden=true;$('crypto-nav').classList.remove('selected');
   $('overview').hidden=true;$('book').hidden=true;$('detail').hidden=false;$('notice').textContent='';
   financialPlan=null;financialPassword=null;$('financial-plan').hidden=true;$('confirm').hidden=true;
   $('crumb').textContent=name(result.institution);$('detail-institution').textContent=name(result.institution)+(result.portfolio_unit?' · '+result.portfolio_unit:'');
@@ -278,6 +282,9 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
+  const isCrypto=['bingx','pionex'].includes(result.institution)&&result.format==='image';
+  $('financial-import').hidden=isCrypto;$('crypto-review').hidden=!isCrypto;
+  if(isCrypto)await showCryptoReview();
   if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto','cetesdirecto','nu'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
@@ -615,6 +622,7 @@ function renderTransfers(data,target) {
 }
 async function openBook() {
   financialPassword=null;
+  $('crypto').hidden=true;$('crypto-nav').classList.remove('selected');
   const [data,evolution,transfers]=await Promise.all([api('/api/book'),api('/api/book/evolution'),api('/api/book/transfers')]);
   selected=null;renderNavigation();
   $('overview').hidden=true;$('detail').hidden=true;$('book').hidden=false;

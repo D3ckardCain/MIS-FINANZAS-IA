@@ -1,0 +1,54 @@
+'use strict';
+// Chrome/Node del ejecutor; CDP y WebSocket nativos, sin paquetes adicionales.
+const {spawn,spawnSync}=require('node:child_process');
+const fs=require('node:fs');const os=require('node:os');const path=require('node:path');
+const assert=require('node:assert/strict');
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('Tiempo de espera agotado')),ms).unref())]);
+(async()=>{
+  assert.equal(typeof WebSocket,'function','La prueba requiere Node con WebSocket nativo');
+  const chrome=process.env.CHROME_BIN||['google-chrome','google-chrome-stable','chromium','chromium-browser'].find(bin=>spawnSync('which',[bin]).status===0);
+  assert.ok(chrome,'Chrome no está instalado en este ejecutor');
+  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'crypto-browser-'));let app,browser,ws,closeBrowser;
+  try {
+    app=spawn(process.env.FINANZAS_TEST_PYTHON||'python3',['-m','tests.browser_crypto_fixture'],{stdio:['ignore','pipe','pipe']});
+    const url=await timeout(new Promise((resolve,reject)=>{let text='';app.stdout.on('data',chunk=>{text+=chunk;const m=text.match(/TEST_URL=(http:\/\/127\.0\.0\.1:\d+)/);if(m)resolve(m[1]);});app.on('error',reject);app.on('exit',()=>reject(Error('Servidor de prueba detenido')));}));
+    browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{detached:true,stdio:['ignore','ignore','pipe']});
+    const endpoint=await timeout(new Promise((resolve,reject)=>{let text='';browser.stderr.on('data',chunk=>{text+=chunk;const m=text.match(/DevTools listening on (ws:\/\/[^\s]+)/);if(m)resolve(m[1]);});browser.on('error',reject);browser.on('exit',()=>reject(Error('Chrome de prueba detenido')));}));
+    ws=new WebSocket(endpoint);await timeout(new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});}));
+    let seq=0;const pending=new Map(),errors=[];
+    ws.addEventListener('message',event=>{const msg=JSON.parse(event.data);if(msg.id){const task=pending.get(msg.id);pending.delete(msg.id);if(task)(msg.error?task.reject(Error(msg.error.message)):task.resolve(msg.result));}else if(msg.method==='Runtime.exceptionThrown')errors.push(msg.params.exceptionDetails.text);});
+    const send=(method,params={},sessionId)=>timeout(new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));}));
+    closeBrowser=()=>send('Browser.close');
+    const {targetId}=await send('Target.createTarget',{url:'about:blank'}),{sessionId}=await send('Target.attachToTarget',{targetId,flatten:true});
+    const cmd=(method,params={})=>send(method,params,sessionId);
+    await cmd('Runtime.enable');await cmd('Page.enable');await cmd('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+    const evaluate=async expression=>{const r=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value;};
+    const until=async expression=>{for(let i=0;i<100;i++){if(await evaluate(expression))return;await delay(100);}throw Error('No se cumplió condición: '+expression);};
+    await cmd('Page.navigate',{url});await until('document.querySelector("#documents .filename")!==null');
+    await evaluate('document.querySelector("#documents .filename").click()');await until(`document.querySelector('[aria-label="Cuenta cripto"]')!==null`);
+    assert.equal(await evaluate('document.querySelector("#financial-import").hidden'),true);
+    await evaluate(`(()=>{const kind=document.querySelector('[aria-label="Tipo de operación cripto"]');kind.value='spot_buy';kind.dispatchEvent(new Event('change'));for(const [key,val] of Object.entries({order_id:'Order-AbC-001',trade_id:'Fill-XyZ-001',base_asset:'BTC',quote_asset:'USDT',quantity:'0.0025',quote_amount:'75.00',fee_amount:'0.03',fee_asset:'USDT'}))document.querySelector('[aria-label="Cripto '+key+'"]').value=val;document.querySelector('[aria-label="Cuenta cripto"]').value='Cuenta principal';document.querySelector('[aria-label="Fecha cripto con desplazamiento"]').value='2026-01-05T12:00:00+00:00';document.querySelector('[aria-label="Estado cripto acreditado"]').value='executed';document.querySelector('[aria-label="Captura cripto verificada"]').checked=true;})()`);
+    assert.equal(await evaluate(`document.querySelector('[aria-label="Cripto quote_amount"]').value`),'75.00');
+    await evaluate('document.querySelector(".crypto-source").parentElement.open=true');
+    await until('document.querySelector(".crypto-source").complete && document.querySelector(".crypto-source").naturalWidth>0');
+    fs.mkdirSync('artifacts',{recursive:true});
+    fs.writeFileSync('artifacts/cripto-revision.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+    await evaluate("[...document.querySelectorAll('#crypto-review button')].find(b=>b.textContent==='Preparar registro cripto').click()");
+    await until("[...document.querySelectorAll('#crypto-review button')].some(b=>b.textContent==='Confirmar registro cripto')");
+    assert.equal(await evaluate("fetch('/api/crypto').then(r=>r.json()).then(d=>d.operations.length)"),0);
+    await evaluate("[...document.querySelectorAll('#crypto-review button')].find(b=>b.textContent==='Confirmar registro cripto').click()");
+    await until("fetch('/api/crypto').then(r=>r.json()).then(d=>d.operations.length===1)");
+    await evaluate('document.querySelector("#crypto-nav").click()');await until('!document.querySelector("#crypto").hidden');
+    const data=await evaluate("fetch('/api/crypto').then(r=>r.json())");
+    assert.equal(data.operations.length,1);assert.equal(data.documents,1);assert.equal(data.operations[0].kind,'spot_buy');
+    assert.equal(data.asset_changes.find(a=>a.asset==='USDT').recorded_change,'-75.03');
+    assert.equal(await evaluate("fetch('/api/book').then(r=>r.json()).then(d=>d.documents)"),0);
+    fs.mkdirSync('artifacts',{recursive:true});
+    fs.writeFileSync('artifacts/cripto-desktop.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+    await cmd('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await delay(250);
+    assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'Desbordamiento del registro cripto en móvil');
+    fs.writeFileSync('artifacts/cripto-mobile.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+    assert.deepEqual(errors,[]);console.log('Cripto navegador: captura original, revisión spot, confirmación, activos separados y móvil aprobados.');
+  } finally {if(browser){const closed=browser.exitCode!==null?Promise.resolve():new Promise(r=>browser.once('exit',r));if(closeBrowser)await Promise.race([closeBrowser().catch(()=>{}),delay(1000)]);try{process.kill(-browser.pid,'SIGTERM');}catch(error){if(error.code!=='ESRCH')throw error;}await Promise.race([closed,delay(2000)]);}if(ws)ws.close();if(app)app.kill();try{fs.rmSync(profile,{recursive:true,force:true,maxRetries:3,retryDelay:200});}catch(error){if(!['ENOTEMPTY','EBUSY'].includes(error.code))throw error;console.log('Perfil ficticio temporal pendiente de la limpieza del ejecutor.');}}
+})().catch(error=>{console.error(error.message);process.exitCode=1;});

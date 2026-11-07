@@ -753,3 +753,12 @@
 - Once pruebas nuevas cubren acreditación, compatibilidad, dos fechas/efectos conservados, exclusión de capital económico no transferible y evidencia cambiada, varias coincidencias, versiones/hash, rollback de ambas patas, idempotencia, reapertura, evolución y revisión posterior; HTTP incluido.
 - Chrome comprobó selección, acreditación, plan, confirmación, evolución sin diferencias ficticias y ancho móvil; el flujo Nu también sigue aprobado. Capturas ficticias de escritorio/móvil inspeccionadas; tabla de vínculos móvil legible con desplazamiento interno.
 - Procesos Chrome aislados y cierre de prueba robusto ante perfiles temporales ocupados. Código/manual publicados; ningún documento o movimiento personal importado. Sin dependencias o pagos operativos nuevos.
+
+
+## 2026-11-06 — Registro revisado cripto BingX/Pionex
+
+- Capturas con revisión por tipo, cuenta/subcuenta, ejecución/pago/bot, activos, importes y desplazamiento horario explícito. Imagen original visible; OCR solo propone campos y conserva sus alertas.
+- Spot y rendimientos pagados con variaciones nativas; comisiones por activo conocido o desconocidas, sin saldo global/MXN/ISR inventados. Futuros, PnL/funding y resúmenes de bot observados sin sumar a spot.
+- Identidad por fill/pago/instante de bot. Varias fotos compatibles añaden evidencia; orden con varios fills no se colapsa y un conflicto no sobrescribe. SQLite local, revisión/hash, transacción, rollback, idempotencia y reapertura.
+- Nuevo panel Registro cripto por plataforma/cuenta/activo/tipo, fuentes accesibles y operaciones paginadas. Fuera del ledger de bancos; sin paquetes, APIs o pagos nuevos.
+- Diecinueve pruebas nuevas, fuentes exclusivamente ficticias; ningún registro personal confirmado. Manual REGISTRO-CRIPTO.md y decisión D032. Comprobación Chrome añadida junto con Nu/traspasos; resultados remotos por verificar.

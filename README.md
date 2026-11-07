@@ -84,3 +84,5 @@ Fintual es una sola institución con portafolios MXN y USD separados. Alpaca sol
 - [Importación Nu con distribución revisada](docs/IMPORTACION-NU.md)
 
 El libro permite [enlazar traspasos propios entre cuentas confirmadas](docs/TRASPASOS-ENTRE-CUENTAS.md), con revisión de ambas evidencias, correcciones atómicas y fechas/importes conservados.
+
+El [registro cripto BingX/Pionex](docs/REGISTRO-CRIPTO.md) admite capturas revisadas de spot y rendimientos pagados, con variaciones por activo y deduplicación por ejecución/pago; futuros y resúmenes de bot quedan como observaciones separadas. No equivale a saldos/tenencias completos.

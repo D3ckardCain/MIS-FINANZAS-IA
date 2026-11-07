@@ -232,3 +232,11 @@
 **Persistencia:** acta en book_transfer_links y dos revisiones de origen dentro de la misma transacción, ligadas al plan/estado del libro. Reintentos idempotentes y cada pata usada una sola vez. Lotes originales sin reescritura.
 **Evolución:** un acta válida y solo cambios de origen/vínculo no rompen la conciliación de efectivo. Cambios financieros o de evidencia posteriores requieren revisión.
 **Límites:** una pareja completa, sin prorrateos, comisiones absorbidas, conversión de moneda, reinversión inferida o reclasificación de compra/venta/principal de préstamo. Sin nuevas dependencias o pagos.
+
+
+## D032 — Registro cripto por ejecución con evidencia revisada
+
+**Decisión:** SQLite local de operaciones/evidencias separado del ledger bancario. Spot y rendimientos pagados registran variaciones nativas; derivados/bots conservan observaciones sin efecto patrimonial automático.
+**Identidad:** cuenta/plataforma y orden+fill (no solo orden), ID de pago o bot+instante según tipo. Segunda imagen compatible añade evidencia, no otra operación. Conflictos bloqueados sin sobrescritura.
+**Datos:** revisión explícita, unidades y fecha con desplazamiento; no inferir moneda/zona, comisiones cero, importes desde precio o beneficio desde PnL genérico. Comisión en tercer activo admitida, desconocido preservado.
+**Control:** documento/versión, hash, transacción, rollback, reintento y reapertura; consulta de captura original y registro por plataforma/cuenta/tipo/activo. Sin nuevos paquetes/APIs/pagos. Capturas de prueba ficticias; los saldos, costo fiscal, wallets e integración automática son otro alcance.

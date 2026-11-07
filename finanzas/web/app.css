@@ -10,3 +10,6 @@
 
 .transfer-panel label{width:100%;max-width:100%;min-width:0;margin-right:0}.transfer-panel select{width:100%}.transfer-panel button{margin:5px 6px 5px 0}
 .transfer-panel table{min-width:760px}.transfer-panel td:first-child{white-space:nowrap}
+#crypto-review label{max-width:100%;min-width:0}#crypto-review input,#crypto-review select{max-width:100%}#crypto-review .opening-review{display:flex}#crypto-content>h2{margin-top:26px}#crypto-content button{margin:5px 5px 5px 0}
+
+.crypto-source{display:block;max-width:100%;max-height:540px;object-fit:contain;margin:10px auto;background:white}

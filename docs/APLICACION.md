@@ -89,3 +89,8 @@ Nu también admite el desglose individual por Cajita: marca esa opción, complet
 ## Traspasos entre cuentas
 
 En Libro financiero, selecciona salida y entrada compatibles y verifica ambas evidencias antes de preparar/confirmar el vínculo. La conciliación conserva los movimientos y sus fechas, sin capital externo nuevo. [Manual de traspasos](TRASPASOS-ENTRE-CUENTAS.md).
+
+
+## Registro cripto
+
+Las capturas BingX/Pionex tienen un formulario específico revisable y vista de la imagen original. Identifica cuenta, tipo, zona horaria, ejecución/pago y sus activos; prepara y confirma antes de registrar. La entrada **Registro cripto** separa operaciones y observaciones, con acceso a cada captura y variaciones que no son saldos. [Manual](REGISTRO-CRIPTO.md).

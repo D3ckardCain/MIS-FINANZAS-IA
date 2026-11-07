@@ -32,20 +32,23 @@ jobs:
         run: .venv/bin/python -c "import sys, sqlite3; print(sys.version); print('SQLite', sqlite3.sqlite_version)"
       - name: Suite completa, incluyendo archivos y reapertura
         run: .venv/bin/python -m unittest discover -v
-      - name: Verificar JavaScript, Nu y traspasos en Chrome
+      - name: Verificar JavaScript y flujos locales en Chrome
         env:
           FINANZAS_TEST_PYTHON: .venv/bin/python
         run: |
           node --check finanzas/web/app.js
+          node --check finanzas/web/crypto.js
           node --check tests/browser_nu_smoke.js
           node tests/browser_nu_smoke.js
           node --check tests/browser_transfers_smoke.js
           node tests/browser_transfers_smoke.js
+          node --check tests/browser_crypto_smoke.js
+          node tests/browser_crypto_smoke.js
       - name: Capturas Nu con datos ficticios
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: nu-y-traspasos-ficticios
+          name: capturas-ficticias-app
           path: artifacts/*.png
           if-no-files-found: ignore
           retention-days: 1

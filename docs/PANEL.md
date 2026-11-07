@@ -64,3 +64,8 @@ Cajitas individuales Nu: cada nombre acreditado aparece como producto propio en 
 ## Conciliar traspasos propios
 
 El libro muestra candidatos elegibles por cuenta, importe/unidad y fecha, con selección explícita, referencia/evidencia, acreditación de propiedad y confirmación de plan. Vínculos confirmados y revisiones posteriores permanecen visibles. No se sugieren enlaces de compras/ventas, capital de préstamos, comisiones o ingresos como si fueran transferencias.
+
+
+## Registro cripto separado
+
+Entrada propia para BingX/Pionex: plataforma, cuenta, activo y tipo de operación. Spot/pagos generan variaciones registradas; derivados y bots permanecen observados. Capturas asociadas a la misma ejecución no generan operaciones dobles. No se añade saldo cripto al libro bancario ni se convierte a pesos automáticamente.

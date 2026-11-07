@@ -9,6 +9,7 @@ from urllib.parse import unquote, urlsplit
 
 from .intake import Inbox, MAX_UPLOAD
 from .book import FinancialBook
+from .crypto_book import CryptoBook
 
 WEB = Path(__file__).with_name('web')
 
@@ -49,13 +50,16 @@ def make_server(path, port=0):
             if not self.authorized(): return
             route = urlsplit(self.path).path
             try:
-                if route in ('/', '/app.js', '/app.css'):
+                if route in ('/', '/app.js', '/app.css','/crypto.js'):
                     name = 'index.html' if route == '/' else route[1:]
-                    mime = {'index.html': 'text/html', 'app.js': 'text/javascript', 'app.css': 'text/css'}[name]
+                    mime = {'index.html': 'text/html', 'app.js': 'text/javascript', 'crypto.js':'text/javascript','app.css': 'text/css'}[name]
                     self.reply(200, (WEB/name).read_bytes(), mime+'; charset=utf-8'); return
                 with Inbox(path) as inbox:
                     if route == '/api/state':
                         self.reply(200, dict(token=token, catalog=inbox.catalog(), documents=inbox.list())); return
+                    if route == '/api/crypto':
+                        with CryptoBook(path) as book:self.reply(200,book.summary())
+                        return
                     if route == '/api/book':
                         with FinancialBook(path) as book: self.reply(200, book.summary())
                         return
@@ -68,9 +72,22 @@ def make_server(path, port=0):
                     if route.startswith('/api/documents/'):
                         parts = route.split('/')
                         identifier = parts[3]
+                        if len(parts) == 5 and parts[4] == 'crypto-plan':
+                            with CryptoBook(path) as book:self.reply(200,book.preview(identifier))
+                            return
                         if len(parts) == 5 and parts[4] == 'plan':
                             with FinancialBook(path) as book: self.reply(200, book.preview(identifier))
                             return
+                        if len(parts) == 5 and parts[4] == 'image':
+                            data=inbox.original(identifier)
+                            if inbox.get(identifier)['result'].get('format')!='image':raise ValueError('El documento no es una imagen.')
+                            from PIL import Image
+                            from io import BytesIO
+                            try:
+                                with Image.open(BytesIO(data)) as image:mime=Image.MIME.get(image.format)
+                            except OSError as error:raise ValueError('Imagen original no legible.') from error
+                            if not mime or not mime.startswith('image/'):raise ValueError('Formato de imagen no admitido.')
+                            self.reply(200,data,mime);return
                         if len(parts) == 5 and parts[4] == 'original':
                             data = inbox.original(identifier)
                             mime = 'application/pdf' if data[:1024].lstrip().startswith(b'%PDF-') else 'application/octet-stream'
@@ -108,6 +125,11 @@ def make_server(path, port=0):
                     parts = route.split('/')
                     if len(parts) == 5 and parts[:3] == ['', 'api', 'documents']:
                         identifier, action = parts[3:]
+                        if action in ('crypto-plan','crypto-confirm'):
+                            with CryptoBook(path) as book:
+                                if action=='crypto-plan':self.reply(200,book.preview(identifier,revision=payload['revision'],review=payload.get('review')))
+                                else:self.reply(200,book.confirm(identifier,revision=payload['revision'],review=payload.get('review'),plan_hash=payload.get('plan_hash')))
+                            return
                         if action == 'plan':
                             if type(payload['revision']) is not int:raise ValueError('Se requiere la revisión vigente del documento.')
                             with FinancialBook(path) as book:
