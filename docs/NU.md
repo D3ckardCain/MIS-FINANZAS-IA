@@ -61,3 +61,8 @@ Los datos de pagos de tarjeta/garantía sirven para rastrear efectivo, sin crear
 ## Confirmación financiera de agregados
 
 El lector documental sigue sin confirmar movimientos por sí solo. La aplicación incorpora ahora el [flujo revisado de importación Nu](IMPORTACION-NU.md): Cuenta/Cajitas agregadas/garantía separados, aperturas y distribución de interés/ISR acreditadas, traspasos enlazados y confirmación atómica. No certifica saldos o rendimientos individuales por Cajita; los globales reconocidos al cierre se distinguen de pagos diarios. PDF protegido y moneda revisada admitidos; imágenes conservan alcance documental.
+
+
+## Cierre del flujo por Cajita
+
+El libro admite ahora **Cajitas individuales acreditadas**, además del agregado: aperturas/cierres y bruto/ISR revisados por nombre, sumas globales y cierre individual exactos. Un modo sustituye al otro, no se suman ni mezclan en un historial confirmado. Cashback explícito conserva origen propio. El lector sigue sin inventar datos ausentes; consulta el [manual de importación actualizado](IMPORTACION-NU.md).

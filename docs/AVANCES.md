@@ -717,3 +717,13 @@
 - Commit del código probado: 125c2ccb4bad74a72715f285a212e3e29eab4962.
 - Diecinueve pruebas nuevas verifican separación de productos, desgloses explícitos, traspasos, reconocimiento al cierre, controles de filas/totales, monedas, revisiones/planes, historia, atomicidad, contraseñas y HTTP.
 - Código y manual publicados en main. La consulta de Actions todavía no devuelve una ejecución para este commit; verificación remota pendiente, sin atribuirle el resultado local. Revisión visual en navegador también pendiente por ausencia de Chromium en el entorno.
+
+
+## 2026-11-06 — Cierre del flujo Nu por Cajita individual
+
+- La ejecución pendiente del incremento anterior ya aprobó: [665 pruebas en GitHub](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42327724619), commit 125c2ccb4bad74a72715f285a212e3e29eab4962.
+- Desglose individual acreditado sustituye el agregado: cuenta por Cajita, incluso sin movimientos, con apertura/cierre/bruto/ISR y conciliación global e individual. Nombres normalizados, historia contigua, no omisión de Cajitas históricas ni mezcla automática de granularidades.
+- Cashback explícito como aportación con origen, sin interés adicional; congelamientos como evidencia de liquidez, sin activo o reinversión duplicados.
+- Doce pruebas adicionales y 677 pruebas locales aprobadas, sin omisiones; controles de JavaScript aprobados. Ningún dato personal importado.
+- Chrome local no se pudo instalar: el destino de descarga entregó HTML en lugar del ZIP. Se incorpora comprobación automática de navegador en Actions con carga ficticia, revisión individual, confirmación, evolución y móvil; capturas de un día. Resultado remoto del nuevo incremento por verificar.
+- Manuales, plan y decisión D030 actualizados; no se añadieron dependencias de pago ni servicios críticos externos.

@@ -81,3 +81,6 @@ En **Libro financiero**, selecciona una cuenta/producto y consulta las tablas po
 ## Nu: distribución revisada por producto
 
 Nu permite confirmar PDF textual con cuenta, Cajitas agregadas y garantía separados. Si faltan aperturas o asignación de interés/ISR, completa la revisión en el plan con evidencia adicional. Los globales se reconocen al cierre del período, sin inventar pagos diarios o saldos individuales por Cajita. [Manual Nu](IMPORTACION-NU.md).
+
+
+Nu también admite el desglose individual por Cajita: marca esa opción, completa sus cifras acreditadas y añade las que no tuvieron movimientos. El agregado se sustituye por cuentas individuales; no se duplica. Cashback explícito se conserva como aportación. Historiales agregados/individuales no se mezclan automáticamente.

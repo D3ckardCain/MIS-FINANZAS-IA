@@ -336,8 +336,8 @@ class FinancialBook:
             institution='fintual' if source_profile=='alpaca' else source_profile
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
                 custodian='alpaca' if source_profile=='alpaca' else None,
-                portfolio='Acciones USD' if source_profile=='alpaca' else 'Fondos MXN' if institution=='fintual' else None,
-                role=('cajitas_aggregate' if lane=='investments' else 'collateral' if lane=='guarantee' else None) if institution=='nu' else 'transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
+                portfolio=next((p.get('product_name') for b in batches for p in b.get('periods',[]) if p.get('account')==account and p.get('product_name')),None) if institution=='nu' else 'Acciones USD' if source_profile=='alpaca' else 'Fondos MXN' if institution=='fintual' else None,
+                role=('cajitas_aggregate' if lane=='investments' else 'cajita' if lane.startswith('investments:') else 'collateral' if lane=='guarantee' else None) if institution=='nu' else 'transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
                 interest=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL))) if interest_complete else None,

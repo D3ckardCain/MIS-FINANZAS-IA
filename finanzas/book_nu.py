@@ -24,7 +24,7 @@ def _amount(value):
     return result
 
 
-def prepare(book,doc,content,*,password=None,currency_confirmation=None,operation_review=None):
+def _aggregate(book,doc,content,*,password=None,currency_confirmation=None,operation_review=None):
     identifier=doc['id']
     plan=dict(document_id=identifier,institution='nu',revision=doc['revision'],status='blocked',can_confirm=False,
         issues=[],warnings=[],periods=[],movements=[],transfers=[],password_required=False,
@@ -89,6 +89,7 @@ def prepare(book,doc,content,*,password=None,currency_confirmation=None,operatio
             link=linked.get(e.evidence_id)
             if not link:plan['issues'].append('Traspaso Nu sin contraparte única: '+locator);continue
             origin=Origin.OWN_TRANSFER
+        elif e.section=='account' and re.match(r'cashback\b',e.description_printed,re.I) and e.amount>0:origin=Origin.CASHBACK;link=None
         elif e.section=='account' and e.category=='transfer_evidence':origin=Origin.UNKNOWN;link=None
         elif e.section=='account' and re.match(r'compra(?: con tarjeta)?\b',e.description_printed,re.I) and e.amount<0:origin=Origin.UNKNOWN;link=None
         else:plan['issues'].append('Concepto Nu sin normalización: '+locator);continue
@@ -143,3 +144,8 @@ def prepare(book,doc,content,*,password=None,currency_confirmation=None,operatio
     if not plan['issues']:plan.update(status='ready',can_confirm=True)
     plan['state_hash']=book._state_hash();plan['plan_hash']=_hash(plan)
     return plan,tuple(movements)
+
+
+def prepare(book,doc,content,**kwargs):
+    from .nu_cajitas import prepare_individual
+    return prepare_individual(book,doc,content,_aggregate,**kwargs)

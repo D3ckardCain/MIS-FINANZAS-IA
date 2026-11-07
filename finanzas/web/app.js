@@ -3,7 +3,7 @@ const $ = id => document.getElementById(id);
 let state, current, financialPlan, financialPassword = null, selected = null, lane = 'debit', busy = false;
 const labels = {
   nu_summary_observation:'Resumen global Nu observado',nu_changes_observation:'Cambios documentales por Cajita',nu_freeze_observations:'Congelamientos y liberaciones observados',
-  cajitas_aggregate:'Cajitas · agregado',collateral:'Crédito con garantía',guarantee:'Garantía',
+  cajitas_aggregate:'Cajitas · agregado',cajita:'Cajita',collateral:'Crédito con garantía',guarantee:'Garantía',
   calculated_final:'Cierre calculado desde el libro vigente',closing_difference:'Diferencia: calculado menos documental',cash_change:'Cambio neto de efectivo',
   external_contributions:'Aportaciones externas / cashback acreditados',cashback_contributions:'Aportaciones de cashback',
   own_transfer_in:'Aportaciones desde cuentas propias',own_transfer_out:'Reducciones hacia cuentas propias',
@@ -354,9 +354,10 @@ function showPlan(plan) {
   if(plan.nu_buckets?.length && (plan.nu_review_required||plan.operation_review?.nu) && plan.status!=='imported') {
     const form=el('div',undefined,'panel resolution');form.append(el('h2','Acreditar distribución Nu por producto'));
     form.append(el('p','El estado publica totales globales. Verifica con fuentes adicionales las aperturas y la distribución del interés e ISR: no son saldos individuales por Cajita ni pagos diarios. Usa 0 solo si lo acreditaste.','footnote'));
-    const controls={};
+    const controls={};let aggregateBox;
     for(const bucket of plan.nu_buckets) {
       const box=el('fieldset');box.append(el('legend',bucket.label));
+      if(bucket.key==='investments')aggregateBox=box;
       box.append(el('p',`Cierre publicado: ${bucket.final} MXN · Cambio por filas, sin interés/ISR global: ${bucket.changes_without_income} MXN`,'footnote'));
       controls[bucket.key]={};
       for(const [key,title] of [['initial','Saldo inicial acreditado'],['gross_interest','Interés bruto acreditado'],['withholding','ISR retenido acreditado']]) {
@@ -368,19 +369,45 @@ function showPlan(plan) {
       if(bucket.previous_initial!==null)box.append(el('p','Apertura enlazada al cierre contiguo confirmado: '+bucket.previous_initial+' MXN.','footnote'));
       form.append(box);
     }
+    const modeLabel=el('label',undefined,'opening-review'),mode=el('input');mode.type='checkbox';mode.checked=!!plan.operation_review?.nu?.cajitas;
+    modeLabel.append(mode,el('span','Acreditar cada Cajita por separado, sin registrar también el agregado.'));form.append(modeLabel);
+    const individual=el('div'),entries=[];
+    individual.append(el('p','Incluye las Cajitas sin movimientos y las históricas cerradas con cero acreditado. Los nombres no se fusionan automáticamente. Los totales se verifican en la aplicación.','footnote'));
+    function addCajita(data={}) {
+      const box=el('fieldset');box.append(el('legend','Cajita individual'));const fields={};
+      for(const [key,title] of [['name','Nombre de Cajita'],['initial','Saldo inicial'],['final','Saldo final'],['gross_interest','Interés bruto'],['withholding','ISR retenido']]) {
+        const caption=el('label',title),input=el('input');input.type='text';input.value=data[key]??'';input.setAttribute('aria-label',title+' individual');
+        if(key!=='name')input.inputMode='decimal';fields[key]=input;caption.append(input);box.append(caption);
+      }
+      const entry={box,fields,active:true},remove=el('button','Quitar Cajita');remove.onclick=()=>{entry.active=false;box.remove();};box.append(remove);entries.push(entry);individual.append(box);
+    }
+    for(const row of plan.operation_review?.nu?.cajitas||plan.nu_cajita_candidates.map(name=>({name})))addCajita(row);
+    const add=el('button','Añadir Cajita sin movimientos');add.onclick=()=>addCajita();individual.append(add);form.append(individual);
+    function changeMode(){individual.hidden=!mode.checked;if(aggregateBox)aggregateBox.hidden=mode.checked;}
+    mode.onchange=changeMode;changeMode();
     const caption=el('label',undefined,'opening-review'),check=el('input');check.type='checkbox';
     caption.append(check,el('span','Verifiqué con mis fuentes las aperturas y esta distribución por producto.'));form.append(caption);
     const apply=el('button','Aplicar revisión Nu');apply.onclick=()=>run(async()=>{
       if(!check.checked)throw new Error('Acredita el desglose Nu con tus fuentes antes de aplicarlo.');
       const buckets={};
       for(const [bucket,fields] of Object.entries(controls)){
+        if(bucket==='investments'&&mode.checked)continue;
         buckets[bucket]={};for(const [key,input] of Object.entries(fields)){
           const amount=input.value.trim();if(!/^[0-9]+(?:\.[0-9]+)?$/.test(amount))throw new Error('Completa cada importe Nu con punto decimal y sin signos.');
           buckets[bucket][key]=amount;
         }
       }
+      const nu={document_id:current.id,revision:plan.revision,buckets};
+      if(mode.checked){
+        nu.cajitas=[];for(const entry of entries.filter(e=>e.active)){
+          const row={};for(const [key,input] of Object.entries(entry.fields)){
+            const val=input.value.trim();if(key!=='name'&&!/^[0-9]+(?:\.[0-9]+)?$/.test(val))throw new Error('Completa los importes de cada Cajita con punto decimal.');
+            if(key==='name'&&!val)throw new Error('Identifica cada Cajita.');row[key]=val;
+          }nu.cajitas.push(row);
+        }
+      }
       showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,password:financialPassword,
-        currency_confirmation:plan.currency_confirmation||null,operation_review:{nu:{document_id:current.id,revision:plan.revision,buckets}}}));
+        currency_confirmation:plan.currency_confirmation||null,operation_review:{nu}}));
     });form.append(apply);panel.append(form);
   }
   if(plan.review_rows?.length) {
@@ -445,7 +472,7 @@ function showPlan(plan) {
     });form.append(apply);panel.append(form);
   }
   if(plan.currency_source==='user_review')panel.append(el('p','Moneda del plan: MXN, indicada expresamente por el usuario.','footnote'));
-  const product=row=>row.role==='cajitas_aggregate'?'Cajitas · agregado':row.role==='collateral'?'Crédito con garantía':row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
+  const product=row=>row.role==='cajita'?'Cajita · '+row.product_name:row.role==='cajitas_aggregate'?'Cajitas · agregado':row.role==='collateral'?'Crédito con garantía':row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
   renderObject({periods:plan.periods.map(p=>({product:product(p),...p})),
     movements:plan.movements.map(m=>({product:product(m),...m,origin:m.origin===null?'No aplica':m.origin})),
     ...(plan.term_snapshots?{term_snapshots:plan.term_snapshots}:{}),
@@ -485,7 +512,7 @@ $('confirm').onclick=()=>run(async()=>{
 });
 function accountTitle(account) {
   return name(account.institution)+(account.portfolio?' · '+account.portfolio:'')+' · '+
-    (account.role==='cajitas_aggregate'?'Cajitas · agregado':account.role==='collateral'?'Crédito con garantía':account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane));
+    (account.role==='cajita'?'Cajita':account.role==='cajitas_aggregate'?'Cajitas · agregado':account.role==='collateral'?'Crédito con garantía':account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane));
 }
 function renderEvolution(data,target) {
   const section=el('section',undefined,'evolution');section.append(el('h2','Evolución por período'),el('p',data.note,'footnote'));

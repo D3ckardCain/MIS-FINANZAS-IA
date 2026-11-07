@@ -216,3 +216,11 @@
 **Evidencia:** aperturas y asignación del bruto/ISR por producto requieren fuentes adicionales revisadas, salvo apertura contigua y globales cero acreditados. La revisión identifica documento/versión y queda ligada al hash del plan.
 **Controles:** suma de aperturas/bruto/ISR frente al resumen, cierre por producto, depósitos/gastos por separado, tablas, fechas, signos, parejas únicas, moneda, continuidad, solapamientos, transacción e idempotencia.
 **Tiempo y alcance:** los conceptos globales se reconocen al cierre por resumen, sin fechas diarias inventadas. Congelar/liberar es observación neutral de liquidez; no rendimiento, otro activo o reinversión. Emisor y tasas históricos conservados. Contratos y cierres individuales por Cajita, cashback, fiscalidad anual e imágenes financieras pendientes. Sin nuevas tablas, dependencias o pagos.
+
+
+## D030 — Nu: Cajitas individuales acreditadas sin duplicar el agregado
+
+**Decisión:** el desglose individual opcional sustituye la cuenta agregada dentro del lote. Apertura/cierre/bruto/ISR de cada Cajita se acreditan con fuentes adicionales; nombres publicados y totales globales no se prorratean.
+**Controles:** identidad por nombre normalizado y cuenta padre, duplicados, todas las Cajitas con movimientos e históricas, total de cierres, cierre por Cajita, continuidad en ambos órdenes, traspasos con la cuenta operativa, hash/versión, transacción y reintentos. No se mezclan modos en historiales confirmados sin transición acreditada.
+**Cashback:** solo concepto explícito positivo en cuenta se reconoce como aportación de cashback; no se identifica por importe ni se confunde con interés o reembolso genérico.
+**Validación visual:** prueba Chrome/CDP con Node nativo en el ejecutor público existente; sin paquetes o APIs obligatorias para ejecutar la app. Datos y capturas solo ficticios, artefactos por un día.

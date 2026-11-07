@@ -56,3 +56,6 @@ El libro financiero presenta tablas por categoría/institución/cuenta/moneda, f
 ## Nu en el libro
 
 Cuenta Nu, Cajitas agregadas y garantía acreditada se muestran como cuentas separadas por producto. Las dos vistas documentales permanecen disponibles. La revisión de apertura/distribución global antecede a la confirmación; saldo disponible/congelado y cambios por nombre quedan como observaciones, sin duplicar activos. [Manual de importación](IMPORTACION-NU.md).
+
+
+Cajitas individuales Nu: cada nombre acreditado aparece como producto propio en resumen/evolución, con su apertura/cierre/bruto/ISR. El total Cajitas queda como control; no representa otra cuenta. Congelado/disponible permanecen subconjuntos observados.
