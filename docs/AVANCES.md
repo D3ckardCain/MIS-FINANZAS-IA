@@ -675,3 +675,12 @@
 - Continuidad global/efectivo/saldos y cambios de acumulados por préstamo, en ambos órdenes de meses. Ausencia explícita de movimientos distinguida de tabla ausente.
 - Interfaz de revisión y selección de originales, con confirmación ligada a versión/hash y operación atómica. PDF protegido y revisiones de apertura/moneda compatibles; documentación reescrita alrededor del flujo completo.
 - Treinta pruebas nuevas del flujo y tres del núcleo, exclusivamente ficticias; ningún movimiento personal confirmado. Sin nuevas dependencias o pagos, manteniendo Fintual MXN/USD.
+
+
+### Verificación del cierre de pagos múltiples y cancelaciones YoTePresto
+
+- [629 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42321231780).
+- Commit probado: a2e54295eebec3af4ada6bf53beee703543cb023.
+- Treinta pruebas nuevas de integración y tres del núcleo verifican pagos/retenciones múltiples, revisión por fila, cancelaciones de los cuatro tipos con originales actuales o históricos, compatibilidad con planes anteriores, componentes exactos, dobles reversos, cambios del original, continuidad en ambos órdenes, importes/préstamos inválidos, tablas vacías/ausentes, versiones, rollback, PDF protegido y HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa. Datos de prueba ficticios y ningún movimiento personal confirmado.
+- Código y manual publicados. Si el documento no acredita el desglose o el original, la aplicación solicita revisión o bloquea la confirmación; no inventa información. Cartera contable completa, reinversión automática, fiscalidad anual y confirmación financiera desde imágenes conservan sus límites documentados.
