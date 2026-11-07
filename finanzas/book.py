@@ -310,6 +310,10 @@ class FinancialBook:
             finally:
                 inbox.db.rollback()  # No modifica originales ni resultados de extracción.
 
+    def evolution(self):
+        from .evolution import report
+        return report(self)
+
     def summary(self):
         ledger=self.store.load_ledger()
         accounts=[]

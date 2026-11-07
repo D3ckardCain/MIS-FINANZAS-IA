@@ -6,7 +6,7 @@ Los estados compartidos son muestras para construir y probar el software. No se 
 
 1. **Carga y consulta local:** implementada la bandeja PDF/imagen, identificación, dos vistas, originales, duplicados y revisión documental.
 2. **Importación financiera:** Openbank, Mifel, BanCoppel, DiDi y Plata PDF conectados al ledger con plan y confirmación atómica, traspasos internos, control de solapamientos y cierres. Extender esta integración a cada institución; transferencias externas/reinversiones/correcciones pendientes.
-3. **Panel financiero:** resúmenes y evolución por institución/producto sobre movimientos confirmados, con cobertura y diferencias visibles.
+3. **Panel financiero:** resumen por cuenta y evolución por período documental implementados, con filtro, componentes, cobertura, diferencias y acceso al original. Valuación patrimonial y rentabilidad porcentual pendientes.
 4. **Cripto, constancias y datos complementarios:** completar sus flujos visuales y contabilidad específica; incorporar nuevos archivos cuando estén disponibles.
 5. **Fiscalidad anual y comparación de inversiones:** implementar después sobre información validada y fuentes oficiales históricas.
 

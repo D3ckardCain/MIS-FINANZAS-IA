@@ -684,3 +684,13 @@
 - Treinta pruebas nuevas de integración y tres del núcleo verifican pagos/retenciones múltiples, revisión por fila, cancelaciones de los cuatro tipos con originales actuales o históricos, compatibilidad con planes anteriores, componentes exactos, dobles reversos, cambios del original, continuidad en ambos órdenes, importes/préstamos inválidos, tablas vacías/ausentes, versiones, rollback, PDF protegido y HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa. Datos de prueba ficticios y ningún movimiento personal confirmado.
 - Código y manual publicados. Si el documento no acredita el desglose o el original, la aplicación solicita revisión o bloquea la confirmación; no inventa información. Cartera contable completa, reinversión automática, fiscalidad anual y confirmación financiera desde imágenes conservan sus límites documentados.
+
+
+## 2026-11-06 — Evolución financiera por cuenta y período
+
+- Consulta local de solo lectura sobre instantánea SQLite: historia cronológica por cuenta/moneda y fechas internas del documento, sin reconstruir meses ni sumar posiciones.
+- Panel por categoría/institución/producto, filtro de cuenta, tablas de apertura/aportaciones/retiros/interés/ISR/neto/cierre y detalle con evidencia y componentes.
+- Separación de capital externo, cashback, traspasos, reinversión, dividendos, impuesto extranjero, IVA, comisiones y cobros de valores sin desglose. Desconocido no equivale a cero; cancelaciones/devoluciones pueden producir netos negativos.
+- Cierre calculado frente al documental, huecos contiguos, revisiones posteriores y movimientos fuera de cobertura visibles, sin ajustar o reescribir el libro.
+- Diecisiete pruebas nuevas con datos ficticios; coexistencia de trece instituciones integradas y Fintual MXN/USD sin institución independiente del custodio. Sin dependencias o pagos nuevos. Manual EVOLUCION.md y plan actualizados.
+- Verificación sintáctica JavaScript y flujo HTTP; validación visual en navegador pendiente porque el ejecutable Chromium no está disponible en este entorno. Ningún dato personal importado.

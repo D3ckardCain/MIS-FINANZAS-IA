@@ -46,3 +46,8 @@ Estilo GitHub oscuro: jerarquía clara, navegación lateral, pestañas de instit
 La revisión de importación tendrá vista previa, diferencias y estado de conciliación antes de confirmar. Consulta local offline; fuentes externas y sincronización requieren conexión.
 
 Identidad corregida por el titular: Fintual MXN y Fintual USD pertenecen a Fintual. El perfil Alpaca queda como custodio/formato técnico, fuera del catálogo de instituciones. Cada portafolio conserva unidad, cuenta y movimientos separados.
+
+
+## Evolución implementada
+
+El libro financiero presenta tablas por categoría/institución/cuenta/moneda, filtro de cuenta y períodos documentales cronológicos. Cada fila muestra apertura, aportaciones, retiros, interés, retención, neto y cierre; su detalle abre componentes, diferencias y documento. Los huecos y cambios posteriores del libro son visibles. No suma monedas o valuaciones ni transforma cortes en meses naturales. [Manual de evolución](EVOLUCION.md).

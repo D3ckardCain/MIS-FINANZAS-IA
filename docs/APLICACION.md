@@ -71,3 +71,8 @@ CETESdirecto confirma efectivo por fecha de liquidación y registra ventas/amort
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.
 
 Identidad corregida por el titular: Fintual MXN y Fintual USD pertenecen a Fintual. El perfil Alpaca queda como custodio/formato técnico, fuera del catálogo de instituciones. Cada portafolio conserva unidad, cuenta y movimientos separados.
+
+
+## Evolución por período
+
+En **Libro financiero**, selecciona una cuenta/producto y consulta las tablas por período documental. Abre el control de cada fila para ver diferencias, componentes y documento de origen. Los huecos y movimientos corregidos fuera de cobertura permanecen visibles; desconocido no se convierte en cero. Consulta el [manual de evolución](EVOLUCION.md).

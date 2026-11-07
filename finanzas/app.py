@@ -59,6 +59,9 @@ def make_server(path, port=0):
                     if route == '/api/book':
                         with FinancialBook(path) as book: self.reply(200, book.summary())
                         return
+                    if route == '/api/book/evolution':
+                        with FinancialBook(path) as book: self.reply(200, book.evolution())
+                        return
                     if route.startswith('/api/documents/'):
                         parts = route.split('/')
                         identifier = parts[3]

@@ -12,6 +12,8 @@ El núcleo distingue aportaciones, retiros, intereses cobrados, ISR retenido, co
 
 Después de instalar los extras indicados abajo, ejecutar `python -m finanzas.app` o abrir `iniciar.bat` en Windows. Funciona localmente sin Internet. [Manual y límites de la aplicación](docs/APLICACION.md).
 
+El libro financiero incluye [evolución por cuenta y período](docs/EVOLUCION.md): aportaciones, retiros, interés/ISR, cierres, huecos y diferencias frente a las revisiones vigentes, con monedas separadas y acceso a la evidencia.
+
 ## Ejecutar las pruebas
 
 Python 3.11 o posterior. El núcleo y SQLite usan la biblioteca estándar; los lectores de PDF e imagen necesitan sus extras. El OCR requiere además Tesseract local (ver manual de imágenes):
