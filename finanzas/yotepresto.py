@@ -219,14 +219,15 @@ class YoTePrestoReader:
         check('Fondos repetidos en flujo no coinciden',s.funds_added,take('Recursos fondeados:',anchored=False),summary_issues)
         check('Retiros repetidos en flujo no coinciden',s.withdrawals,take('Recursos retirados:',anchored=False),summary_issues)
         check('Comisiones repetidas en flujo no coinciden',fee,take('Comisiones cobradas:',anchored=False),summary_issues)
-        rows=[];loans=[];arrears=[];section=None
+        rows=[];loans=[];arrears=[];section=None;cash_table_seen=False;explicit_empty=False
         for pno,page in enumerate(pages[1:],2):
             for lno,line in enumerate(page.splitlines(),1):
                 normalized=fold(line)
-                if re.match(r'^fecha\s+concepto\s+usuario',normalized):section='cash';continue
+                if re.match(r'^fecha\s+concepto\s+usuario',normalized):section='cash';cash_table_seen=True;continue
                 if re.match(r'^fecha\s+id\b',normalized) and 'tasa' in normalized:section='loans';continue
                 if normalized.startswith('id estatus dias de atraso'):section='arrears';continue
-                if normalized=='mis movimientos':section='cash';continue
+                if normalized=='mis movimientos':section='cash';cash_table_seen=True;continue
+                if section=='cash' and normalized.startswith(('no hay movimientos','no tienes movimientos','sin movimientos')):explicit_empty=True;continue
                 if normalized=='inversiones realizadas':section='loans';continue
                 if normalized=='inversiones realizadas atrasadas':section='arrears';continue
                 if normalized.startswith(('todas las cantidades','los recursos de los usuarios','comunidad de prestamos')):section=None
@@ -252,6 +253,8 @@ class YoTePrestoReader:
         implied=_sum((rows[0].balance,-rows[0].amount)) if rows else None
         previous=None
         cash_issues.append('Saldo inicial de efectivo no publicado; candidato aritmético sin confirmar')
+        if not cash_table_seen:cash_issues.append('Tabla operativa YoTePresto ausente; no se presume vacía')
+        if not rows and not explicit_empty:cash_issues.append('Detalle operativo vacío sin declaración explícita de ausencia')
         for r in rows:
             if previous is not None:check('Saldo operativo por fila no concilia',r.balance,_sum((previous,r.amount)),cash_issues,r.page,r.line)
             previous=r.balance
@@ -262,7 +265,8 @@ class YoTePrestoReader:
         if any(a.effective_date>b.effective_date for a,b in zip(rows,rows[1:])):cash_issues.append('Fechas operativas fuera de orden publicado')
         for cat,total in [('funding',s.funds_added),('withdrawal',s.withdrawals),('repayment',s.payments_received)]:
             value=_sum((r.amount if cat!='withdrawal' else -r.amount) for r in rows if r.category==cat)
-            check('Flujo operativo de '+cat+' no coincide con resumen',total,value,cash_issues)
+            net=_sum((value,*(r.amount for r in rows if r.category=='payment_cancellation'))) if cat=='repayment' else value
+            if total not in (value,net):check('Flujo operativo de '+cat+' no coincide con resumen',total,value,cash_issues)
         net_commission=-_sum(r.amount for r in rows if r.category in ('commission','commission_cancellation'))
         check('Comisiones netas del diario difieren del resumen',s.commission_total,net_commission,cash_issues)
         if s.retention_total is not None:

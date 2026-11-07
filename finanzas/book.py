@@ -55,23 +55,23 @@ class FinancialBook:
                 plan.update(institution='fintual',reader_profile='alpaca',custodian='alpaca',portfolio_unit='USD')
             return plan | dict(status='imported', can_confirm=False)
 
-    def preview(self, identifier, *, currency_confirmation=None, expected_revision=None, password=None, cash_opening_confirmation=None):
+    def preview(self, identifier, *, currency_confirmation=None, expected_revision=None, password=None, cash_opening_confirmation=None, operation_review=None):
         with Inbox(self.inbox_path) as inbox:
             doc=inbox.get(identifier)
             if expected_revision is not None and (type(expected_revision) is not int or expected_revision!=doc['revision']):
                 raise ValueError('Revisión desactualizada: vuelve a abrir el documento.')
             existing=self._existing(identifier)
             if existing: return existing
-            plan,_=self._plan(doc,inbox.original(identifier),currency_confirmation=currency_confirmation,password=password,cash_opening_confirmation=cash_opening_confirmation)
+            plan,_=self._plan(doc,inbox.original(identifier),currency_confirmation=currency_confirmation,password=password,cash_opening_confirmation=cash_opening_confirmation,operation_review=operation_review)
             return plan
 
-    def _plan(self, doc, content, *, currency_confirmation=None, password=None, cash_opening_confirmation=None):
+    def _plan(self, doc, content, *, currency_confirmation=None, password=None, cash_opening_confirmation=None, operation_review=None):
         if doc['result']['institution']=='cetesdirecto' and doc['result']['format']=='pdf':
             from .book_cetesdirecto import prepare
             return prepare(self,doc,content,password=password)
         if doc['result']['institution']=='yotepresto' and doc['result']['format']=='pdf':
             from .book_yotepresto import prepare
-            return prepare(self,doc,content,password=password,currency_confirmation=currency_confirmation,cash_opening_confirmation=cash_opening_confirmation)
+            return prepare(self,doc,content,password=password,currency_confirmation=currency_confirmation,cash_opening_confirmation=cash_opening_confirmation,operation_review=operation_review)
         if doc['result']['institution']=='fintual' and doc['result'].get('reader_profile')=='alpaca' and doc['result']['format']=='pdf':
             from .book_alpaca import prepare
             return prepare(self,doc,content,password=password)
@@ -279,7 +279,7 @@ class FinancialBook:
             if date.fromisoformat(period['end'])+timedelta(days=1)==date.fromisoformat(start) and Decimal(initial)!=Decimal(period['final']):
                 plan['issues'].append('Saldo final no coincide con apertura siguiente en '+label+'.')
 
-    def confirm(self, identifier, *, revision, plan_hash, currency_confirmation=None, password=None, cash_opening_confirmation=None):
+    def confirm(self, identifier, *, revision, plan_hash, currency_confirmation=None, password=None, cash_opening_confirmation=None, operation_review=None):
         # Bloquea cambios de la bandeja mientras se comprueba y confirma el plan.
         # Solo la base financiera se modifica: un único commit abarca todo el lote.
         with Inbox(self.inbox_path) as inbox:
@@ -292,7 +292,7 @@ class FinancialBook:
                     if type(revision) is not int or revision!=doc['revision']:
                         raise ValueError('Revisión desactualizada: vuelve a preparar la importación.')
                     content=inbox.original(identifier)
-                    plan,movements=self._plan(doc,content,currency_confirmation=currency_confirmation,password=password,cash_opening_confirmation=cash_opening_confirmation)
+                    plan,movements=self._plan(doc,content,currency_confirmation=currency_confirmation,password=password,cash_opening_confirmation=cash_opening_confirmation,operation_review=operation_review)
                     if not plan['can_confirm']: raise ValueError('El plan contiene problemas pendientes; no se importó nada.')
                     if plan_hash!=plan['plan_hash']:
                         raise ValueError('El plan o el libro cambió: vuelve a preparar la importación.')
@@ -320,7 +320,7 @@ class FinancialBook:
                 if date.fromisoformat(previous[1])+timedelta(days=1)<date.fromisoformat(next_[0]):
                     gaps.append(dict(start=str(date.fromisoformat(previous[1])+timedelta(days=1)),end=str(date.fromisoformat(next_[0])-timedelta(days=1))))
             selected=[m for m in ledger.movements if m.account==account]
-            retained=[m.amount for m in selected if m.kind==Kind.WITHHOLDING]
+            retained=[m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.WITHHOLDING,Kind.WITHHOLDING_REFUND)]
             batches=[json.loads(row[0]) for row in self.db.execute(
                 'SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,))]
             withholding_complete=not any(b.get('withholding_status')=='unknown' for b in batches)
@@ -333,19 +333,19 @@ class FinancialBook:
                 role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca','cetesdirecto') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,
-                interest=str(_sum(m.amount for m in selected if m.kind==Kind.INTEREST)) if interest_complete else None,
+                interest=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL))) if interest_complete else None,
                 interest_complete=interest_complete,
                 interest_reported=str(_sum(Decimal(b['interest_reported_observation']) for b in batches if 'interest_reported_observation' in b)) if institution=='cetesdirecto' else None,
                 security_proceeds=str(_sum(m.amount for m in selected if m.kind==Kind.SECURITY_PROCEEDS)),
                 withholding=str(_sum(retained)) if retained and withholding_complete else None,
                 withholding_documented=str(_sum(retained)) if retained else None,withholding_complete=withholding_complete,
-                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.WITHHOLDING))) if retained and withholding_complete and interest_complete else None,
-                vat_received=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_RECEIVED)),
-                vat_paid=str(_sum(m.amount for m in selected if m.kind==Kind.VAT_PAID)),
+                interest_net_of_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL,Kind.WITHHOLDING,Kind.WITHHOLDING_REFUND))) if retained and withholding_complete and interest_complete else None,
+                vat_received=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.VAT_RECEIVED,Kind.VAT_RECEIVED_REVERSAL))),
+                vat_paid=str(_sum(m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.VAT_PAID,Kind.VAT_REFUND))),
                 rewards=str(_sum(m.amount for m in selected if m.kind==Kind.REWARD)),
                 dividends=str(_sum(m.amount for m in selected if m.kind==Kind.DIVIDEND)),
                 foreign_withholding=str(_sum(m.amount for m in selected if m.kind==Kind.FOREIGN_WITHHOLDING)),
-                income_net_foreign_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.DIVIDEND,Kind.FOREIGN_WITHHOLDING))),
+                income_net_foreign_withholding=str(_sum(m.signed_amount for m in selected if m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL,Kind.DIVIDEND,Kind.FOREIGN_WITHHOLDING))),
                 charges_fees_and_vat=str(_sum(m.signed_amount.copy_negate() for m in selected if m.kind in (Kind.FEE,Kind.FEE_REFUND))),
                 pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected)))
         return dict(accounts=accounts,documents=self.db.execute('SELECT COUNT(*) FROM book_batches').fetchone()[0],

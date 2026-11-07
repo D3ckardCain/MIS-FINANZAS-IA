@@ -45,4 +45,6 @@ Los formatos admitidos separan períodos, moneda nacional y tasas por préstamo.
 
 ## Plan financiero desde la aplicación
 
-La aplicación añade un [plan explícito](IMPORTACION-YOTEPRESTO.md) para efectivo con apertura acreditada por revisión del usuario o cierre contiguo confirmado compatible. El lector mantiene su candidato aritmético sin aprobarlo. El alcance inicial exige pago único enlazado a préstamo y retención de fecha única; cancelaciones o pagos múltiples permanecen bloqueados. Cartera y acumulados son observaciones.
+La aplicación añade un [plan explícito](IMPORTACION-YOTEPRESTO.md) para efectivo con apertura acreditada por revisión del usuario o cierre contiguo confirmado compatible. El lector mantiene su candidato aritmético sin aprobarlo. El flujo admite pagos/retenciones múltiples mediante desglose por operación revisado cuando falta en el PDF, y cancelaciones de préstamo/pago/comisión/retención enlazadas a originales del mismo documento o meses anteriores. Impide cancelar un original dos veces; cartera y acumulados siguen como observaciones y controles históricos, sin convertirse en otros cobros.
+
+Las tablas sin movimientos requieren declaración explícita de ausencia; tabla ausente no acredita cero. La confirmación coteja cambios de acumulados y saldos por préstamo entre meses contiguos, en ambos órdenes de importación. Los reversos conservan componentes y referencias originales sin reescribir auditoría.

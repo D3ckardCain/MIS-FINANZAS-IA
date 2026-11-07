@@ -70,6 +70,9 @@ const labels = {
   first_period:'Primer período importado', through:'Cierre al', closing:'Saldo de cierre documental',
   pending_origins:'Orígenes pendientes', gaps:'Huecos entre períodos importados',
   devolucion_comision:'Devolución de comisión',
+  reverso_interes:'Cancelación de interés',reverso_iva_recibido:'Cancelación de IVA recibido',devolucion_isr:'Devolución de ISR',devolucion_iva_pagado:'Devolución de IVA retenido',
+  ordinary_interest:'Interés ordinario',late_interest:'Interés moratorio',ordinary_vat:'IVA ordinario',late_vat:'IVA moratorio',
+  retention_isr:'ISR retenido',retention_vat:'IVA retenido',cancellation_links:'Cancelaciones enlazadas',history_checks:'Continuidad y cambios acumulados cotejados',payment_flow_observation:'Pagos informados · bruto y neto de cancelaciones',gross:'Bruto',net:'Neto',indistinguishable:'Bruto y neto coinciden',unexplained:'Sin conciliar',
   iva_recibido:'IVA recibido',iva_pagado:'IVA pagado',recompensa:'Recompensa',
   vat_received:'IVA recibido',vat_paid:'IVA pagado',rewards:'Recompensas',
   withholding_documented:'Retención documentada · cobertura parcial',
@@ -322,7 +325,7 @@ function showPlan(plan) {
     const apply=el('button','Acreditar apertura de efectivo');apply.onclick=()=>run(async()=>{
       if(!check.checked)throw new Error('El documento queda pendiente hasta acreditar la apertura de efectivo.');
       showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,
-        cash_opening_confirmation:plan.cash_opening_candidate,currency_confirmation:plan.currency_confirmation||null,password:financialPassword}));
+        cash_opening_confirmation:plan.cash_opening_candidate,operation_review:plan.operation_review||null,currency_confirmation:plan.currency_confirmation||null,password:financialPassword}));
     });group.append(caption,apply);panel.append(group);
   }
   if(plan.cash_opening_source)panel.append(el('p',plan.cash_opening_source==='user_review'?
@@ -336,9 +339,70 @@ function showPlan(plan) {
     caption.append(select);const apply=el('button','Aplicar revisión de moneda');
     apply.onclick=()=>run(async()=>{
       if(select.value!=='MXN')throw new Error('El documento queda pendiente hasta acreditar una moneda admitida.');
-      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN',cash_opening_confirmation:plan.cash_opening_confirmation||null,password:financialPassword}));
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN',cash_opening_confirmation:plan.cash_opening_confirmation||null,operation_review:plan.operation_review||null,password:financialPassword}));
     });
     group.append(caption,apply);panel.append(group);
+  }
+  if(plan.review_rows?.length) {
+    const form=el('div',undefined,'panel resolution');form.append(el('h2','Completar desglose de operaciones'));
+    form.append(el('p','Verifica cada componente con tus fuentes. No se reparten totales mensuales por porcentaje. Las cancelaciones requieren elegir su original; no se borrarán operaciones.','footnote'));
+    const entries=[];
+    for(const row of plan.review_rows) {
+      const box=el('fieldset');box.append(el('legend',`${row.date} · ${row.description} · ${row.reference} · ${row.total} MXN`));
+      const controls={};
+      if(row.type==='cancellations') {
+        const select=el('select');select.setAttribute('aria-label','Original de cancelación '+row.id);
+        const empty=el('option','Seleccionar original');empty.value='';select.append(empty);
+        for(const original of row.candidates) {
+          const option=el('option',`${original.date} · ${original.reference} · ${original.total} MXN · ${original.document_id.slice(0,10)}`);
+          option.value=original.id;select.append(option);
+        }
+        if(!row.candidates.length)box.append(el('p','No hay un original compatible disponible. Incorpora el documento original o revisa referencia, fecha e importe.','alert'));
+        box.append(select);controls.original=select;
+        if(row.loans?.length) {
+          const caption=el('label','Préstamo cancelado acreditado'),loanSelect=el('select');
+          const emptyLoan=el('option','Seleccionar préstamo');emptyLoan.value='';loanSelect.append(emptyLoan);
+          for(const loan of row.loans) {const option=el('option',`${loan.id} · ${loan.status}`);option.value=loan.id;loanSelect.append(option);}
+          caption.append(loanSelect);box.append(caption);controls.loan_id=loanSelect;
+        }
+      } else {
+        if(row.type==='payments') {
+          const caption=el('label','Préstamo acreditado');const select=el('select');
+          const empty=el('option','Seleccionar préstamo');empty.value='';select.append(empty);
+          for(const loan of row.loans) {const option=el('option',`${loan.id} · ${loan.status}`);option.value=loan.id;select.append(option);}
+          select.value=row.loan_id||'';caption.append(select);box.append(caption);controls.loan_id=select;
+        }
+        for(const field of row.fields) {
+          const caption=el('label',label(field)),input=el('input');input.type='text';input.inputMode='decimal';
+          input.setAttribute('aria-label',label(field)+' '+row.id);input.value=row.values?.[field]??'';
+          caption.append(input);box.append(caption);controls[field]=input;
+        }
+      }
+      entries.push({row,controls});form.append(box);
+    }
+    const caption=el('label',undefined,'opening-review'),checked=el('input');checked.type='checkbox';
+    caption.append(checked,el('span','Verifiqué estos desgloses y originales con mis fuentes.'));form.append(caption);
+    const apply=el('button','Aplicar revisión de operaciones');apply.onclick=()=>run(async()=>{
+      if(!checked.checked)throw new Error('Verifica los desgloses y originales antes de aplicar.');
+      const review=JSON.parse(JSON.stringify(plan.operation_review||{payments:{},retentions:{},cancellations:{}}));
+      for(const {row,controls} of entries) {
+        review[row.type] ||= {};
+        if(row.type==='cancellations') {
+          if(!controls.original.value)throw new Error('Selecciona el original de cada cancelación.');
+          if(controls.loan_id && !controls.loan_id.value)throw new Error('Acredita el préstamo de la cancelación.');
+          review.cancellations[row.id]=controls.loan_id?{original_event_id:controls.original.value,loan_id:controls.loan_id.value}:controls.original.value;
+        } else {
+          const values={};for(const field of row.fields) {
+            if(!/^(?:[0-9]+)(?:\.[0-9]+)?$/.test(controls[field].value.trim()))throw new Error('Indica cada componente con punto decimal; usa 0 solo si lo acreditaste.');
+            values[field]=controls[field].value.trim();
+          }
+          if(controls.loan_id)values.loan_id=controls.loan_id.value;
+          review[row.type][row.id]=values;
+        }
+      }
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,operation_review:review,
+        cash_opening_confirmation:plan.cash_opening_confirmation||null,currency_confirmation:plan.currency_confirmation||null,password:financialPassword}));
+    });form.append(apply);panel.append(form);
   }
   if(plan.currency_source==='user_review')panel.append(el('p','Moneda del plan: MXN, indicada expresamente por el usuario.','footnote'));
   const product=row=>row.role==='fund_cash'?'Efectivo del portafolio':row.role==='transit'?'Cuenta de paso':row.shared_account?'Cuenta remunerada · ambas vistas':laneLabel(row.lane);
@@ -363,16 +427,19 @@ function showPlan(plan) {
     ...(plan.arrears_observations?{arrears_observations:plan.arrears_observations}:{}),
     ...(plan.platform_summary_observation?{platform_summary_observation:plan.platform_summary_observation}:{}),
     ...(plan.commission_components_observation?{commission_components_observation:plan.commission_components_observation}:{}),
+    ...(plan.payment_flow_observation?{payment_flow_observation:plan.payment_flow_observation}:{}),
+    ...(plan.history_checks?{history_checks:plan.history_checks}:{}),
+    ...(plan.cancellation_links?{cancellation_links:plan.cancellation_links}:{}),
     ...(plan.payment_groups?{payment_groups:plan.payment_groups}:{}),
     ...(plan.investment_transfer_evidence?{investment_transfer_evidence:plan.investment_transfer_evidence}:{})},panel);
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
 $('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan',{
-  revision:current.revision,currency_confirmation:financialPlan?.currency_confirmation||null,cash_opening_confirmation:financialPlan?.cash_opening_confirmation||null,password:financialPassword})));
+  revision:current.revision,currency_confirmation:financialPlan?.currency_confirmation||null,cash_opening_confirmation:financialPlan?.cash_opening_confirmation||null,operation_review:financialPlan?.operation_review||null,password:financialPassword})));
 $('confirm').onclick=()=>run(async()=>{
   if(!financialPlan?.can_confirm)return;
   const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash,
-    currency_confirmation:financialPlan.currency_confirmation||null,cash_opening_confirmation:financialPlan.cash_opening_confirmation||null,password:financialPassword});
+    currency_confirmation:financialPlan.currency_confirmation||null,cash_opening_confirmation:financialPlan.cash_opening_confirmation||null,operation_review:financialPlan.operation_review||null,password:financialPassword});
   showPlan(plan);message(plan.duplicate?'El documento ya estaba importado; no se duplicó.':'Importación confirmada. Los movimientos están guardados en el libro financiero.');
 });
 async function openBook() {

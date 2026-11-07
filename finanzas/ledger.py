@@ -19,6 +19,14 @@ class Kind(str, Enum):
     DIVIDEND = "dividendo_cobrado"
     FOREIGN_WITHHOLDING = "retencion_extranjera"
     SECURITY_PROCEEDS = "cobro_valores_sin_desglose"
+    INTEREST_REVERSAL = "reverso_interes"
+    VAT_RECEIVED_REVERSAL = "reverso_iva_recibido"
+    WITHHOLDING_REFUND = "devolucion_isr"
+    VAT_REFUND = "devolucion_iva_pagado"
+
+
+DEBIT_KINDS=frozenset((Kind.WITHDRAWAL,Kind.WITHHOLDING,Kind.FOREIGN_WITHHOLDING,Kind.FEE,
+    Kind.VAT_PAID,Kind.INTEREST_REVERSAL,Kind.VAT_RECEIVED_REVERSAL))
 
 
 class Origin(str, Enum):
@@ -75,7 +83,7 @@ class Movement:
 
     @property
     def signed_amount(self):
-        return self.amount.copy_negate() if self.kind in (Kind.WITHDRAWAL, Kind.WITHHOLDING, Kind.FOREIGN_WITHHOLDING, Kind.FEE, Kind.VAT_PAID) else self.amount
+        return self.amount.copy_negate() if self.kind in DEBIT_KINDS else self.amount
 
 
 def _sum(values):
@@ -142,9 +150,9 @@ class Ledger:
         return tuple(sorted(i for i in ids if sum(m.transfer_id == i for m in self.movements) == 1))
 
     def interest_received(self, unit: str):
-        return _sum(m.amount for m in self.movements if m.unit == unit and m.kind == Kind.INTEREST)
+        return _sum(m.signed_amount for m in self.movements if m.unit == unit and m.kind in (Kind.INTEREST,Kind.INTEREST_REVERSAL))
 
     def withholding_recorded(self, unit: str):
         """None: no hay retención documentada. Cero: documento explícito con cero."""
-        values = [m.amount for m in self.movements if m.unit == unit and m.kind == Kind.WITHHOLDING]
+        values = [m.signed_amount.copy_negate() for m in self.movements if m.unit == unit and m.kind in (Kind.WITHHOLDING,Kind.WITHHOLDING_REFUND)]
         return _sum(values) if values else None

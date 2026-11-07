@@ -62,7 +62,7 @@ Fintual confirma efectivo del portafolio y conserva fondos/valuación/rendimient
 
 Fintual USD confirma efectivo USD con dividendos, intereses, comisiones y retención extranjera separados. Posiciones/costo/resultados son observaciones; no se calcula ISR mexicano, ganancia por lote o conversión a MXN. Ver [manual Fintual USD](IMPORTACION-ALPACA.md).
 
-YoTePresto permite revisar expresamente la apertura candidata de efectivo o enlazarla a un cierre contiguo confirmado compatible. Solo admite pago único con principal cotejado al préstamo y retención de fecha única; nunca convierte el saldo global en efectivo. Ver [manual YoTePresto](IMPORTACION-YOTEPRESTO.md).
+YoTePresto permite revisar expresamente la apertura candidata de efectivo o enlazarla a un cierre contiguo confirmado compatible. Admite pagos/retenciones múltiples con desglose por fila revisado cuando falta, y cancelaciones enlazadas a originales, con componentes netos y controles por préstamo. Nunca convierte el saldo global en efectivo. Ver [manual YoTePresto](IMPORTACION-YOTEPRESTO.md).
 
 CETESdirecto confirma efectivo por fecha de liquidación y registra ventas/amortizaciones como cobros sin desglose de principal/interés. El libro distingue interés informado del clasificado; este último y el neto permanecen desconocidos si falta asignación. Ver [manual CETESdirecto](IMPORTACION-CETESDIRECTO.md).
 

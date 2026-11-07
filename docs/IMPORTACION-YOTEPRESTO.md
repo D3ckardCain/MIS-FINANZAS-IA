@@ -1,42 +1,63 @@
-# YoTePresto: apertura de efectivo y cobro documentado
+# YoTePresto: pagos múltiples y cancelaciones trazables
 
-La aplicación prepara un plan para el PDF textual reconocido. La confirmación registra una cuenta de efectivo de la plataforma, no una cuenta bancaria adicional. Cartera, tasas, acumulados y atrasos quedan como observaciones; no se suman como otro saldo o ingreso mensual.
+La aplicación confirma el efectivo de la plataforma con sus componentes y controles por préstamo. Cartera, tasas y atrasos se conservan como observaciones, sin crear otra cuenta bancaria, duplicar acumulados o registrar una pérdida por atraso.
 
-## Acreditar la apertura
+## Flujo
 
-El estado distingue saldo global y disponible, pero este formato no publica la apertura de efectivo. La resta entre primer saldo operativo e importe de la primera fila genera únicamente un **candidato aritmético**. El saldo global inicial no lo reemplaza.
+1. Subir o abrir el PDF. Si está protegido, introducir contraseña para procesarlo y para **Desbloquear plan**. Solo se usa en memoria; no queda en la base, el plan o el historial.
+2. Acreditar la apertura de efectivo. El candidato aritmético no es una cifra publicada: comprobarlo con fuentes propias, marcar la declaración y aplicar. Un cierre contiguo confirmado compatible puede acreditar el enlace. El saldo global no sustituye a la apertura de efectivo.
+3. Si aparecen operaciones sin desglose, completar **Desglose de operaciones** y elegir el préstamo acreditado de cada pago. Revisar con fuentes propias los cinco componentes de pago o los dos de retención. No se completan por porcentaje ni se acepta un guion como cero.
+4. Para cada cancelación, elegir su original compatible. Si cancela un préstamo, acreditar también el ID del préstamo. Si no existe original, incorporar su documento; si hay varios candidatos, elegir expresamente uno. Marcar la verificación y pulsar **Aplicar revisión de operaciones**.
+5. Revisar el plan listo y confirmar. El original, versión, decisiones y estado financiero se comprueban otra vez. Apertura, moneda y desgloses pueden revisarse por separado; las decisiones válidas se conservan en el plan pendiente.
 
-1. Subir o abrir el PDF. Si está protegido, proporcionar la contraseña para procesarlo y en **Desbloquear plan**; solo permanece en memoria y no se guarda en el plan/base.
-2. Comprobar la apertura candidata con otras fuentes propias. Si se acredita, marcar **Verifiqué con mis fuentes la apertura de efectivo** y pulsar **Acreditar apertura de efectivo**. La app registra la declaración del usuario, no una cifra publicada por el estado ni una verificación automática de esas fuentes. Si no se puede acreditar, dejar el documento pendiente.
-3. Revisar el plan y confirmar únicamente si todos los controles pasan.
+La revisión documenta una declaración del usuario sobre sus fuentes; no afirma que el PDF publicara ese desglose ni que la app inspeccionara automáticamente esas fuentes. La app verifica importes, referencias, saldos, acumulados, signos y coherencia. Las decisiones quedan ligadas a documento, revisión y huella del plan, y no se aplican a otros documentos.
 
-Si ya existe el cierre del mes inmediatamente anterior confirmado, y coincide con el candidato, el plan puede usarlo como apertura enlazada. Un hueco temporal no habilita ese enlace. La revisión explícita queda vinculada a importe, documento, versión y huella del plan; no se convierte en preferencia global ni aportación. No elimina diferencias de continuidad o de otros controles.
+## Pagos y retenciones
 
-## Desglose dentro del alcance
-
-Esta primera integración admite un pago único enlazado por referencia a un préstamo abierto antes del período. El principal debe coincidir con saldo inicial menos saldo final de ese préstamo. Principal más interés/IVA mensuales deben coincidir con el pago completo, en su fecha publicada. No se reparte un agregado entre varias fechas o préstamos por proporción.
-
-| Evidencia | Registro |
+| Componente | Tratamiento |
 | --- | --- |
-| Principal recuperado | Aportación a efectivo, con origen pendiente; no interés ni capital externo acreditado |
-| Interés ordinario / moratorio | Interés cobrado en dos componentes con evidencia |
-| IVA ordinario / moratorio | IVA recibido separado del interés |
-| Fila única de retención | Desglose mensual en ISR retenido e IVA pagado, en la fecha de esa fila |
-| Comisión con IVA | Un cargo, sin duplicar el desglose del resumen |
+| Principal recuperado | Aportación a efectivo con origen pendiente; no interés ni capital externo acreditado |
+| Interés ordinario / moratorio | Dos componentes de interés cobrado |
+| IVA ordinario / moratorio | Dos componentes de IVA recibido, separados del interés |
+| Retención ISR / IVA | ISR retenido e IVA pagado por su fecha publicada |
+| Comisión con IVA | Cargo una sola vez; el resumen no genera otro |
 | Fondeo / retiro / préstamo | Aportación o reducción operativa con origen/contrapartida pendientes |
-| Cartera, atrasos y acumulados | Observaciones, sin cobros o pérdidas adicionales |
-| Ganancia del resumen | Control informativo de su base antes/después de retención, sin otro ingreso |
 
-El ISR no publicado permanece desconocido y bloquea este alcance porque falta su desglose. Un cero publicado puede registrarse como evidencia de retención cero. Retención no determina el impuesto anual. Interés neto de ISR no equivale a ganancia después de IVA y comisiones.
+Un pago único puede desglosarse sin intervención cuando su préstamo preexistente, principal por cambio de saldo y componentes publicados acreditan exactamente el total. Con pagos o retenciones múltiples, se revisan los componentes por fila cuando no están publicados. Cada suma debe coincidir con su operación y con los totales mensuales, y el principal neto debe coincidir por préstamo. Para un préstamo abierto en el mes con saldo inicial cero se coteja el capital prestado explícito; no se obtiene de una valuación. La revisión no habilita ajustes para hacer cuadrar cifras contradictorias.
 
-## Controles y límites
+El importe de «Pagos recibidos» se conserva y se contrasta tanto con pagos brutos como con el neto de cancelaciones. La app muestra ambas cifras y la base que coincide; no sustituye la cifra impresa ni vuelve a registrar la ganancia publicada como ingreso.
 
-- Se exigen ambas lecturas específicas y conciliación de resumen global, efectivo y cartera. Solo la incidencia concreta de apertura no publicada se resuelve mediante revisión/enlace; no se borran las demás alertas.
-- Pagos múltiples, retenciones múltiples sin fecha única, referencias de préstamo ambiguas, principal incompatible, cancelaciones y conceptos no mapeados bloquean; no se genera un reparto supuesto.
-- Moneda MXN publicada o revisada por documento. Una moneda extranjera/contradictoria no puede sobrescribirse. Fechas y signos publicados se conservan, sin ajustar fines de semana, importes o redondeos para cuadrar.
-- La normalización vuelve a comprobar cierre de efectivo, interés, IVA recibido, ISR, IVA retenido y comisión. Aperturas/cierres son anclas documentales y no movimientos de capital nuevo.
-- Solapamientos y saldos contiguos incompatibles bloquean. Se admiten meses fuera de orden; huecos visibles y reintentos idempotentes. Fallos revierten documento, aprobación, movimientos y cobertura en una transacción.
+## Cancelaciones
 
-Quedan pendientes pagos múltiples con desglose por operación, cancelaciones, cartera contable por préstamo, reinversión, conciliación con otras cuentas, correcciones, fiscalidad anual e importación financiera desde imágenes. El OCR local conserva evidencia revisable. El libro muestra cierre de efectivo, no valor total del patrimonio.
+| Cancelación | Reverso registrado |
+| --- | --- |
+| Préstamo | Aportación de retorno a efectivo, sin nueva ganancia o capital externo |
+| Pago | Principal, interés ordinario/moratorio e IVA exactamente contrarios a los componentes originales |
+| Comisión | Devolución de comisión, sin ingreso por interés |
+| Retención | Devolución del ISR e IVA originales, separados de ganancias y aportaciones |
 
-Procesamiento local/offline con las dependencias existentes, sin APIs, servicios o pagos nuevos. Pruebas ficticias; no se confirma contabilidad personal en el chat. La institución Fintual conserva sus portafolios MXN/USD y no se crea una institución independiente con el nombre de su custodio.
+El original puede estar en el mismo documento o en un mes confirmado anterior. Debe coincidir en cuenta, referencia, concepto compatible, importe opuesto y fecha no posterior a la cancelación. Estos controles generan candidatos; no convierten fecha/importe en un identificador económico único. La selección explícita resuelve cuál original se declara cancelado.
+
+Cada reverso conserva el documento/evento original y los identificadores de sus componentes. No se edita ni borra el original. Un original no se puede cancelar dos veces, incluso en archivos distintos. Si el importe del original fue corregido en el libro, su versión congelada no basta para revertir el importe antiguo: la revisión queda bloqueada hasta resolver la evidencia.
+
+Una cancelación de préstamo exige acreditar su ID, sin confundir el retorno con principal pagado por el prestatario. No se infiere reinversión por volver a prestar el efectivo recuperado.
+
+## Consulta y conciliación histórica
+
+Interés, IVA, ISR y comisiones se muestran netos de sus reversos/devoluciones. La devolución de ISR no es ingreso ni capital externo; puede dar una retención neta negativa en el mes de devolución. Esto no determina el impuesto anual.
+
+Entre meses contiguos se cotejan efectivo, saldo global y saldos de préstamos compartidos. Los cambios de acumulados de principal, interés e IVA se contrastan con los pagos y cancelaciones clasificados del mes, también al incorporar meses fuera de orden. Una disminución se conserva; si no coincide con reversos documentados, bloquea en vez de inventar una pérdida o devolución.
+
+Los acumulados no generan cobros: sirven de control. Los meses no contiguos no se enlazan como si no hubiera huecos. Las posiciones siguen siendo observaciones por fecha; no se reconstruye un calendario o vencimiento contractual supuesto.
+
+## Controles de confirmación
+
+- Resumen, efectivo, cartera, columnas, signos, fechas y componentes deben conciliar. Revisar una apertura no elimina otras alertas.
+- Un período sin movimientos requiere tabla y declaración explícita de ausencia, flujos publicados cero y apertura acreditada; no se inventan operaciones para llenar el mes. Una tabla ausente no equivale a vacía.
+- Moneda MXN acreditada o revisada por documento. Moneda extranjera/contradictoria no puede sobrescribirse. No se desplazan fechas al lunes o al corte.
+- Revisiones de otro archivo, filas ajenas, valores negativos/no finitos, préstamos incompatibles o desgloses que no suman quedan rechazados. No se eliminan pagos iguales legítimos por coincidencia de importe o referencia.
+- Solapamientos y saldos contiguos incompatibles bloquean. La transacción abarca aprobación, movimientos, eventos, enlaces de cancelación y cobertura; un fallo revierte todo. Reabrir o reintentar no duplica.
+
+El libro muestra efectivo y componentes confirmados, no un patrimonio total inventado. Este flujo no calcula declaración anual, no asigna titularidad externa ni aprueba reinversión por coincidencia. Las imágenes siguen aportando evidencia OCR revisable; la confirmación financiera descrita corresponde al PDF textual reconocido. Un documento incompleto o un formato desconocido permanece bloqueado.
+
+Procesamiento local/offline con dependencias existentes, sin APIs, servicios o pagos nuevos. Pruebas ficticias y sin confirmar contabilidad personal en el chat. Fintual conserva su identidad MXN/USD.

@@ -665,3 +665,13 @@
 - Dieciocho pruebas de integración y una del núcleo cubren cuenta de efectivo, cobros sin principal/interés supuestos, interés informado/clasificado, ISR período/acumulado, registro/liquidación, folios por código, venta, columnas, vacíos, operaciones iguales legítimas, meses fuera de orden, versiones, rollback, contraseña, HTTP y coexistencia con Fintual MXN/USD.
 - Suite local y JavaScript aprobados; ejecución remota completa. Muestra real usada únicamente para comprobar el bloqueo de discrepancia entre efectivo del resumen y detalle; ningún movimiento personal confirmado.
 - Código, manual y límites publicados. Desglose de cobros, títulos/costo por lote, continuidad de posiciones, reinversión y fiscalidad anual pendientes; Fintual mantiene su identidad corregida.
+
+
+## 2026-11-06 — Cierre de pagos múltiples y cancelaciones YoTePresto
+
+- Desglose revisado por fila para pagos y retenciones múltiples, con préstamo acreditado, sumas exactas y controles mensuales; sin prorrateos de agregados.
+- Cancelaciones de préstamo/pago/comisión/retención enlazadas a originales del mismo documento o meses anteriores. Reversos de componentes exactos y protección contra reutilizar/corregir un original sin resolver evidencia.
+- Tipos de reverso/devolución y netos coherentes de interés/IVA/ISR/comisión; devoluciones sin ingreso o capital externo ficticios. Originales/auditoría conservados.
+- Continuidad global/efectivo/saldos y cambios de acumulados por préstamo, en ambos órdenes de meses. Ausencia explícita de movimientos distinguida de tabla ausente.
+- Interfaz de revisión y selección de originales, con confirmación ligada a versión/hash y operación atómica. PDF protegido y revisiones de apertura/moneda compatibles; documentación reescrita alrededor del flujo completo.
+- Treinta pruebas nuevas del flujo y tres del núcleo, exclusivamente ficticias; ningún movimiento personal confirmado. Sin nuevas dependencias o pagos, manteniendo Fintual MXN/USD.

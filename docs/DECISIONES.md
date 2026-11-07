@@ -199,3 +199,12 @@
 **Consulta:** interés clasificado y neto desconocidos si algún período tiene asignación pendiente; importe informado y cobro completo se muestran separados. ISR de filas una vez; acumulados anuales no se reimportan. Cero explícito se conserva cuando corresponde.
 **Control:** conciliación completa, columnas por código, orden/fecha de liquidación, normalización, continuidad, versiones, atomicidad e idempotencia. Moneda publicada y contraseña temporal. Fintual MXN/USD conserva su identidad.
 **Límites:** desglose de cobros, títulos/costo por lote, continuidad de posiciones, reinversión, contrapartidas, impuestos anuales e imágenes pendientes. Sin nuevas tablas, dependencias o servicios.
+
+
+## D028 — YoTePresto: desgloses revisados y cancelaciones con original
+
+**Decisión:** cerrar el límite de pago/retención únicos con revisión por fila cuando el PDF no publica componentes. Cinco componentes por pago y dos por retención, préstamo acreditado, suma exacta por fila y por mes y cotejo de principal por préstamo; sin prorratear agregados. El camino automático único se conserva cuando la evidencia lo acredita.
+**Cancelación:** selección explícita de original compatible, de este documento o de uno confirmado anterior, sin consumirlo dos veces. Reverso de sus componentes exactos, documento/evento/movimientos originales en el plan; no se reescribe el original. Historial corregido incompatible bloquea el reverso obsoleto. Cancelación histórica de préstamo exige ID acreditado.
+**Núcleo/consulta:** tipos para reverso de interés/IVA recibido y devolución de ISR/IVA retenido; netos coherentes en ledger y libro, sin tratar devoluciones como ganancia o capital externo. Comisiones usan devolución existente. Cambios de acumulados y saldos se cotejan entre meses contiguos, en ambos órdenes.
+**Interfaz:** campos por operación, selección de préstamo y original, declaración de revisión y plan final confirmable; decisiones ligadas a versión/hash y conservadas entre revisiones de apertura/moneda. Tabla vacía explícita distinguida de ausente. Eventos/enlaces forman parte de la transacción y reintentos existentes.
+**Alcance:** flujo de PDF textual conocido, sin suponer evidencia ausente, fiscalidad anual, titularidad externa o reinversión. Sin nuevas tablas, dependencias, servicios o pagos. Fintual mantiene la identidad corregida.

@@ -15,6 +15,27 @@ def movement(id, account="ahorro_a", kind=Kind.CONTRIBUTION, amount="100", **kwa
 
 
 class LedgerTests(unittest.TestCase):
+    def test_interest_vat_tax_and_fee_reversals_net_cash_without_new_capital(self):
+        book=Ledger()
+        pairs=[(Kind.INTEREST,Kind.INTEREST_REVERSAL,'8.62'),(Kind.VAT_RECEIVED,Kind.VAT_RECEIVED_REVERSAL,'1.38'),
+            (Kind.WITHHOLDING,Kind.WITHHOLDING_REFUND,'1'),(Kind.VAT_PAID,Kind.VAT_REFUND,'1'),(Kind.FEE,Kind.FEE_REFUND,'1.16')]
+        for i,(original,reverse,amount) in enumerate(pairs):
+            book.record(movement('original'+str(i),kind=original,amount=amount))
+            book.record(movement('reverse'+str(i),kind=reverse,amount=amount))
+        self.assertEqual(book.balances()[('ahorro_a','MXN')],0)
+        self.assertEqual(book.interest_received('MXN'),0);self.assertEqual(book.withholding_recorded('MXN'),0)
+        self.assertEqual(book.external_contributions('MXN'),0)
+
+    def test_refund_is_not_income_or_capital_and_can_give_negative_period_retention(self):
+        book=Ledger();book.record(movement('refund',kind=Kind.WITHHOLDING_REFUND,amount='1'))
+        self.assertEqual(book.withholding_recorded('MXN'),D('-1'));self.assertEqual(book.interest_received('MXN'),0)
+        self.assertEqual(book.external_contributions('MXN'),0)
+
+    def test_reversal_amount_requires_positive_decimal_and_no_capital_origin(self):
+        for kind in (Kind.INTEREST_REVERSAL,Kind.VAT_RECEIVED_REVERSAL,Kind.WITHHOLDING_REFUND,Kind.VAT_REFUND):
+            for values in ({'amount':'0'},{'amount':'-1'},{'origin':Origin.EXTERNAL}):
+                with self.assertRaises(ValueError):movement('invalid',kind=kind,**values)
+
     def test_security_receipt_changes_cash_without_capital_or_interest_assumption(self):
         book=Ledger();book.record(movement('cobro',kind=Kind.SECURITY_PROCEEDS,amount='11'))
         self.assertEqual(book.balances()[('ahorro_a','MXN')],D('11'))
