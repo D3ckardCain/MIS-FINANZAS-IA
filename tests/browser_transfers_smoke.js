@@ -1,0 +1,50 @@
+'use strict';
+// Chrome/Node del ejecutor; CDP y WebSocket nativos, sin paquetes adicionales.
+const {spawn,spawnSync}=require('node:child_process');
+const fs=require('node:fs');const os=require('node:os');const path=require('node:path');
+const assert=require('node:assert/strict');
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const timeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('Tiempo de espera agotado')),ms).unref())]);
+(async()=>{
+  assert.equal(typeof WebSocket,'function','La prueba requiere Node con WebSocket nativo');
+  const chrome=process.env.CHROME_BIN||['google-chrome','google-chrome-stable','chromium','chromium-browser'].find(bin=>spawnSync('which',[bin]).status===0);
+  assert.ok(chrome,'Chrome no está instalado en este ejecutor');
+  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'transfers-browser-'));let app,browser,ws,closeBrowser;
+  try {
+    app=spawn(process.env.FINANZAS_TEST_PYTHON||'python3',['-m','tests.browser_transfers_fixture'],{stdio:['ignore','pipe','pipe']});
+    const url=await timeout(new Promise((resolve,reject)=>{let text='';app.stdout.on('data',chunk=>{text+=chunk;const m=text.match(/TEST_URL=(http:\/\/127\.0\.0\.1:\d+)/);if(m)resolve(m[1]);});app.on('error',reject);app.on('exit',()=>reject(Error('Servidor de prueba detenido')));}));
+    browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+    const endpoint=await timeout(new Promise((resolve,reject)=>{let text='';browser.stderr.on('data',chunk=>{text+=chunk;const m=text.match(/DevTools listening on (ws:\/\/[^\s]+)/);if(m)resolve(m[1]);});browser.on('error',reject);browser.on('exit',()=>reject(Error('Chrome de prueba detenido')));}));
+    ws=new WebSocket(endpoint);await timeout(new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});}));
+    let seq=0;const pending=new Map(),errors=[];
+    ws.addEventListener('message',event=>{const msg=JSON.parse(event.data);if(msg.id){const task=pending.get(msg.id);pending.delete(msg.id);if(task)(msg.error?task.reject(Error(msg.error.message)):task.resolve(msg.result));}else if(msg.method==='Runtime.exceptionThrown')errors.push(msg.params.exceptionDetails.text);});
+    const send=(method,params={},sessionId)=>timeout(new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));}));
+    closeBrowser=()=>send('Browser.close');
+    const {targetId}=await send('Target.createTarget',{url:'about:blank'}),{sessionId}=await send('Target.attachToTarget',{targetId,flatten:true});
+    const cmd=(method,params={})=>send(method,params,sessionId);
+    await cmd('Runtime.enable');await cmd('Page.enable');await cmd('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+    const evaluate=async expression=>{const r=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value;};
+    const until=async expression=>{for(let i=0;i<100;i++){if(await evaluate(expression))return;await delay(100);}throw Error('No se cumplió condición: '+expression);};
+    await cmd('Page.navigate',{url});await until('document.querySelector("#documents .filename")!==null');
+    await evaluate('document.querySelector("#book-nav").click()');await until('document.querySelector(".transfer-panel select")!==null');
+    await evaluate(`(()=>{const source=document.querySelector('[aria-label="Reducción en cuenta origen"]');source.value=source.options[1].value;source.dispatchEvent(new Event('change'));const target=document.querySelector('[aria-label="Aportación en cuenta destino"]');target.value=target.options[1].value;target.dispatchEvent(new Event('change'));})()`);
+    assert.equal(await evaluate(`document.querySelector('[aria-label="Ambas cuentas propias verificadas"]').checked`),false);
+    assert.equal(await evaluate("fetch('/api/book/transfers').then(r=>r.json()).then(d=>d.links.length)"),0);
+    await evaluate(`(()=>{document.querySelector('[aria-label="Ambas cuentas propias verificadas"]').checked=true;[...document.querySelectorAll('.transfer-panel button')].find(b=>b.textContent==='Preparar vínculo propio').click();})()`);
+    await until("[...document.querySelectorAll('.transfer-panel button')].some(b=>b.textContent==='Confirmar traspaso propio')");
+    assert.equal(await evaluate("fetch('/api/book/transfers').then(r=>r.json()).then(d=>d.links.length)"),0);
+    await evaluate("[...document.querySelectorAll('.transfer-panel button')].find(b=>b.textContent==='Confirmar traspaso propio').click()");
+    await until("fetch('/api/book/transfers').then(r=>r.json()).then(d=>d.links.length===1)");
+    await until('document.querySelectorAll(".evolution table").length===3');
+    const data=await evaluate("fetch('/api/book/transfers').then(r=>r.json())");assert.equal(data.matches.length,0);assert.equal(data.links[0].status,'linked');
+    const accounts=await evaluate("fetch('/api/book/evolution').then(r=>r.json()).then(d=>d.accounts)");
+    assert.ok(accounts.every(a=>a.history.every(r=>r.reconciled)));
+    assert.equal(accounts.reduce((n,a)=>n+a.history.reduce((s,r)=>s+r.reviewed_origin_ids.length,0),0),2);
+    fs.mkdirSync('artifacts',{recursive:true});
+    fs.writeFileSync('artifacts/traspasos-desktop.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+    await cmd('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await delay(250);
+    assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'Desbordamiento del panel de traspasos en móvil');
+    fs.writeFileSync('artifacts/traspasos-mobile.png',Buffer.from((await cmd('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+    assert.deepEqual(errors,[]);console.log('Traspasos navegador: selección, acreditación, plan, confirmación, evolución y móvil aprobados.');
+  } finally {if(browser){const closed=browser.exitCode!==null?Promise.resolve():new Promise(r=>browser.once('exit',r));if(closeBrowser)await Promise.race([closeBrowser().catch(()=>{}),delay(1000)]);if(browser.exitCode===null)browser.kill();await Promise.race([closed,delay(2000)]);}if(ws)ws.close();if(app)app.kill();fs.rmSync(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
+})().catch(error=>{console.error(error.message);process.exitCode=1;});

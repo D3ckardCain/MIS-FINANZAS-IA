@@ -7,3 +7,5 @@
 .evolution{margin-top:28px}.evolution h3{font-size:13px;color:var(--muted);font-weight:500;margin:26px 0 12px}.evolution caption{text-align:left;padding:8px 17px;color:var(--muted);font-size:11px}.evolution .money{text-align:right;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.evolution .coverage-gap{color:#d29922;background:#d299220c}.evolution td details{min-width:185px}.evolution td details[open]{min-width:290px}.evolution td summary{cursor:pointer;color:var(--blue)}.evolution .kv{grid-template-columns:1fr 1fr}.evolution .kv dt,.evolution .kv dd{padding:7px;font-size:11px}.evolution td button{margin-top:10px}
 
 .evolution .period-cell{min-width:125px;white-space:nowrap}.evolution .period-cell>span{display:block}
+
+.transfer-panel label{width:100%;max-width:100%;min-width:0;margin-right:0}.transfer-panel select{width:100%}.transfer-panel button{margin:5px 6px 5px 0}

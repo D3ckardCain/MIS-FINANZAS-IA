@@ -82,3 +82,5 @@ No hay motor fiscal ni recomendaciones de inversión implementados.
 Fintual es una sola institución con portafolios MXN y USD separados. Alpaca solo identifica el custodio/formato del portafolio USD; no aparece como institución independiente ni se suman monedas o cuentas.
 
 - [Importación Nu con distribución revisada](docs/IMPORTACION-NU.md)
+
+El libro permite [enlazar traspasos propios entre cuentas confirmadas](docs/TRASPASOS-ENTRE-CUENTAS.md), con revisión de ambas evidencias, correcciones atómicas y fechas/importes conservados.

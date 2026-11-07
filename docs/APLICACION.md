@@ -84,3 +84,8 @@ Nu permite confirmar PDF textual con cuenta, Cajitas agregadas y garantía separ
 
 
 Nu también admite el desglose individual por Cajita: marca esa opción, completa sus cifras acreditadas y añade las que no tuvieron movimientos. El agregado se sustituye por cuentas individuales; no se duplica. Cashback explícito se conserva como aportación. Historiales agregados/individuales no se mezclan automáticamente.
+
+
+## Traspasos entre cuentas
+
+En Libro financiero, selecciona salida y entrada compatibles y verifica ambas evidencias antes de preparar/confirmar el vínculo. La conciliación conserva los movimientos y sus fechas, sin capital externo nuevo. [Manual de traspasos](TRASPASOS-ENTRE-CUENTAS.md).

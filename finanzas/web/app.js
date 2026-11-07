@@ -10,6 +10,7 @@ const labels = {
   reinvestment_in:'Aportaciones por reinversión vinculada',reinvestment_out:'Reducciones por reinversión vinculada',
   interest_documented:'Interés clasificado en el libro',boundary_difference:'Diferencia con cierre contiguo anterior',
   period_movement_count:'Movimientos del período',
+  linked:'Vínculo propio confirmado',needs_review:'Revisión del vínculo necesaria',reviewed_origin_count:'Orígenes propios conciliados',
   summary:'Resumen publicado', rows:'Movimientos', entries:'Registros', observations:'Evidencia extraída',
   initial:'Saldo inicial', final:'Saldo final', deposits:'Depósitos', withdrawals:'Retiros',
   deposits_and_income:'Depósitos y rendimientos', gross_income_reported:'Interés bruto publicado',
@@ -561,7 +562,7 @@ function renderEvolution(data,target) {
             interest_documented:row.interest_documented,withholding_documented:row.withholding_documented,
             dividends:row.dividends,foreign_withholding:row.foreign_withholding,security_proceeds:row.security_proceeds,
             vat_received:row.vat_received,vat_paid:row.vat_paid,fees:row.fees,rewards:row.rewards,
-            boundary_difference:row.boundary_difference===null?'Sin cierre contiguo':row.boundary_difference,period_movement_count:row.movements},details);
+            reviewed_origin_count:row.reviewed_origin_ids.length,boundary_difference:row.boundary_difference===null?'Sin cierre contiguo':row.boundary_difference,period_movement_count:row.movements},details);
           const source=el('button','Abrir documento');source.onclick=()=>run(()=>openDocument(row.document_id));details.append(source);
           control.append(details);tr.append(control);body.append(tr);
         }
@@ -571,15 +572,56 @@ function renderEvolution(data,target) {
   }
   filter.onchange=draw;draw();target.append(section);
 }
+function renderTransfers(data,target) {
+  const section=el('section',undefined,'panel resolution transfer-panel');section.append(el('h2','Traspasos entre tus cuentas'),el('p',data.note,'footnote'));
+  if(data.matches.length){
+    const source=el('select'),destination=el('select'),from=el('label','Reducción en cuenta origen'),to=el('label','Aportación en cuenta destino');
+    source.setAttribute('aria-label','Reducción en cuenta origen');destination.setAttribute('aria-label','Aportación en cuenta destino');
+    const empty=select=>{select.replaceChildren(new Option('Seleccionar movimiento',''));};
+    const title=m=>name(m.institution)+' · '+m.amount+' '+m.unit+' · '+m.effective_date+' · '+m.account.slice(-8);
+    empty(source);empty(destination);
+    for(const m of data.outgoing.filter(m=>data.matches.some(p=>p.outgoing_id===m.id)))source.append(new Option(title(m),m.id));
+    from.append(source);to.append(destination);section.append(from,to);
+    const evidence=el('div'),result=el('div');let prepared=null;
+    function showEvidence(){
+      prepared=null;check.checked=false;result.replaceChildren();evidence.replaceChildren();
+      for(const [id,rows,caption] of [[source.value,data.outgoing,'Origen'],[destination.value,data.incoming,'Destino']]){
+        const m=rows.find(m=>m.id===id);if(!m)continue;
+        evidence.append(el('p',caption+': '+m.description+' · '+(m.reference||'Referencia no publicada')+' · '+m.evidence.locator,'footnote'));
+        const open=el('button','Abrir evidencia de '+caption.toLowerCase());open.onclick=()=>run(()=>openDocument(m.evidence.document_id));evidence.append(open);
+      }
+    }
+    source.onchange=()=>{empty(destination);for(const m of data.incoming.filter(m=>data.matches.some(p=>p.outgoing_id===source.value&&p.incoming_id===m.id)))destination.append(new Option(title(m),m.id));showEvidence();};
+    destination.onchange=showEvidence;
+    const caption=el('label',undefined,'opening-review'),check=el('input');check.type='checkbox';check.setAttribute('aria-label','Ambas cuentas propias verificadas');
+    caption.append(check,el('span','Contrasté ambas evidencias y comprobé que las cuentas y el dinero son propios.'));
+    const prepare=el('button','Preparar vínculo propio');prepare.onclick=()=>run(async()=>{
+      if(!source.value||!destination.value||!check.checked)throw new Error('Selecciona origen/destino y verifica la propiedad con ambas evidencias.');
+      prepared=await api('/api/book/transfers/plan',{outgoing_id:source.value,incoming_id:destination.value,ownership_confirmed:true});
+      result.replaceChildren();for(const issue of prepared.issues)result.append(el('p',issue,'alert'));
+      if(!prepared.can_confirm)return;
+      result.append(el('p',`Se enlazarán ${prepared.outgoing.amount} ${prepared.outgoing.unit}: reducción ${prepared.outgoing.effective_date} → aportación ${prepared.incoming.effective_date}. Fechas e importes se conservan; no es ingreso ni capital externo nuevo.`));
+      const confirm=el('button','Confirmar traspaso propio','primary');confirm.onclick=()=>run(async()=>{
+        if(!check.checked||!prepared)throw new Error('Vuelve a comprobar las evidencias.');
+        await api('/api/book/transfers/confirm',{outgoing_id:prepared.outgoing.id,incoming_id:prepared.incoming.id,ownership_confirmed:true,plan_hash:prepared.plan_hash});
+        await openBook();message('Traspaso propio enlazado. Se conservaron ambos movimientos y su historial.');
+      });result.append(confirm);
+    });section.append(evidence,caption,prepare,result);
+  }else section.append(el('p','No hay parejas pendientes de igual importe y moneda entre cuentas elegibles. No se enlaza por aproximación.','muted'));
+  if(data.links.length)renderArray(data.links.map(p=>({status:p.status,amount:p.outgoing.amount,unit:p.outgoing.unit,
+    description:'Reducción '+p.outgoing.effective_date+' → aportación '+p.incoming.effective_date,
+    reference:p.transfer_id.slice(0,12)})),section);
+  target.append(section);
+}
 async function openBook() {
   financialPassword=null;
-  const [data,evolution]=await Promise.all([api('/api/book'),api('/api/book/evolution')]);
+  const [data,evolution,transfers]=await Promise.all([api('/api/book'),api('/api/book/evolution'),api('/api/book/transfers')]);
   selected=null;renderNavigation();
   $('overview').hidden=true;$('detail').hidden=true;$('book').hidden=false;
   $('crumb').textContent='Libro financiero';$('all').classList.remove('selected');$('book-nav').classList.add('selected');
   const target=$('book-content');target.replaceChildren(el('p',data.note,'footnote'));
   target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
-  renderEvolution(evolution,target);
+  renderTransfers(transfers,target);renderEvolution(evolution,target);
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else {const summary=el('details',undefined,'data-section');summary.append(el('summary','Resumen acumulado por cuenta'));target.append(summary);renderArray(data.accounts.map(account=>({
     account_name:accountTitle(account), unit:account.unit,

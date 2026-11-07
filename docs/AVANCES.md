@@ -736,3 +736,12 @@
 - Chrome completó revisión individual desde la interfaz, confirmación financiera, evolución de tres cuentas sin agregado duplicado y comprobación de ancho móvil. Capturas ficticias de escritorio/móvil descargadas e inspeccionadas; fechas móviles mejoradas y limpieza del perfil Chrome corregida.
 - Se cierran los pendientes de Actions y revisión visual anotados en incrementos anteriores. PDF/contraseña, distribución acreditada, saldos individuales revisados y cashback explícito listos dentro del formato conocido; la app conserva pendientes concretos cuando las fuentes no acreditan un dato.
 - Sin importación personal ni nuevas dependencias operativas. No se amplía el alcance a fiscalidad anual, devengo contractual supuesto o confirmación financiera automática de OCR; se mantienen las reglas documentadas.
+
+
+## 2026-11-06 — Conciliación de traspasos entre cuentas
+
+- Candidatos elegibles en el libro, evidencia de origen/destino, acreditación de propiedad y plan antes de confirmar. Igual importe/unidad entre cuentas distintas; varias coincidencias no se resuelven automáticamente.
+- Dos revisiones y acta en una transacción: misma reducción/aportación, fechas e importes intactos, sin movimientos/capital externo nuevos. Versiones, hash, idempotencia y reapertura.
+- Evolución acepta la conciliación de origen acreditada sin falsa diferencia de efectivo; cambios financieros/evidencia posteriores señalan el vínculo para revisión. Lotes originales preservados.
+- Once pruebas nuevas y 688 pruebas locales aprobadas, sin omisiones; JavaScript comprobado. Navegador CI ampliado a traspasos, además de Nu; capturas exclusivamente ficticias por un día.
+- Manual TRASPASOS-ENTRE-CUENTAS.md y decisión D031. Sin datos personales, nuevas dependencias o pagos; conversiones, comisiones/tramos y conciliación uno a varios permanecen fuera del flujo de pareja completa.

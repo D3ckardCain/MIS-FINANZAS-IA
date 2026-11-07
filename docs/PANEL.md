@@ -59,3 +59,8 @@ Cuenta Nu, Cajitas agregadas y garantía acreditada se muestran como cuentas sep
 
 
 Cajitas individuales Nu: cada nombre acreditado aparece como producto propio en resumen/evolución, con su apertura/cierre/bruto/ISR. El total Cajitas queda como control; no representa otra cuenta. Congelado/disponible permanecen subconjuntos observados.
+
+
+## Conciliar traspasos propios
+
+El libro muestra candidatos elegibles por cuenta, importe/unidad y fecha, con selección explícita, referencia/evidencia, acreditación de propiedad y confirmación de plan. Vínculos confirmados y revisiones posteriores permanecen visibles. No se sugieren enlaces de compras/ventas, capital de préstamos, comisiones o ingresos como si fueran transferencias.

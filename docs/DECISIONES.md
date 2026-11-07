@@ -224,3 +224,11 @@
 **Controles:** identidad por nombre normalizado y cuenta padre, duplicados, todas las Cajitas con movimientos e históricas, total de cierres, cierre por Cajita, continuidad en ambos órdenes, traspasos con la cuenta operativa, hash/versión, transacción y reintentos. No se mezclan modos en historiales confirmados sin transición acreditada.
 **Cashback:** solo concepto explícito positivo en cuenta se reconoce como aportación de cashback; no se identifica por importe ni se confunde con interés o reembolso genérico.
 **Validación visual:** prueba Chrome/CDP con Node nativo en el ejecutor público existente; sin paquetes o APIs obligatorias para ejecutar la app. Datos y capturas solo ficticios, artefactos por un día.
+
+
+## D031 — Traspasos entre cuentas con dos evidencias y revisión atómica
+
+**Decisión:** seleccionar una reducción y una aportación elegibles, de igual importe/unidad y cuentas distintas; exigir propiedad acreditada, sin deducirla por fecha o cantidad. Mantener ambas fechas y ambos movimientos.
+**Persistencia:** acta en book_transfer_links y dos revisiones de origen dentro de la misma transacción, ligadas al plan/estado del libro. Reintentos idempotentes y cada pata usada una sola vez. Lotes originales sin reescritura.
+**Evolución:** un acta válida y solo cambios de origen/vínculo no rompen la conciliación de efectivo. Cambios financieros o de evidencia posteriores requieren revisión.
+**Límites:** una pareja completa, sin prorrateos, comisiones absorbidas, conversión de moneda, reinversión inferida o reclasificación de compra/venta/principal de préstamo. Sin nuevas dependencias o pagos.

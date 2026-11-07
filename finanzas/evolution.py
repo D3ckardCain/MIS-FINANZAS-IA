@@ -22,6 +22,8 @@ def _report(book):
     batches={identifier:json.loads(payload) for identifier,payload in book.db.execute(
         'SELECT document_id,plan_json FROM book_batches')}
     pending=set(ledger.pending_transfers())
+    from .book_transfers import overview
+    reviewed_ids={row[side]['id'] for row in overview(book)['links'] if row['status']=='linked' for side in ('outgoing','incoming')}
     assigned=set();accounts=[]
     for account in book.summary()['accounts']:
         history=[];previous=None
@@ -33,10 +35,12 @@ def _report(book):
                       and start<=m.effective_date.isoformat()<=end]
             assigned.update(m.id for m in selected)
             expected={m['id']:m for m in batch['movements'] if m['account']==account['account'] and m['unit']==account['unit']}
-            changed=[]
+            changed=[];reviewed=[]
             for identifier,original in expected.items():
                 latest=plain(current[identifier]) if identifier in current else None
-                if latest is None or any(latest[key]!=original.get(key) for key in latest):changed.append(identifier)
+                differences={key for key in latest if latest[key]!=original.get(key)} if latest is not None else {'missing'}
+                if differences and differences<={'origin','transfer_id'} and identifier in reviewed_ids:reviewed.append(identifier)
+                elif differences:changed.append(identifier)
             extra=[m.id for m in selected if m.id not in expected]
             def total(kinds):return _sum(m.signed_amount for m in selected if m.kind in kinds)
             def capital(kind,origins=None):
@@ -77,7 +81,7 @@ def _report(book):
                 fees=str(total((Kind.FEE,Kind.FEE_REFUND)).copy_negate()),rewards=str(total((Kind.REWARD,))),
                 movements=len(selected),pending_origins=sum(m.origin==Origin.UNKNOWN for m in selected),
                 pending_transfer_ids=sorted({m.transfer_id for m in selected if m.transfer_id in pending}),
-                changed_movement_ids=sorted(changed),additional_movement_ids=sorted(extra),
+                changed_movement_ids=sorted(changed),reviewed_origin_ids=sorted(reviewed),additional_movement_ids=sorted(extra),
                 gap_before=gap,boundary_difference=boundary,issues=issues,reconciled=not issues))
             previous=history[-1]
         accounts.append({k:account[k] for k in ('account','institution','unit','lane','role','portfolio','shared_account')}|dict(history=history))

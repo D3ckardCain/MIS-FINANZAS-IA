@@ -31,6 +31,10 @@ class FinancialBook:
                 source_revision INTEGER NOT NULL, plan_hash TEXT NOT NULL,
                 plan_json TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
+            CREATE TABLE IF NOT EXISTS book_transfer_links (
+                transfer_id TEXT PRIMARY KEY, outgoing_id TEXT NOT NULL UNIQUE,
+                incoming_id TEXT NOT NULL UNIQUE, plan_json TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS book_periods (
                 document_id TEXT NOT NULL REFERENCES documents(id), lane TEXT NOT NULL,
                 account TEXT NOT NULL, unit TEXT NOT NULL, start TEXT NOT NULL, end TEXT NOT NULL,
@@ -312,6 +316,18 @@ class FinancialBook:
                 return plan | dict(status='imported',can_confirm=False,duplicate=False)
             finally:
                 inbox.db.rollback()  # No modifica originales ni resultados de extracción.
+
+    def transfer_overview(self):
+        from .book_transfers import overview
+        return overview(self)
+
+    def transfer_plan(self,outgoing_id,incoming_id,*,ownership_confirmed=False):
+        from .book_transfers import plan
+        return plan(self,outgoing_id,incoming_id,ownership_confirmed)
+
+    def confirm_transfer(self,outgoing_id,incoming_id,*,ownership_confirmed,plan_hash):
+        from .book_transfers import confirm
+        return confirm(self,outgoing_id,incoming_id,ownership_confirmed,plan_hash)
 
     def evolution(self):
         from .evolution import report

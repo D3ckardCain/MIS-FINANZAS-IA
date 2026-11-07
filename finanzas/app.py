@@ -59,6 +59,9 @@ def make_server(path, port=0):
                     if route == '/api/book':
                         with FinancialBook(path) as book: self.reply(200, book.summary())
                         return
+                    if route == '/api/book/transfers':
+                        with FinancialBook(path) as book: self.reply(200, book.transfer_overview())
+                        return
                     if route == '/api/book/evolution':
                         with FinancialBook(path) as book: self.reply(200, book.evolution())
                         return
@@ -92,6 +95,13 @@ def make_server(path, port=0):
                     if route == '/api/upload':
                         self.reply(201, inbox.upload(content, unquote(self.headers.get('X-Filename', 'documento')))); return
                     payload = json.loads(content)
+                    if route in ('/api/book/transfers/plan','/api/book/transfers/confirm'):
+                        with FinancialBook(path) as book:
+                            args=dict(ownership_confirmed=payload.get('ownership_confirmed'))
+                            if route.endswith('/confirm'):args['plan_hash']=payload.get('plan_hash')
+                            fn=book.confirm_transfer if route.endswith('/confirm') else book.transfer_plan
+                            self.reply(200,fn(payload.get('outgoing_id'),payload.get('incoming_id'),**args))
+                        return
                     if route == '/api/group':
                         inbox.set_group(payload['institution'], payload['category'])
                         self.reply(200, inbox.catalog()); return
