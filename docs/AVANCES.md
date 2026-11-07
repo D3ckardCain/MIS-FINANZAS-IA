@@ -710,3 +710,10 @@
 - Controles de composición, tablas, signos, fechas, importes, conceptos, depósitos/gastos brutos, cierres y continuidad. Apertura contigua no asigna rendimientos no nulos automáticamente.
 - PDF protegido con contraseña temporal, revisión de moneda, emisor histórico, confirmación atómica y evolución por producto. Sin saldos individuales inventados por Cajita ni nuevas dependencias/pagos.
 - Diecinueve pruebas nuevas, exclusivamente ficticias; ningún movimiento personal importado. Manual IMPORTACION-NU.md, documentación y decisión D029 actualizados. Revisión visual de navegador pendiente por ausencia de Chromium en el entorno.
+
+### Verificación local de importación Nu
+
+- 665 pruebas aprobadas, sin omisiones, en la suite completa local; JavaScript sin errores sintácticos.
+- Commit del código probado: 125c2ccb4bad74a72715f285a212e3e29eab4962.
+- Diecinueve pruebas nuevas verifican separación de productos, desgloses explícitos, traspasos, reconocimiento al cierre, controles de filas/totales, monedas, revisiones/planes, historia, atomicidad, contraseñas y HTTP.
+- Código y manual publicados en main. La consulta de Actions todavía no devuelve una ejecución para este commit; verificación remota pendiente, sin atribuirle el resultado local. Revisión visual en navegador también pendiente por ausencia de Chromium en el entorno.
