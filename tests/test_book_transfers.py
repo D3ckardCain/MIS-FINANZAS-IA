@@ -10,7 +10,7 @@ from unittest.mock import patch
 from finanzas.book import FinancialBook
 from finanzas.book_transfers import eligible
 from finanzas.intake import Inbox,plain
-from finanzas.ledger import Kind,Origin
+from finanzas.ledger import Evidence,Kind,Origin
 from tests.test_book_bancoppel import content as bancoppel
 from tests.test_openbank import page,table_row,synthetic_pdf
 from tests import test_intake
@@ -79,6 +79,7 @@ class TransferBookTests(unittest.TestCase):
         for row in ({'category':'purchase'},{'category':'repayment','component':'principal'},{'description':'Compra de valores SPEI'}):
             self.assertFalse(eligible(m,plain(m)|row))
         self.assertFalse(eligible(replace(m,origin=Origin.CASHBACK),plain(m)|dict(category='transfer')))
+        self.assertFalse(eligible(replace(m,evidence=Evidence('otro-documento','otra fila')),plain(m)|dict(category='transfer')))
         # Otra unidad en un registro de cuenta distinto nunca aparece como pareja MXN.
         revised=replace(m,account='ficticio-usd',unit='USD')
         self.book.store.record_many([revised],corrections={m.id:(1,'Corrección ficticia de unidad y cuenta')})

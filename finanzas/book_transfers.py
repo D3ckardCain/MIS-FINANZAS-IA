@@ -14,7 +14,7 @@ _DENIED={'purchase','sale','repayment','loan','loan_funding','payment','principa
 
 def eligible(m,record):
     if m.origin!=Origin.UNKNOWN or m.kind not in (Kind.CONTRIBUTION,Kind.WITHDRAWAL) or m.transfer_id:return False
-    if not record or record.get('kind')!=m.kind.value or record.get('account')!=m.account or record.get('unit')!=m.unit:return False
+    if not record or record.get('kind')!=m.kind.value or record.get('account')!=m.account or record.get('unit')!=m.unit or record.get('evidence')!=plain(m.evidence):return False
     text=fold(record.get('description',''))
     if record.get('category') in _DENIED or record.get('component')=='principal':return False
     if re.search(r'\b(compra|venta|prestamo|amortizacion|dividendo|interes)\b',text):return False
