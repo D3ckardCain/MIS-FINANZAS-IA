@@ -657,3 +657,11 @@
 - Moneda documentada y contraseña transitoria para PDF protegido; columnas, cierres y totales normalizados, transacción y reintentos existentes.
 - Dieciocho pruebas de integración y una del núcleo: efectivo/valuación, cobros, interés/ISR período-acumulado, fechas, códigos, vacíos, duplicados, meses fuera de orden, versiones/rollback, HTTP y coexistencia sin alterar Fintual MXN/USD.
 - Muestra real usada solo para verificar bloqueo por efectivo de resumen/detalle discordante, sin confirmar movimientos personales. Manual y límites documentados, sin nuevas dependencias o pagos.
+
+### Verificación de importación de efectivo CETESdirecto
+
+- [596 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42318251572).
+- Commit probado: a121e77cab6a01f23312eee9f97c2365a1a25e4a.
+- Dieciocho pruebas de integración y una del núcleo cubren cuenta de efectivo, cobros sin principal/interés supuestos, interés informado/clasificado, ISR período/acumulado, registro/liquidación, folios por código, venta, columnas, vacíos, operaciones iguales legítimas, meses fuera de orden, versiones, rollback, contraseña, HTTP y coexistencia con Fintual MXN/USD.
+- Suite local y JavaScript aprobados; ejecución remota completa. Muestra real usada únicamente para comprobar el bloqueo de discrepancia entre efectivo del resumen y detalle; ningún movimiento personal confirmado.
+- Código, manual y límites publicados. Desglose de cobros, títulos/costo por lote, continuidad de posiciones, reinversión y fiscalidad anual pendientes; Fintual mantiene su identidad corregida.
