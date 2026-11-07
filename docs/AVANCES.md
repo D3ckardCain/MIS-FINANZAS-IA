@@ -639,3 +639,11 @@
 - Revisión de apertura ligada a documento, versión y plan; moneda y contraseña temporal también admitidas. Transacción, reintentos, continuidad y fechas preservados.
 - Catorce pruebas nuevas de apertura, componentes, controles, cero/ausencia ISR, meses en ambos órdenes, revisión/rollback y confirmación HTTP; datos exclusivamente ficticios.
 - Manual y límites documentados; sin nuevas dependencias o pagos. Fintual sigue siendo la institución de sus portafolios MXN/USD.
+
+### Verificación de importación YoTePresto
+
+- [577 pruebas aprobadas, sin omisiones](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42317499606).
+- Commit probado: b6a2994ec8cac983305db10c704b1af745cc0236.
+- Catorce pruebas nuevas cubren candidato de apertura sin aprobación automática, revisión ligada al plan/versión, valores inválidos, principal/pago único, interés/IVA/ISR/comisión, ambigüedades, cero/ausencia de retención, enlace contiguo, meses fuera de orden, solapamientos, moneda, rollback, contraseña y flujo HTTP.
+- Suite local y JavaScript aprobados; ejecución remota completa. Documentos ficticios y ningún movimiento personal confirmado.
+- Código y manual publicados. Pagos múltiples, cancelaciones, cartera contable, reinversión, fiscalidad anual y confirmación desde imágenes pendientes. Identidad Fintual MXN/USD preservada.
