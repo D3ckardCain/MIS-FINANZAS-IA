@@ -261,7 +261,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','yotepresto'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -310,6 +310,18 @@ function showPlan(plan) {
     group.append(caption,unlock,el('p','Solo se mantiene en memoria durante esta revisión; no se guarda en el plan ni en la base de datos.','footnote'));panel.append(group);
   }
   if(plan.status==='imported')financialPassword=null;
+  if(plan.cash_opening_confirmation_required && plan.cash_opening_candidate!==null) {
+    const group=el('div'),caption=el('label');const check=el('input');check.type='checkbox';caption.className='opening-review';
+    check.setAttribute('aria-label','Apertura de efectivo verificada con mis fuentes');
+    caption.append(check,el('span',` Verifiqué con mis fuentes la apertura de efectivo de ${plan.cash_opening_candidate} MXN. Es un candidato aritmético; no está publicado en el estado.`));
+    const apply=el('button','Acreditar apertura de efectivo');apply.onclick=()=>run(async()=>{
+      if(!check.checked)throw new Error('El documento queda pendiente hasta acreditar la apertura de efectivo.');
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,
+        cash_opening_confirmation:plan.cash_opening_candidate,currency_confirmation:plan.currency_confirmation||null,password:financialPassword}));
+    });group.append(caption,apply);panel.append(group);
+  }
+  if(plan.cash_opening_source)panel.append(el('p',plan.cash_opening_source==='user_review'?
+    'Apertura de efectivo acreditada expresamente por el usuario.':'Apertura de efectivo enlazada al cierre contiguo confirmado.','footnote'));
   if(plan.currency_confirmation_required) {
     const group=el('div');const caption=el('label','Moneda revisada del estado');
     const select=el('select');select.setAttribute('aria-label','Moneda revisada del estado');
@@ -319,7 +331,7 @@ function showPlan(plan) {
     caption.append(select);const apply=el('button','Aplicar revisión de moneda');
     apply.onclick=()=>run(async()=>{
       if(select.value!=='MXN')throw new Error('El documento queda pendiente hasta acreditar una moneda admitida.');
-      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN',password:financialPassword}));
+      showPlan(await api('/api/documents/'+current.id+'/plan',{revision:plan.revision,currency_confirmation:'MXN',cash_opening_confirmation:plan.cash_opening_confirmation||null,password:financialPassword}));
     });
     group.append(caption,apply);panel.append(group);
   }
@@ -346,11 +358,11 @@ function showPlan(plan) {
   $('confirm').hidden=!plan.can_confirm;$('confirm').disabled=!plan.can_confirm;
 }
 $('prepare').onclick=()=>run(async()=>showPlan(await api('/api/documents/'+current.id+'/plan',{
-  revision:current.revision,currency_confirmation:financialPlan?.currency_confirmation||null,password:financialPassword})));
+  revision:current.revision,currency_confirmation:financialPlan?.currency_confirmation||null,cash_opening_confirmation:financialPlan?.cash_opening_confirmation||null,password:financialPassword})));
 $('confirm').onclick=()=>run(async()=>{
   if(!financialPlan?.can_confirm)return;
   const plan=await api('/api/documents/'+current.id+'/confirm',{revision:financialPlan.revision,plan_hash:financialPlan.plan_hash,
-    currency_confirmation:financialPlan.currency_confirmation||null,password:financialPassword});
+    currency_confirmation:financialPlan.currency_confirmation||null,cash_opening_confirmation:financialPlan.cash_opening_confirmation||null,password:financialPassword});
   showPlan(plan);message(plan.duplicate?'El documento ya estaba importado; no se duplicó.':'Importación confirmada. Los movimientos están guardados en el libro financiero.');
 });
 async function openBook() {
@@ -368,7 +380,7 @@ async function openBook() {
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),
     ...(account.custodian==='alpaca'?{dividends:account.dividends,foreign_withholding:account.foreign_withholding,income_net_foreign_withholding:account.income_net_foreign_withholding}:{}),
-    ...(account.institution==='doopla'?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
+    ...(['doopla','yotepresto'].includes(account.institution)?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
     charges_fees_and_vat:account.charges_fees_and_vat,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps
   })),target);

@@ -629,3 +629,13 @@
 - Commit probado: 99ae699ce479e5bc67e304f0400bfaf1d5638991.
 - Ocho pruebas nuevas verifican institución/candidatos/catálogo Fintual, selección del lector USD, registro financiero como Fintual, cuentas MXN/USD separadas, presentación compatible de documentos/lotes anteriores sin reescribir auditoría ni duplicar, agrupación y HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa. Corrección limitada a identidad, presentación y compatibilidad; importes e impuestos sin cambios.
+
+
+## 2026-11-06 — YoTePresto: apertura acreditada y desglose de cobro único
+
+- Plan automático con revisión explícita del candidato de apertura de efectivo o enlace a cierre contiguo confirmado, sin confundir saldo global con efectivo.
+- Pago único enlazado a préstamo preexistente: principal cotejado con cambio de saldo e interés/IVA mensuales, con ISR e IVA retenido separados y comisión con IVA una vez.
+- Cartera/acumulados/atrasos observados, sin rendimientos o capital externo duplicados. Pagos/retenciones múltiples, cancelaciones y referencias ambiguas bloqueados.
+- Revisión de apertura ligada a documento, versión y plan; moneda y contraseña temporal también admitidas. Transacción, reintentos, continuidad y fechas preservados.
+- Catorce pruebas nuevas de apertura, componentes, controles, cero/ausencia ISR, meses en ambos órdenes, revisión/rollback y confirmación HTTP; datos exclusivamente ficticios.
+- Manual y límites documentados; sin nuevas dependencias o pagos. Fintual sigue siendo la institución de sus portafolios MXN/USD.

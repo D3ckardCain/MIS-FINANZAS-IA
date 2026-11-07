@@ -182,3 +182,11 @@
 **Implementación:** detección y selección manual asignan Fintual con perfil de origen Alpaca, custodio y unidad USD separados. Catálogo/panel sin institución Alpaca. Fintual fondos MXN y acciones USD mantienen cuentas, monedas y planes distintos; nuevos documentos financieros se registran con institución Fintual.
 **Compatibilidad:** presentación de documentos/lotes antiguos corregida sin reescribir originales, revisiones o planes auditados. Identificadores técnicos existentes se conservan para continuidad, solapamientos e idempotencia; reabrir no duplica operaciones. La categoría explícita elegida para Fintual prevalece sobre una agrupación antigua del alias.
 **Verificación:** pruebas de detección, selección, catálogo, registro financiero, dos monedas, compatibilidad y HTTP. Sin cambios de importes, fiscalidad, dependencias o servicios.
+
+
+## D026 — YoTePresto: apertura de efectivo acreditada y pago único
+
+**Decisión:** no confundir saldo global con efectivo ni aceptar automáticamente una apertura derivada de la primera fila. Revisión expresa del candidato por documento/versión/huella, o enlace al cierre contiguo confirmado compatible. La declaración del usuario no acredita que el importe estuviera publicado en el estado.
+**Desglose:** exigir un pago único enlazado a préstamo preexistente, principal cotejado con variación de su saldo y total del pago cotejado con interés/IVA mensuales. Retención única desglosada en IVA/ISR por su fecha; comisión con IVA una vez. Rechazar repartos entre múltiples operaciones, cancelaciones y referencias ambiguas.
+**Control:** ambas vistas y todas las demás conciliaciones permanecen exigidas. Apertura como ancla, sin aportación ficticia; revisiones de moneda y apertura independientes y ligadas al plan. Reutilizar versiones, continuidad, transacción y reintentos.
+**Límites:** cartera y acumulados observados, sin reinversión, fiscalidad anual o pérdidas automáticas. PDF protegido con contraseña temporal. Sin nuevas tablas, dependencias o servicios; Fintual conserva la identidad corregida del titular.

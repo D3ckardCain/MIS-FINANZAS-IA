@@ -62,6 +62,8 @@ Fintual confirma efectivo del portafolio y conserva fondos/valuación/rendimient
 
 Fintual USD confirma efectivo USD con dividendos, intereses, comisiones y retención extranjera separados. Posiciones/costo/resultados son observaciones; no se calcula ISR mexicano, ganancia por lote o conversión a MXN. Ver [manual Fintual USD](IMPORTACION-ALPACA.md).
 
+YoTePresto permite revisar expresamente la apertura candidata de efectivo o enlazarla a un cierre contiguo confirmado compatible. Solo admite pago único con principal cotejado al préstamo y retención de fecha única; nunca convierte el saldo global en efectivo. Ver [manual YoTePresto](IMPORTACION-YOTEPRESTO.md).
+
 ### Moneda ausente en un estado operativo Fondeadora
 
 El plan pide revisar la moneda dentro de la aplicación. Seleccionar MXN y aplicar la revisión prepara un plan confirmable solo si el resto concilia; elegir otra moneda/no poder comprobarla mantiene el documento pendiente. Esta decisión queda en el plan aceptado, sin editar el original o su moneda extraída. Un reporte sin saldos no se habilita mediante esta selección.

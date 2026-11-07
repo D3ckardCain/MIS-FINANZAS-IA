@@ -41,3 +41,8 @@ Los importes y signos originales se preservan, incluso en cancelaciones. Los pag
 El capital recuperado y el rendimiento que quedan disponibles pueden volver a financiar préstamos. Fondear un préstamo es reducción del efectivo y asignación a una inversión, no otra aportación externa ni una ganancia. El lector conserva los hechos necesarios, pero no confirma reinversión por igualdad de importe/fecha ni reparte un pago compuesto sin evidencia suficiente.
 
 Los formatos admitidos separan períodos, moneda nacional y tasas por préstamo. No se aplican tasas actuales al pasado, se construye un calendario de pago supuesto, se reconstruye titularidad externa ni se calcula ISR anual. Las imágenes conservan evidencia OCR y requieren revisión; no heredan automáticamente verificaciones del PDF. Documentos, cartera, referencias e informes reales permanecen privados; las pruebas públicas son ficticias.
+
+
+## Plan financiero desde la aplicación
+
+La aplicación añade un [plan explícito](IMPORTACION-YOTEPRESTO.md) para efectivo con apertura acreditada por revisión del usuario o cierre contiguo confirmado compatible. El lector mantiene su candidato aritmético sin aprobarlo. El alcance inicial exige pago único enlazado a préstamo y retención de fecha única; cancelaciones o pagos múltiples permanecen bloqueados. Cartera y acumulados son observaciones.

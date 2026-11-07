@@ -39,6 +39,7 @@ class YoTePrestoSummary:
     total_invested_reported: Decimal
     gain_reported: Decimal
     gain_basis_observed: str
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -120,6 +121,7 @@ class YoTePrestoPreview:
     shared_account: bool = True
     scope: str = 'platform_cash_and_lending'
     investment_balance: None = None
+    currency_markers: tuple[str,...] = ()
 
     @property
     def entries(self):return self.rows
@@ -156,12 +158,13 @@ class YoTePrestoReader:
         from .imaging import read_statement_image
         return read_statement_image(content,'yotepresto',self.lane,engine=engine)
 
-    def read_pdf(self,content):
+    def read_pdf(self,content,*,password=None):
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
         try:
             pdf=PdfReader(BytesIO(content))
-            if pdf.is_encrypted:raise ReaderError('PDF YoTePresto protegido')
+            if pdf.is_encrypted and (password is None or not pdf.decrypt(password)):
+                raise ReaderError('PDF YoTePresto protegido: contraseña requerida o no válida')
             pages=tuple(p.extract_text(extraction_mode='layout') or '' for p in pdf.pages)
         except PyPdfError as e:raise ReaderError('PDF YoTePresto no legible') from e
         return self.read_pages(pages,sha256(content).hexdigest())
@@ -194,6 +197,11 @@ class YoTePrestoReader:
             take('Intereses Moratorios'),take('IVA de Intereses Moratorios'),fee,take('Comisión'),take('IVA Comisión'),
             ret,vat,isr,take('(+) Fondos Agregados'),take('(-) Retiros'),take('Inversiones realizadas:',anchored=False),
             take('Pagos recibidos:',anchored=False),take('Monto total invertido:',anchored=False),gain,basis)
+        text='\n'.join(pages)
+        markers={m.upper() for m in re.findall(r'\b(?:moneda|divisa)\s*:?\s*([A-Z]{3})\b',text,re.I)}
+        if re.search(r'\bmoneda\s*:?\s*(?:nacional|pesos mexicanos)\b',fold(text)):markers.add('MXN')
+        if re.search(r'\b(?:moneda|divisa)\s*:?\s*dolares\b',fold(text)):markers.add('USD')
+        s=replace(s,unit='MXN' if markers=={'MXN'} else None)
         positions=[]
         pattern=r'(Al corriente|En tránsito|Atrasado|Vencido|Pagado)\s+(\d+|--)\s+([\d.]+)%\s+('+_MONEY+r')'
         for match in re.finditer(pattern,first,re.I):positions.append(YoTePrestoPosition(fold(match[1]),int(match[2]) if match[2]!='--' else None,Decimal(match[3]),money(match[4])))
@@ -274,7 +282,7 @@ class YoTePrestoReader:
         check('Saldo global difiere de cartera más disponible',s.final,_sum((active,s.available)),portfolio)
         if any(l.opened>end for l in loans):portfolio.append('Préstamo abierto después del corte')
         return YoTePrestoPreview(identifier,start,end,account,s,tuple(positions),tuple(rows),tuple(loans),tuple(arrears),tuple(differences),
-            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(portfolio)),implied,self.lane)
+            tuple(dict.fromkeys(summary_issues)),tuple(dict.fromkeys(cash_issues)),tuple(dict.fromkeys(portfolio)),implied,self.lane,currency_markers=tuple(sorted(markers)))
 
 
 @dataclass(frozen=True)
