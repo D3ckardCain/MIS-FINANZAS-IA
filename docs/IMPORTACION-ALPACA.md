@@ -1,4 +1,6 @@
-# Alpaca: efectivo USD, dividendos y retención extranjera
+# Fintual USD: formato del custodio Alpaca
+
+La institución de registro es **Fintual**, portafolio **Acciones USD**. Alpaca se conserva únicamente como custodio/perfil técnico del estado; no es una institución independiente en el panel.
 
 La aplicación prepara el plan del estado mensual textual del formato admitido. Confirmar registra **una cuenta de efectivo USD del portafolio**. Acciones/ETF, cantidades, precios, costo, plusvalías y resultados reportados quedan como observaciones; todavía no se crea una cartera contable por lotes.
 

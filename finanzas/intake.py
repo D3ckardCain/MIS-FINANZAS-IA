@@ -28,6 +28,17 @@ GROUPS.update(nu='SOFIPOs', didi='SOFIPOs', doopla='Instituciones de préstamo',
 NAMES = {p.key: p.name for p in PROFILES} | {'bingx': 'BingX', 'pionex': 'Pionex'}
 
 
+def canonical_result(result):
+    """Decisión del titular: el formato del custodio pertenece a Fintual USD."""
+    result=dict(result)
+    result['candidates']=list(dict.fromkeys('fintual' if k=='alpaca' else k for k in result.get('candidates',[])))
+    if result.get('institution')=='alpaca':
+        result.update(institution='fintual',reader_profile='alpaca',custodian='alpaca',portfolio_unit='USD')
+    elif result.get('institution')=='fintual':
+        result.setdefault('reader_profile','fintual');result.setdefault('portfolio_unit','MXN')
+    return result
+
+
 def plain(value):
     """Sin float: conserva todos los importes como cadenas decimales exactas."""
     if is_dataclass(value):
@@ -92,6 +103,8 @@ def analyze(content, *, institution=None, password=None, engine=None):
         result['ocr'] = plain(evidence)
     found = _candidates(text)
     result['candidates'] = found
+    if 'alpaca' in found and all(k in ('fintual','alpaca') for k in found) and institution in (None,'fintual','alpaca'):
+        institution='alpaca' if 'fintual' not in found or re.search(r'Alpaca.*Monthly Statement|Account No:',text,re.I) else 'fintual'
     if institution:
         if institution not in found:
             result['issues'] = ['La institución elegida no está acreditada por el contenido.']
@@ -159,7 +172,7 @@ def analyze(content, *, institution=None, password=None, engine=None):
         except ValueError as error:
             result['views'][lane] = dict(status='unreadable', issues=[str(error)])
     result['status'] = 'pending_review'
-    return result
+    return canonical_result(result)
 
 
 class Inbox:
@@ -188,11 +201,15 @@ class Inbox:
     def __exit__(self, *args): self.close()
 
     def catalog(self):
-        groups = GROUPS | dict(self.db.execute('SELECT institution,category FROM intake_groups'))
+        custom=dict(self.db.execute('SELECT institution,category FROM intake_groups'))
+        groups = GROUPS | custom
+        if 'alpaca' in custom and 'fintual' not in custom:
+            groups['fintual']=custom['alpaca']
         return dict(categories=CATEGORIES, institutions=[dict(key=k, name=n,
-            category=groups.get(k, 'Por clasificar')) for k, n in NAMES.items()])
+            category=groups.get(k, 'Por clasificar')) for k, n in NAMES.items() if k!='alpaca'])
 
     def set_group(self, institution, category):
+        if institution=='alpaca':institution='fintual'
         if institution not in NAMES or category not in CATEGORIES:
             raise ValueError('Institución o categoría no admitida')
         with self.db:
@@ -244,7 +261,7 @@ class Inbox:
         latest = self.db.execute('SELECT decision FROM intake_reviews WHERE document_id=? AND revision=? ORDER BY seq DESC LIMIT 1',
                                  (identifier, row['revision'])).fetchone()
         return dict(id=row['id'], filename=row['filename'], revision=row['revision'], created_at=row['created_at'],
-                    review=latest['decision'] if latest else 'pending', result=json.loads(row['result']))
+                    review=latest['decision'] if latest else 'pending', result=canonical_result(json.loads(row['result'])))
 
     def list(self):
         items = []

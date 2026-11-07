@@ -242,7 +242,7 @@ async function openDocument(id) {
   current=await api('/api/documents/'+id);const result=current.result;
   $('overview').hidden=true;$('book').hidden=true;$('detail').hidden=false;$('notice').textContent='';
   financialPlan=null;financialPassword=null;$('financial-plan').hidden=true;$('confirm').hidden=true;
-  $('crumb').textContent=name(result.institution);$('detail-institution').textContent=name(result.institution);
+  $('crumb').textContent=name(result.institution);$('detail-institution').textContent=name(result.institution)+(result.portfolio_unit?' · '+result.portfolio_unit:'');
   $('detail-name').textContent=current.filename;
   const item=state.documents.find(d=>d.id===id);$('detail-period').textContent=item?'Período interior: '+periods(item):'';
   $('original').href='/api/documents/'+id+'/original';
@@ -261,7 +261,7 @@ async function openDocument(id) {
   $('review-state').textContent=current.review==='reviewed'?'Documento marcado como revisado':'Revisión documental pendiente';
   $('review').textContent=current.review==='reviewed'?'Devolver a pendientes':'Marcar como revisado';
   renderView();
-  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual','alpaca'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
+  if(['openbank','mifel','bancoppel','didi','fondeadora','plata','supertasas','hey','kapital','doopla','fintual'].includes(result.institution) && result.format==='pdf')showPlan(await api('/api/documents/'+id+'/plan'));
 }
 $('all').onclick=()=>{selected=null;current=null;showList();};
 $('back').onclick=()=>{current=null;showList();};
@@ -363,11 +363,11 @@ async function openBook() {
   target.append(el('p',`${data.documents} documentos confirmados · ${data.movements} movimientos`,'subtitle'));
   if(!data.accounts.length)target.append(el('div','Todavía no hay períodos confirmados. Abre un documento y prepara su importación.','empty'));
   else renderArray(data.accounts.map(account=>({
-    account_name:name(account.institution)+' · '+(account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
+    account_name:name(account.institution)+(account.portfolio?' · '+account.portfolio:'')+' · '+(account.role==='fund_cash'?'Efectivo del portafolio':account.role==='transit'?'Cuenta de paso':account.shared_account?'Cuenta remunerada':laneLabel(account.lane)), unit:account.unit,
     through:account.through, closing:account.closing, first_period:account.first_period,
     interest:account.interest, withholding:account.withholding,interest_net_of_withholding:account.interest_net_of_withholding,
     ...(!account.withholding_complete && account.withholding_documented!==null?{withholding_documented:account.withholding_documented}:{}),
-    ...(account.institution==='alpaca'?{dividends:account.dividends,foreign_withholding:account.foreign_withholding,income_net_foreign_withholding:account.income_net_foreign_withholding}:{}),
+    ...(account.custodian==='alpaca'?{dividends:account.dividends,foreign_withholding:account.foreign_withholding,income_net_foreign_withholding:account.income_net_foreign_withholding}:{}),
     ...(account.institution==='doopla'?{vat_received:account.vat_received,vat_paid:account.vat_paid,rewards:account.rewards}:{}),
     charges_fees_and_vat:account.charges_fees_and_vat,
     periods:account.periods,pending_origins:account.pending_origins,gaps:account.gaps

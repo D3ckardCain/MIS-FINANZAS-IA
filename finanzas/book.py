@@ -50,7 +50,10 @@ class FinancialBook:
     def _existing(self, identifier):
         found=self.db.execute('SELECT plan_json FROM book_batches WHERE document_id=?',(identifier,)).fetchone()
         if found:
-            return json.loads(found[0]) | dict(status='imported', can_confirm=False)
+            plan=json.loads(found[0])
+            if plan.get('institution')=='alpaca':
+                plan.update(institution='fintual',reader_profile='alpaca',custodian='alpaca',portfolio_unit='USD')
+            return plan | dict(status='imported', can_confirm=False)
 
     def preview(self, identifier, *, currency_confirmation=None, expected_revision=None, password=None):
         with Inbox(self.inbox_path) as inbox:
@@ -63,7 +66,7 @@ class FinancialBook:
             return plan
 
     def _plan(self, doc, content, *, currency_confirmation=None, password=None):
-        if doc['result']['institution']=='alpaca' and doc['result']['format']=='pdf':
+        if doc['result']['institution']=='fintual' and doc['result'].get('reader_profile')=='alpaca' and doc['result']['format']=='pdf':
             from .book_alpaca import prepare
             return prepare(self,doc,content,password=password)
         if doc['result']['institution']=='fintual' and doc['result']['format']=='pdf':
@@ -314,8 +317,11 @@ class FinancialBook:
             retained=[m.amount for m in selected if m.kind==Kind.WITHHOLDING]
             withholding_complete=not any(json.loads(row[0]).get('withholding_status')=='unknown' for row in
                 self.db.execute('SELECT b.plan_json FROM book_batches b JOIN book_periods p USING(document_id) WHERE p.account=?',(account,)))
-            institution=account.split(':',1)[0]
+            source_profile=account.split(':',1)[0]
+            institution='fintual' if source_profile=='alpaca' else source_profile
             accounts.append(dict(account=account,institution=institution,lane=lane,unit=unit,shared_account=institution in ('mifel','didi'),
+                custodian='alpaca' if source_profile=='alpaca' else None,
+                portfolio='Acciones USD' if source_profile=='alpaca' else 'Fondos MXN' if institution=='fintual' else None,
                 role='transit' if institution=='bancoppel' else 'fund_cash' if institution in ('fintual','alpaca') else None,
                 first_period=periods[0][0],through=periods[-1][1],closing=periods[-1][3],
                 periods=len(periods),gaps=gaps,

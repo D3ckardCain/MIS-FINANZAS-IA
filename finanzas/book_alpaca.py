@@ -8,7 +8,7 @@ from .storage import movement_id
 
 def prepare(book,doc,content,*,password=None):
     identifier=doc['id']
-    plan=dict(document_id=identifier,institution='alpaca',revision=doc['revision'],status='blocked',can_confirm=False,
+    plan=dict(document_id=identifier,institution='fintual',reader_profile='alpaca',custodian='alpaca',portfolio_unit='USD',revision=doc['revision'],status='blocked',can_confirm=False,
         issues=[],warnings=[],periods=[],movements=[],transfers=[],stock_positions=[],memo_observations=[],
         password_required=False,withholding_status='unknown',withholding_basis='foreign_tax_separate_from_mexican_isr')
     if password is not None and not isinstance(password,str):

@@ -614,3 +614,11 @@
 - Diecisiete pruebas de integración y dos del núcleo cubren efectivo USD único, dividendos/retención extranjera distintos de interés/ISR mexicano, compra/venta, comisiones y Fees sin duplicar, cero extranjero, valuación/acumulados, Holdings/cierre, moneda/instrumentos, Memopost, meses fuera de orden, versiones, rollback, contraseña transitoria, doce instituciones y confirmación HTTP.
 - Suite local y JavaScript aprobados; ejecución remota completa sin omisiones. Pruebas ficticias y ningún movimiento personal confirmado.
 - Código, manual y límites publicados; lotes/costo, ganancia realizada calculada, fiscalidad mexicana, conversión documentada y reinversiones permanecen pendientes.
+
+
+## 2026-11-06 — Corrección de identidad: Fintual MXN/USD
+
+- Por instrucción del titular, Alpaca deja de ser institución de registro y navegación; se conserva exclusivamente como custodio/perfil técnico de Fintual USD.
+- Detección, selección manual, bandeja, plan y libro muestran Fintual. Nuevos documentos financieros guardan Fintual como institución; MXN/USD mantienen cuentas e importes separados.
+- Compatibilidad con documentos/lotes previos sin reescribir originales o auditoría, alterar referencias financieras o duplicar movimientos. Catálogo sin institución independiente Alpaca.
+- Ocho pruebas nuevas de identidad, selección, dos portafolios, registro en base, compatibilidad, agrupación y flujo HTTP; manuales y documentación corregidos.

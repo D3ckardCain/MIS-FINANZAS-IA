@@ -35,3 +35,8 @@ PDF y OCR funcionan localmente. Las imágenes generan evidencia para revisión, 
 ## Confirmación desde la aplicación
 
 La aplicación incorpora un [plan de efectivo revisable](IMPORTACION-FINTUAL.md), con posiciones y resumen como observaciones separadas. La confirmación no convierte valuación o rendimiento porcentual en interés cobrado ni descuenta de nuevo el ISR informativo. El libro distingue «Efectivo del portafolio» y mantiene retención/neto de efectivo desconocidos hasta acreditar su atribución. PDF protegido con contraseña transitoria admitido, sin guardarla.
+
+
+## Institución y portafolios
+
+Fintual incluye fondos MXN y acciones USD como portafolios separados. Los estados con formato Alpaca se registran bajo Fintual; Alpaca solo figura como custodio/perfil técnico. Ver [Fintual USD](IMPORTACION-ALPACA.md). No se fusionan saldos o movimientos de monedas distintas.

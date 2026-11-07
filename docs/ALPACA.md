@@ -1,4 +1,4 @@
-# Alpaca: acciones/ETF y efectivo USD
+# Fintual USD: formato del custodio Alpaca
 
 Se incorpora un perfil documental con dos vistas y OCR local, más lector PDF optativo de revisión detallada. Ambas vistas corresponden a una única cuenta de corretaje; su efectivo no es otra posición ni una cuenta bancaria inventada.
 
@@ -38,3 +38,5 @@ La ausencia de acciones en Holdings no acredita cierre de cuenta ni ausencia his
 ## Confirmación de efectivo desde la aplicación
 
 La aplicación incorpora un [plan de efectivo USD revisable](IMPORTACION-ALPACA.md). Dividendos, intereses y retenciones extranjeras quedan separados; no se convierten en ISR mexicano ni se duplica la valuación como ingreso. Posiciones/resultados son observaciones y la confirmación no reconstruye costo por lote. El libro distingue efectivo del portafolio. PDF protegido admitido con contraseña transitoria, sin guardarla.
+
+Por decisión del titular, todos los documentos de este perfil se registran en la aplicación bajo Fintual USD. El nombre Alpaca identifica únicamente el custodio/formato técnico, no una institución adicional.
