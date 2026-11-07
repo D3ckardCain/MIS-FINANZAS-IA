@@ -161,8 +161,11 @@ class EvolutionTests(unittest.TestCase):
         for profile in ('mifel','bancoppel','didi','plata','fondeadora','supertasas','hey','kapital','doopla','fintual','alpaca','cetesdirecto'):
             module=importlib.import_module('tests.test_book_'+profile)
             self.confirm(module.content())
+        from tests.test_yotepresto import source
+        self.confirm(synthetic_pdf(source()),cash_opening_confirmation='10.00')
         data=self.book.evolution()
-        self.assertEqual(len(data['accounts']),15)
+        self.assertEqual(len(data['accounts']),16)
+        self.assertEqual(len({a['institution'] for a in data['accounts']}),13)
         self.assertTrue(all(row['reconciled'] for a in data['accounts'] for row in a['history']))
         self.assertEqual(data['unassigned_movements'],[])
 
