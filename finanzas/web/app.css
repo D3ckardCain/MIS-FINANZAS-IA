@@ -9,3 +9,4 @@
 .evolution .period-cell{min-width:125px;white-space:nowrap}.evolution .period-cell>span{display:block}
 
 .transfer-panel label{width:100%;max-width:100%;min-width:0;margin-right:0}.transfer-panel select{width:100%}.transfer-panel button{margin:5px 6px 5px 0}
+.transfer-panel table{min-width:760px}.transfer-panel td:first-child{white-space:nowrap}
