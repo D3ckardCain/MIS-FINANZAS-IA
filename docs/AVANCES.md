@@ -727,3 +727,12 @@
 - Doce pruebas adicionales y 677 pruebas locales aprobadas, sin omisiones; controles de JavaScript aprobados. Ningún dato personal importado.
 - Chrome local no se pudo instalar: el destino de descarga entregó HTML en lugar del ZIP. Se incorpora comprobación automática de navegador en Actions con carga ficticia, revisión individual, confirmación, evolución y móvil; capturas de un día. Resultado remoto del nuevo incremento por verificar.
 - Manuales, plan y decisión D030 actualizados; no se añadieron dependencias de pago ni servicios críticos externos.
+
+### Verificación final del flujo Nu
+
+- [677 pruebas aprobadas, sin omisiones, y flujo Chrome aprobado](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42329263937).
+- Commit probado: c189fc4a1ab13e2fdbfbb3a63a74ae76b4a2884a.
+- Treinta y una pruebas Nu entre integración de productos y Cajitas individuales; suite completa sin regresiones. JavaScript comprobado en CI.
+- Chrome completó revisión individual desde la interfaz, confirmación financiera, evolución de tres cuentas sin agregado duplicado y comprobación de ancho móvil. Capturas ficticias de escritorio/móvil descargadas e inspeccionadas; fechas móviles mejoradas y limpieza del perfil Chrome corregida.
+- Se cierran los pendientes de Actions y revisión visual anotados en incrementos anteriores. PDF/contraseña, distribución acreditada, saldos individuales revisados y cashback explícito listos dentro del formato conocido; la app conserva pendientes concretos cuando las fuentes no acreditan un dato.
+- Sin importación personal ni nuevas dependencias operativas. No se amplía el alcance a fiscalidad anual, devengo contractual supuesto o confirmación financiera automática de OCR; se mantienen las reglas documentadas.

@@ -49,3 +49,8 @@ Un historial confirmado en modo agregado continúa en ese modo; uno individual c
 Cierres individuales introducidos por el usuario siguen etiquetados como revisión, no como extracción automática del PDF global. El reconocimiento de interés/ISR por resumen mantiene fecha de cierre; las fuentes que no publican pagos diarios no permiten certificar fechas diarias. Congelamientos y vencimientos conservan su evidencia, sin inventar tasa contractual o reinversión.
 
 Doce pruebas adicionales verifican Cajitas individuales activas/sin movimientos, totales/cierres, nombres ambiguos/inválidos, continuidad fuera de orden, Cajitas históricas, incompatibilidad de granularidad, rollback/reintento/reapertura, cashback explícito y confirmación HTTP con revisión normalizada. Se añade prueba automatizada de navegador Chrome en CI, sin dependencias del sistema operativo de la app: carga ficticia, formulario individual, confirmación, evolución y ancho móvil; capturas exclusivamente ficticias retenidas un día.
+
+
+## Resultado de validación
+
+[677 pruebas y flujo Chrome aprobados](https://github.com/D3ckardCain/MIS-FINANZAS-IA/actions/runs/42329263937). Se inspeccionaron las capturas ficticias de escritorio y móvil. El flujo validado incluye revisión por Cajita, confirmación y evolución sin agregado duplicado. La falta de datos en las fuentes se trata como pendiente acreditable, no como cero ni como bloqueo del desarrollo del módulo.
